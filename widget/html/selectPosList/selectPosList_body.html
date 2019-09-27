@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+	</head>
+	<body>
+		<section class="subpageMain">
+		    <div class="SmyPosListMain">
+				 <ul class="myPosListUl SmyPosListUl">
+
+				</ul>
+			</div>
+			<div class="SmyPosFooterBtn line_top">
+				<!-- <span id="num">共选择10件</span> -->
+				<a onclick="dialePos();">拨码</a>
+			</div>
+		</section>
+	</body>
+		<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+		<script type="text/javascript" src="../../script/H.js"></script>
+		<script type="text/javascript" src="../../script/db.js"></script>
+		<script type="text/javascript" src="../../script/api.js"></script>
+		<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+			<script src="../../script/doT.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/refresh.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+		var db;
+		var userInfo;
+		var $bid,$plat,subid,$terminal;
+		H.ready(function(){
+				db=api.require('db');
+				//取出用户信息
+				var sql='select * from kltx_login',
+						userInfo=selectSql('kltx_db', sql);
+						$bid = userInfo[0].id;
+						$plat = userInfo[0].plat;
+						subid=H.getStorage("subid");
+						refresh(refreshCallback);
+						fnRefreshHeaderLoading();
+	});
+	//下拉刷新
+	function refreshCallback(ret,err){
+			//获取POS机列表
+			getPosList();
+	}
+		//搜索
+		function search(val){
+			showLoading();
+			$terminal=val;
+			getPosList();
+		}
+
+	//获取分类
+	function getID(){
+		showLoading();
+		getPosList();
+	}
+	//获取POS机列表
+	function getPosList(){
+				$terminal=$terminal == undefined || $terminal == '' ? '' : $terminal;
+		var $url=url+'Home/PersonalPublic/dialCodePos';
+		H.ajax(getPosListCallback, $url, 'post', {values:{bid:$bid,plat:$plat,terminal:$terminal,cid:1}}, 'json', {});
+	}
+	//获取POS机列表
+	function getPosList1($id){
+		showLoading();
+		$terminal=$terminal == undefined || $terminal == '' ? '' : $terminal;
+		var $url=url+'Home/PersonalPublic/dialCodePos';
+		H.ajax(getPosListCallback, $url, 'post', {values:{bid:$bid,plat:$plat,terminal:$terminal,cid:$id}}, 'json', {});
+	}
+	//获取POS机列表成功
+	function getPosListCallback(ret,err){
+		hideLoading();
+		api.refreshHeaderLoadDone();
+		if(ret){
+			//J(ret);
+			if(ret.body.status){
+				var data=ret.body.data;
+				if(data.length>0){
+					var interText = doT.template($("#posMarsk").text());
+					$(".SmyPosListUl").html(interText(data));
+				}else{
+						$(".SmyPosListUl").html('<div style="text-align:center;height:50px; line-height:50px;">暂无数据</div>');
+				}
+			}
+		}else{
+			J(err);
+		}
+	}
+	//拨码
+	function dialePos(){
+			var arrId='';
+			var checkBox=document.getElementsByClassName('input_checkbox');
+			if(checkBox.length>0){
+				for(var i=0;i<checkBox.length;i++){
+						if(checkBox[i].checked){
+							arrId += checkBox[i].value+',';
+						}
+			}
+			//请求拨码
+			postDialePos(arrId);
+		}else{
+			H.toast("请选择终端码");
+		}
+	}
+//请求拨码
+function postDialePos(arrId){
+	showLoading();
+	var $url=url+'Home/PersonalPublic/dialCode';
+			arrId=arrId.substring(0,arrId.length-1);
+	H.ajax(postDialePosCallback, $url, 'post', {values:{bid:$bid,plat:$plat,subId:subid,posid:arrId}}, 'json', {});
+}
+//请求拨码返回
+function postDialePosCallback(ret,err){
+	hideLoading();
+	if(ret){
+		//J(ret);
+		if(ret.body.status){
+			setTimeout(function(){
+				H.closeWin();
+			},500);
+		}
+			H.toast(ret.body.msg);
+	}else{
+		return false;
+	}
+}
+
+
+	</script>
+	<script id="posMarsk" type="text/x-dot-template">
+			{{
+				for(var index in it){
+				}}
+				<li class="bindedLi">
+					<label>
+					<input type="checkbox" class="input_checkbox" value="{{=it[index].posid}}"/>
+					<span class="checkboxSpan"></span>
+						<div class="myPosListLiHeader">
+							<span><b><img src="{{=it[index].picUrl}}"/></b>{{=it[index].posname}}</span>
+						</div>
+						<div class="myPosListNumber">
+							<p>终端号</p>
+							<div>{{=it[index].terminal}}</div>
+						</div>
+						</label>
+				</li>
+				{{
+				}
+			}}
+	</script>
+</html>

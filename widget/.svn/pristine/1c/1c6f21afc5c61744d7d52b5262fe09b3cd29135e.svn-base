@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/swiper.min.css" />
+		<style type="text/css">
+			html, body {
+				background: #fff;
+			}
+		</style>
+	</head>
+	<body>
+		<section class="subpageMain">
+			<!--选择提现 开始-->
+			<div class="selectWithdraw">
+				<div class="swiper-container">
+					<div class="swiper-wrapper" id='swiperWrapper'>
+
+					</div>
+				</div>
+			</div>
+			<!--选择提现 结束-->
+			<!--填写商户账号信息 开始-->
+			<div class="input_div">
+				<!--单条数据CashWithdrawal-->
+				<!--单条数据-->
+				<div class="input_list withDrawInput">
+					<em>提现金额</em>
+					<div>
+						<input id="withdrawal_id" type="number" placeholder="" emp="{empty:true}" mess="输入提现金额">
+					</div>
+				</div>
+			</div>
+			<nav class="nav_title">
+				账户信息
+			</nav>
+			<div class="input_div" id="drawDiv">
+				<!--单条数据-->
+
+			</div>
+			<nav class="nav_title">
+				注意事项
+			</nav>
+			<div class="input_div">
+				<div class="input_list" id="shuoming" style="font-size:14px; line-height:26px;">
+				</div>
+			</div>
+			<a tepmode class="registerBtn" onclick="withdraw(this);">确定提现</a>
+		</section>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+	<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/doT.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" src="../../js/swiper.min.js"></script>
+	<script>
+	var db;
+	var userInfo;
+	var $bid,$plat,$type;
+		H.ready(function(){
+			db=api.require('db');
+			//取出用户信息
+			var sql='select * from kltx_login',
+					userInfo=selectSql('kltx_db', sql);
+					$bid = userInfo[0].id;
+					$plat = userInfo[0].plat;
+				//请求金额
+					getMoney();
+				//请求银行卡信息
+					getBankCardInfo();
+				//请求提现说明
+					getWithdrawSm();
+		});
+//提现说明
+function getWithdrawSm(){
+	var $url=url+'Home/PublicInterface/drawInstruct';
+	H.ajax(getWithdrawSmCallback, $url, 'post', {values:{plat:$plat}}, 'json', {});
+}
+//请求提现说明返回
+function getWithdrawSmCallback(ret,err){
+	if(ret){
+			if(ret.body.status){
+				$("#shuoming").html(ret.body.data);
+			}
+	}else{
+			J(err);
+	}
+}
+
+	//请求金额
+	function getMoney(){
+		var $url=url+'Home/Withdrawal/drawBalance';
+	 	H.ajax(getMoneyCallback, $url, 'post', {values:{bid:$bid,plat:$plat}}, 'json', {});
+	}
+//请求金额返回
+function getMoneyCallback(ret,err){
+	if(ret){
+		//J(ret);
+			if(ret.body.status){
+			var data=ret.body.data;
+			if(data.length>0){
+						$("#withdrawal_id").attr("placeholder","请输入"+ret.body.qujian+"的数字");
+						var interText = doT.template($("#drawMarsk").text());
+						$("#swiperWrapper").html(interText(data));
+						selectWithDraw();
+		}else{
+				return false;
+		}
+		}else{
+			return false;
+		}
+	}else{
+		J(err);
+	}
+}
+//请求银行卡信息
+function getBankCardInfo(){
+	var $url=url+'Home/BankCard/drawBankCard';
+	H.ajax(getBankCardInfoCallback, $url, 'post', {values:{bid:$bid,plat:$plat}}, 'json', {});
+}
+//请求银行卡信息返回
+function getBankCardInfoCallback(ret,err){
+	if(ret){
+	//	J(ret);
+		if(ret.body.status){
+			var data=ret.body.data;
+			var interText = doT.template($("#bankCardMarsk").text());
+			$("#drawDiv").html(interText(data));
+		}
+	}else{
+		J(err);
+	}
+}
+
+//提现
+var $this;
+function withdraw(obj){
+	$this=$(obj);
+	//提现金额
+	if ($('[emp]').checkinput()){
+			var $money=$("#withdrawal_id").val();
+			var $type=$('.withDrawBox.active').attr("type");
+			//var $url=url+'Home/Withdrawal/drawal';
+
+			//var $url=url+'Raise/Newport/index';
+			var $url=url+'Raise/Paychannel/inlet';
+			var cl=$(obj).attr('cl');
+			if(cl!='flag'){
+				$(obj).attr('cl','flag');
+				// H.ajax(withdrawCallback, $url, 'post', {values:{bid:$bid,plat:$plat,money:$money,types:$type}}, 'json', {});
+				H.ajax(withdrawCallback, $url, 'post', {values:{AgentsId:$bid,CashAmount:$money,CashType:$type}}, 'json', {});
+			}
+	}
+}
+//提现返回
+function withdrawCallback(ret,err){
+	if(ret){
+		if(ret.body.statusCode=='200'){
+				setTimeout(function(){
+					H.closeWin();
+				},1000);
+		}else{
+			$this.removeAttr('cl');
+		}
+		H.toast(ret.body.message);
+	}else{
+		$this.removeAttr('cl');
+		H.toast(err);
+	}
+
+}
+	</script>
+	<script type="text/javascript">
+		function selectWithDraw() {
+			var swiper = new Swiper('.swiper-container', {
+				pagination : '.swiper-pagination',
+				slidesPerView : 1.4,
+				centeredSlides : true,
+				spaceBetween : 15,
+				onSlideChangeEnd : function(swiper) {
+					$('.swiper-wrapper .withDrawBox').removeClass('active');
+					var $txBox = $('#withdrawal_id');
+					var $type=swiper.activeIndex;
+					if (swiper.activeIndex == 0) {
+						var $rqBox = $thisBind = $('.swiper-wrapper .withDrawBox').eq(0);
+						$thisBind.addClass('active');
+					} else if (swiper.activeIndex == 1) {
+						var $rqBox = $thisPos = $('.swiper-wrapper .withDrawBox').eq(1);
+						$thisPos.addClass('active');
+					}else if (swiper.activeIndex == 2) {
+						var $rqBox = $thisPos = $('.swiper-wrapper .withDrawBox').eq(2);
+						$thisPos.addClass('active');
+					}else if (swiper.activeIndex == 3) {
+						var $rqBox = $thisPos = $('.swiper-wrapper .withDrawBox').eq(3);
+						$thisPos.addClass('active');
+					}else if (swiper.activeIndex == 4) {
+						var $rqBox = $thisPos = $('.swiper-wrapper .withDrawBox').eq(4);
+						$thisPos.addClass('active');
+					}
+					$txBox.val('');
+					$txBox.attr('placeholder', '最多可提现' + $($rqBox).find('.canTxMoney').text() + '元');
+					//$type = $($rqBox).find('.canTxMoney').attr('data-type');
+				}
+			});
+		}
+
+		function cxSlide(obj) {
+			var $txBox = $('#withdrawal_id');
+			$txBox.val($(obj).find('.canTxMoney').text());
+			//$type = $(obj).find('.canTxMoney').attr('data-type');
+		}
+	</script>
+
+	<script id="drawMarsk" type="text/x-dot-template">
+			{{
+				for(var index in it){
+				}}
+				<div class="swiper-slide" onclick="cxSlide(this)">
+				<div class="withDrawBox {{? index == 0}}active{{?}}" type="{{=it[index].t}}">
+					<h3 class="fxway">{{=it[index].types}}</h3>
+					<div>
+						<p>
+							可提现金额
+						</p>
+						<span class="canTxMoney">{{=it[index].ktx}}</span>
+					</div>
+					<em>余额:{{=it[index].money}}</em>
+					<em id="{{=it[index].t}}">结算方式：{{=it[index].method}}</em>
+				</div>
+				</div>
+				{{
+				}
+			}}
+	</script>
+
+	<script id="bankCardMarsk" type="text/x-dot-template">
+	<div class="input_list line_bottom">
+		<em>收款姓名</em>
+		<div>
+			<input id='gatheringName' type="text" value="{{=it.name}}" disabled="disabled">
+		</div>
+	</div>
+	<!--单条数据-->
+	<div class="input_list">
+		<em>收款银行卡</em>
+		<div>
+			<input id="gatheringNum" type="tel" value="{{=it.bankName}}(尾号{{=it.bankCard}})" disabled="disabled">
+		</div>
+	</div>
+	</script>
+</html>

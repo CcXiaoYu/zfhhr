@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html manifest="../cache.manifest">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/css.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+		<style>
+			html, body {
+				background: rgba(0,0,0,0);
+			}
+			.logoImg {
+			    width:107px;
+			    height:40px;
+				position: absolute;
+				left: 5%;
+				bottom: 0;
+				z-index: 9999;
+			}
+			.logoImg img{
+			 width:100%;
+			}
+			.back-prev {
+				position: absolute;
+				right: 5%;
+				bottom: 0;
+				width: 30px;
+				height: 30px;
+				padding: 5px;
+				font-size: 28px;
+				text-align: center;
+				line-height: 20px;
+				color: #fff;
+				z-index: 9999;
+			}
+			.back-prev img {
+				max-width: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="logoImg">
+			<img src="../../images/scanLogo.png"/>
+		</div>
+		<div class="back-prev" onclick="closeView();">
+			<img src="../../images/close.png"/>
+		</div>
+	</body>
+</html>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../script/H.js"></script>
+<script type="text/javascript">
+	H.ready(function() {
+	});
+	function closeView() {
+		api.execScript({
+			name : 'scanMain',
+			frameName : 'FNScanner',
+			script : 'closeView();'
+		});
+		api.closeWin({
+			name : 'scanMain'
+		});
+	}
+</script>

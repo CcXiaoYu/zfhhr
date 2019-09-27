@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css?4564" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+		<script type="text/javascript" src="../../script/dateRange.js"></script>
+		<link rel="stylesheet" type="text/css" href="../../css/dateRange.css"/>
+		<style>
+			html,body{ height: 100%; position: relative;}
+		</style>
+	</head>
+	<body>
+		<div class="sunDrying-main">
+			<div class="sunDrying-search clearfix bottom-line">
+				<div class="sunDrying-date">
+					<div class="" id="div_date1">
+						<span class="date_title" id="date1"></span>
+					</div>
+				</div>
+				<div class="sunDrying-classification">
+						<span>　</span>
+						<select id="sunDrying-classification" onchange="changeClassification(this);"></select>
+				</div>
+				<div class="sunDrying-typesof">
+					<span>　</span>
+					<select id="sunDrying-typesof" onchange="changeTypesof(this);">
+							<option value="1">按交易量</option>
+							<option value="3">按激活量</option>
+							<option value="2">按笔数</option>
+					</select>
+				</div>
+			</div>
+			<div style="height:20px;"></div>
+		 	<div id="container" style="height: 300px;margin:0 auto;"></div>
+		 </div>
+		 <!--统计-->
+		 <div class="t_statistics">
+		 </div>
+		 <!--/统计-->
+		 <div style="height:20px;"></div>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" src="../../script/echarts.min.js"></script>
+	<script src="../../script/doT.min.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+	var db;
+	var userInfo;
+	var $bid,$plat;
+	var $posData;
+	var $flData;
+	var $unit;
+	var startDate;
+	var endDate;
+	var $pid=0;
+	var $type=1;
+		H.ready(function(){
+			db=api.require('db');
+			//取出用户信息
+			var sql='select * from kltx_login',
+					userInfo=selectSql('kltx_db', sql);
+					$bid = userInfo[0].id;
+					$plat = userInfo[0].plat;
+					$("#container").css({width:H.winWidth});
+					getData();
+		});
+		//请求数据
+		function getData(){
+			showLoading();
+			//获取POS机分类
+			var $url1=url+'Home/Sunburn/listData';
+			H.ajax(getPosFlCallback, $url1,'post', {values:{bid:$bid,plat:$plat}}, 'json', {});
+		}
+		function getDataCallback(ret,err){
+			hideLoading();
+		//	J(ret);
+			if(ret){
+				if(ret.body.status){
+					$posData=ret.body.data.et.agt;
+					$flData=ret.body.data.et.pte;
+					$unit=ret.body.data.et.unit;
+					echart($posData,$flData,$unit);
+					var data=ret.body.data;
+					var interText = doT.template($("#statisticsMarsk").text());
+						$(".t_statistics").html(interText(data));
+				}
+			}else{
+				//J(err);
+			}
+		}
+		//获取POS机分类
+		function getPosFlCallback(ret,err){
+			if(ret){
+					if(ret.body.status){
+						var data=ret.body.data;
+						if(data.length>0){
+							var interText = doT.template($("#classificationMarsk").text());
+								$("select#sunDrying-classification").html(interText(data));
+								$pid=$("select#sunDrying-classification > option:selected").attr("value");
+								getAllData();
+						}
+					}else{
+						hideLoading();
+						return false;
+					}
+			}else{
+					J(err);
+			}
+		}
+	//获取所有数据
+	function getAllData(){
+		showLoading();
+		//获取数据
+		var $url=url+'Home/Sunburn/synData';
+		H.ajax(getDataCallback, $url,'post', {values:{bid:$bid,plat:$plat,pid :$pid,sDate:startDate,eDate:endDate,type:$type}}, 'json', {});
+	}
+//切换POS机分类
+function changeClassification(obj){
+	$pid=$(obj).find("option:selected").attr("value");
+	getAllData();
+}
+//切换类型
+function changeTypesof(obj){
+	$type=$(obj).find("option:selected").attr("value");
+	getAllData();
+}
+		//打开日历
+		function echart($posData,$flData,$unit){
+			var dom = document.getElementById("container");
+			var myChart = echarts.init(dom);
+			var app = {};
+			option = null;
+			app.title = '嵌套环形图';
+			option = {
+			    tooltip: {
+			        trigger: 'item',
+			        formatter: "{a} <br/>{b}: {c} ({d}%)"
+			    },
+			    legend: {
+							show:false
+			    },
+			    series: [
+			        {
+			            name:'数据统计('+$unit+')',
+			            type:'pie',
+			            selectedMode: 'single',
+			            radius: [0, '15%'],
+			            label: {
+			                normal: {
+			                    position: 'inner',
+			                    fontSize:8
+			                }
+			            },
+			            labelLine: {
+			                normal: {
+			                    show: false
+			                }
+			            },
+			            data:$posData
+			        },
+			        {
+			            name:'数据统计('+$unit+')',
+			            type:'pie',
+			            radius: ['22%', '28%'],
+			            label: {
+			                normal: {
+			                    formatter: '{a|{a}}{abg|}\n{hr|}\n {b|{b}:}{s|{c}} {per|{d}%}',
+			                    backgroundColor: '#eee',
+			                    borderColor: '#aaa',
+			                    borderWidth: 0.5,
+			                    borderRadius: 4,
+			                    // shadowBlur:3,
+			                    // shadowOffsetX: 2,
+			                    // shadowOffsetY: 2,
+			                    // shadowColor: '#999',
+			                    //padding: [0,0],
+			                    rich: {
+			                        a: {
+			                            color: '#999',
+			                            lineHeight: 22,
+			                            align: 'center',
+			                            fontSize:8
+			                        },
+			                        // abg: {
+			                        //     backgroundColor: '#333',
+			                        //     width: '100%',
+			                        //     align: 'right',
+			                        //     height: 22,
+			                        //     borderRadius: [4, 4, 0, 0]
+			                        // },
+			                        hr: {
+			                            borderColor: '#aaa',
+			                            width: '100%',
+			                            borderWidth: 0.5,
+			                            height: 0
+			                        },
+
+			                        b: {
+			                            fontSize: 8,
+			                            lineHeight: 20
+			                        },
+			                        s:{
+			                             fontSize: 8
+			                        },
+			                        per: {
+			                            color: '#eee',
+			                            backgroundColor: '#334455',
+			                            padding: [2, 1],
+			                            borderRadius: 2,
+			                            fontSize: 8
+			                        }
+			                    }
+			                }
+			            },
+			            data:$flData
+			        }
+			    ]
+			};
+			if (option && typeof option === "object") {
+					myChart.setOption(option, true);
+			}
+		}
+	</script>
+	<script type="text/javascript">
+			function p(s) {
+					return s < 10 ? '0' + s: s;
+			}
+			var myDate = new Date();
+			//获取当前年
+			var year=myDate.getFullYear();
+			//获取当前月
+			var month=myDate.getMonth()+1;
+			//获取当前日
+			var date=myDate.getDate();
+			var now=year+'-'+p(month)+"-"+p(date-6);
+			var end=year+'-'+p(month)+"-"+p(date);
+			startDate=now;
+			endDate=end;
+		var dateRange1 = new pickerDateRange('date1', {
+			stopToday : false,
+			isTodayValid : true,
+			startDate: now,
+			endDate: end,
+			needCompare : false,
+			defaultText : ' - ',
+			autoSubmit : false,
+			inputTrigger : 'input_trigger1',
+			theme : 'ta',
+			success : function(obj) {
+				startDate=obj.startDate;
+				endDate=obj.endDate;
+				getAllData();
+			}
+		});
+	</script>
+<script id="statisticsMarsk" type="text/x-dot-template">
+<!--激活统计-->
+ <div class="activationStatistics">
+	 <h2 class="bottom-line">激活统计</h2>
+	 <div class="activationStatistics-main clearfix">
+		 <div class="activationStatistics-list r-line">
+			 <div class="activationStatistics_self">{{=it.act.per}}<span>台</span></div>
+			 <div class="activationStatistics_title">我的激活</div>
+		 </div>
+		 <div class="activationStatistics-list">
+			 <div class="activationStatistics_self">{{=it.act.team}}<span>台</span></div>
+			 <div class="activationStatistics_title">伙伴激活</div>
+		 </div>
+	 </div>
+ </div>
+ <!--/激活统计-->
+ <!--交易统计-->
+ <div class="activationStatistics">
+	 <h2 class="bottom-line">交易统计</h2>
+	 <div class="activationStatistics-main clearfix">
+		 <div class="activationStatistics-list r-line">
+			 <div class="activationStatistics_self"><span>￥</span>{{=it.trd.per}}</div>
+			 <div class="activationStatistics_title">我的商户交易</div>
+		 </div>
+		 <div class="activationStatistics-list">
+			<div class="activationStatistics_self"><span>￥</span>{{=it.trd.team}}</div>
+			 <div class="activationStatistics_title">伙伴商户交易</div>
+		 </div>
+	 </div>
+ </div>
+ <!--/交易统计-->
+ <!--收益统计-->
+ <div class="activationStatistics">
+	 <h2 class="bottom-line">收益统计</h2>
+	 <div class="activationStatistics-main clearfix">
+		 <div class="activationStatistics-list r-line">
+	<div class="activationStatistics_self"><span>￥</span>{{=it.pft.per}}</div>
+			 <div class="activationStatistics_title">我的商户收益</div>
+		 </div>
+		 <div class="activationStatistics-list">
+			 <div class="activationStatistics_self"><span>￥</span>{{=it.pft.team}}</div>
+			 <div class="activationStatistics_title">伙伴商户收益</div>
+		 </div>
+	 </div>
+ </div>
+ <!--/收益统计-->
+</script>
+<script id="classificationMarsk" type="text/x-dot-template">
+	{{
+		for(var index in it){
+		}}
+			<option value="{{=it[index].id}}">{{=it[index].name}}</option>
+		{{
+		}
+	}}
+</script>
+</html>

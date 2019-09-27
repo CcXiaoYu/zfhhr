@@ -1,0 +1,244 @@
+﻿<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+	</head>
+	<body>
+		<!--subpageMain start-->
+		<section class="subpageMain">
+			<div class="popularizeMain">
+
+			</div>
+		</section>
+		<!--subpageMain end-->
+	</body>
+</html>
+<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../script/H.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/db.js"></script>
+<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../script/doT.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../script/chackLogin.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../script/refresh.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" src="../../script/rand.js"></script>
+
+<script type="text/javascript">
+		var db;
+		var userInfo;
+		var $bid,$plat;
+		var urls;
+		H.ready(function(){
+			db=api.require('db');
+				//取出用户信息
+				getUserInfo();
+		});
+//取出用户信息
+function getUserInfo(){
+	//取出用户信息
+if(!checkOpenWin()){
+	var sql='select * from kltx_login',
+			userInfo=selectSql('kltx_db', sql);
+			$bid = userInfo[0].id;
+			$plat = userInfo[0].plat;
+			//请求推广二维码
+			refresh(refreshCallback);
+				fnRefreshHeaderLoading();
+		}else{
+			var interText = doT.template($("#loginMarsk").text());
+			$(".popularizeMain").html(interText());
+			H.openWin('login','../login/login.html',{},{animation : {type : 'movein',subType : 'from_bottom',duration : 300}});
+		}
+}
+	function refreshCallback(){
+		getShareImg();
+	}
+		//请求推广二维码
+		function getShareImg(){
+			var $url=url+'Home/Qrcode/index';
+			H.ajax(getShareImgCallback, $url, 'post', {values:{bid:$bid,plat:$plat}}, 'json', {});
+		}
+			//请求推广二维码返回
+		function getShareImgCallback(ret,err){
+			api.refreshHeaderLoadDone();
+				if(ret){
+					//J(ret);
+					if(ret.body.status){
+						var imgUrl=ret.body.imgUrl;
+						//下载到本地
+						downlocation(imgUrl);
+						var interText = doT.template($("#imgMarsk").text());
+						$(".popularizeMain").html(interText(imgUrl));
+						//alert(imgUrl);
+					//	$("#shareImg").html('<img src="'+imgUrl+'"/>');
+					}else{
+						return false;
+					}
+				}else{
+					J(err);
+				}
+		}
+		//请求成功后下载到本地
+		function downlocation(url){
+			api.download({
+			    url: url,
+			    savePath: 'fs://images/share'+NumberRandom(5)+'.png',
+			    report: true,
+			    cache: true,
+			    allowResume: true
+			},function( ret, err ){
+			    if(ret){
+			         urls=ret.savePath;
+			    }
+			});
+		}
+		//保存图片到本地
+		function saveImg(){
+			api.saveMediaToAlbum({
+					path: urls
+			}, function( ret, err ){
+					if( ret ){
+							api.toast({
+										msg:'保存成功,位置:'+urls+''
+									});
+					}else{
+							api.toast({
+										msg:'保存失败'
+									});
+					}
+			});
+		}
+		//分享二维码
+		function shareImgs(){
+					var dialogBox = api.require('dialogBox');
+							dialogBox.actionMenu({
+							    rect:{
+							        h: 150
+							    },
+							    texts:{
+							         cancel: '取消'
+							    },
+							    items:[
+							    {
+							        text: '微信朋友圈',
+							        icon: 'widget://images/frindq.png'
+							    },
+							    {
+							        text: '微信好友',
+							        icon: 'widget://images/wxfrind.png'
+							    },
+									{
+							        text: '保存到相册',
+							        icon: 'widget://images/xiangce.png'
+							    }
+							    ],
+							    styles:{
+							        bg:'#FFF',
+							        column: 3,
+							        itemText: {
+							            color: '#000',
+							            size: 12,
+							            marginT:8
+							        },
+							        itemIcon:{
+							            size:40
+							        },
+							        cancel:{
+							            bg: 'fs://icon.png',
+							            color:'#000',
+							            h: 44 ,
+							            size: 14
+							        }
+							    }
+							}, function(ret){
+								var dialogBox = api.require('dialogBox');
+									dialogBox.close({
+											dialogName: 'actionMenu'
+									});
+									var $scene;
+									switch (ret.index) {
+										case 0:
+												//微信朋友圈
+											$scene='timeline';
+											shareToWx($scene);
+											break;
+										case 1:
+												//微信好友
+												$scene='session';
+												shareToWx($scene);
+											break;
+										case 2:
+												saveImg();
+											break;
+										default:
+											return;
+									}
+							});
+		}
+
+		//分享到微信
+		function shareToWx($scene){
+			var wx = api.require('wx');
+					wx.shareImage({
+						scene: $scene,
+						thumb: 'widget://a.jpg',
+						contentUrl: urls
+				}, function(ret, err) {
+						if (ret.status) {
+								H.toast('分享成功');
+						} else {
+								//H.toast(err.code);
+								/**
+								{
+												code: 0     //数字类型；
+																		//错误码：
+																		//-1（未知错误）
+																		//0（成功）
+																		//1（apiKey非法）
+																		//2（用户取消）
+																		//3（发送失败）
+																		//4（授权拒绝）
+																		//5（微信服务器返回的不支持错误）
+																		//7 (注册SDK失败)
+											}
+								**/
+								switch (err.code) {
+									case 0:
+											H.toast('分享成功');
+										break;
+										case 2:
+												H.toast('用户取消');
+											break;
+											case 3:
+													H.toast('发送失败');
+												break;
+												case 4:
+														H.toast('授权拒绝');
+													break;
+													case 5:
+															H.toast('不支持错误');
+														break;
+									default:
+										H.toast('未知错误');
+								}
+						}
+				});
+		}
+</script>
+<script id="imgMarsk" type="text/x-dot-template">
+<div id="shareImg"><img src="{{=it}}"/></div>
+</script>
+
+
+<script id="loginMarsk" type="text/x-dot-template">
+<div class="myLoginButton">
+	<a onclick="H.openWin('login','../login/login.html',{},{animation : {type : 'movein',subType : 'from_bottom',duration : 300}});">立即登录</a>
+	</div>
+</script>

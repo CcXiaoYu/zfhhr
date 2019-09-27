@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+		<style>
+			html, body {
+				background: #fff;
+			}
+        </style>
+	</head>
+	<body>
+		<section class="subpageMain">
+			<div class="FormsGroup modificationPassword">
+				<div class="line_bottom">
+					<img src="../../images/settingPasswordIcon.png" alt="旧密码" />
+					<input type="password" id="oldPaw" placeholder="请输入旧密码" emp="{empty:true}" mess="输入旧密码" />
+				</div>
+				<div class="line_bottom">
+					<img src="../../images/settingPasswordIcon.png" alt="新密码" />
+					<input type="password" id="newPaw" placeholder="请输入新密码" emp="{empty:true}" mess="输入新密码" />
+				</div>
+				<div class="line_bottom">
+					<img src="../../images/settingPasswordIcon.png" alt="确认新密码" />
+					<input type="password" id="newPwdOne" placeholder="请再次输入新密码" emp="{empty:true,compassw:'#newPaw'}" mess="再次输入新密码" />
+				</div>
+			</div>
+			<div class="buttonMain">
+				<a onclick="changePassWord();">确认修改</a>
+			</div>
+		</section>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+		<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/base64.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/rand.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	var db;
+	var userInfo;
+	var $bid,$plat;
+		H.ready(function(){
+			db=api.require('db');
+			//取出用户信息
+			var sql='select * from kltx_login',
+					userInfo=selectSql('kltx_db', sql);
+					$bid = userInfo[0].id;
+					$plat = userInfo[0].plat;
+
+		});
+		function changePassWord(){
+			var $oldPass=$("#oldPaw").val();
+			var $newPass=$("#newPaw").val();
+			var $newPwdOne=$("#newPwdOne").val();
+			//6-20位数字加字母正则
+			var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/;
+			if($oldPass!=''&&reg.test($newPass)&&$newPwdOne!=""&&$newPwdOne==$newPass){
+				showLoading();
+				var $url=url+'Home/PublicInterface/changePwd';
+				H.ajax(changePassWordCallback, $url, 'post', {values:{bid:$bid,oldPass:$oldPass,newPass:$newPass}}, 'json', {});
+			}else if($oldPass==''){
+				H.toast("请输入旧密码");
+			}else if(!reg.test($newPass)){
+				H.toast("请输入6-20位,字母加数字组合");
+			}else if($newPwdOne==""||$newPwdOne!=$newPass){
+				H.toast("两次输入的密码不符");
+			}
+
+		}
+		function changePassWordCallback(ret,err){
+			hideLoading();
+			if(ret){
+					H.toast(ret.body.msg);
+				if(ret.body.status){
+					setTimeout(function(){
+							H.closeWin();
+					},2000);
+				}else{
+					return false;
+				}
+			}else{
+				J(err);
+			}
+		}
+
+	</script>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+	</head>
+	<body>
+	<section class="subpageMain">
+			<div class="settingContainer">
+					<ul class="settingListMain">
+						<li>
+						 <a onclick="H.openWin('changePassWord','../changePassWord/changePassWord.html');" class="rightArr line_bottom"><img src="../../images/settingPasswordIcon.png"/><span>修改密码</span></a>
+						</li>
+						 <li>
+						 <a  onclick="H.openWin('settingChangePhoneOtherWayTwo','../changePhone/settingChangePhoneOtherWayTwo.html');" class="rightArr line_bottom"><img src="../../images/settingPhoneIcon.png"/><span>更换手机号</span></a>
+						</li>
+						<li>
+						 <a onclick="H.openWin('changeCard','../changeCard/changeCard.html');" class="rightArr"><img src="../../images/settingBankCardIcon.png"/><span>更换结算卡</span></a>
+						</li>
+					</ul>
+					 <ul class="settingListMain">
+						<li>
+						 <a onclick="H.openWin('help','../help/help.html');" class="rightArr line_bottom"><img src="../../images/settingHelpIcon.png"/><span>用户帮助</span></a>
+						</li>
+						<li>
+						 <a onclick="H.openWin('feedBack','../feedBack/feedBack.html');" class="rightArr"><img src="../../images/settingFeedbackIcon.png"/><span>意见反馈</span></a>
+						</li>
+					 </ul>
+					<ul class="settingListMain">
+						<li>
+						 <a onclick="clearCache();" class="line_bottom"><img src="../../images/settingCookieIcon.png"/><span>清除缓冲</span><em class="cookieEm"></em></a>
+						</li>
+						 <!-- <li>
+						 <a onclick="mam();" class="line_bottom"><img src="../../images/settingUpdataIcon.png"/><span>检查更新</span><em id='appVersion'></em></a>
+						</li> -->
+						 <li>
+						 <a onclick="outLogin();"><img src="../../images/exitIcon.png"/><span>退出登录</span></a>
+						</li>
+					</ul>
+			</div>
+	</section>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+		<script type="text/javascript" src="../../script/db.js"></script>
+<script type="text/javascript" src="../../script/dialog.js"></script>
+<script src="../../script/mam.js" type="text/javascript"></script>
+<script src="../../script/doT.min.js" type="text/javascript"></script>
+
+	<script type="text/javascript">
+	var db;
+		H.ready(function(){
+			db=api.require("db");
+			H.getCacheSize(getCacheSizeCallback);
+			//获取版本信息
+			getAppVersion();
+		});
+		//获取版本信息
+		function getAppVersion(){
+			var appVersion =	H.appVersion;
+			$("#appVersion").html('当前版本:'+appVersion);
+		}
+		//获取缓存
+		function getCacheSizeCallback(ret,err){
+			if(ret){
+				$(".cookieEm").html((ret.size / 1024).toFixed(2)+"K");
+			}else{
+					$(".cookieEm").html("0K");
+			}
+		}
+		//退出登陆
+		function outLogin(){
+			var dialogBox = api.require('dialogBox');
+					dialogBox.alert({
+						texts: {
+								title: '温馨提示',
+								content: '确定要退出登陆吗？',
+								leftBtnTitle: '取消',
+								rightBtnTitle: '确认'
+						},
+						styles: {
+								bg: '#fff',
+								w: 300,
+								title: {
+										marginT: 20,
+										icon: 'widget://res/gou.png',
+										iconSize: 40,
+										titleSize: 14,
+										titleColor: '#000'
+								},
+								content: {
+										color: '#000',
+										size: 14
+								},
+								left: {
+										marginB: 7,
+										marginL: 20,
+										w: 130,
+										h: 35,
+										corner: 2,
+										bg: '#eee',
+										size: 14,
+										color:'#000'
+								},
+								right: {
+										marginB: 7,
+										marginL: 10,
+										w: 130,
+										h: 35,
+										corner: 2,
+										bg: '#eee',
+										size: 14,
+										color:'#000'
+								}
+						}
+					}, function(ret) {
+						if (ret.eventType == 'right') {
+								var sql="delete from kltx_login";
+									executeSql('kltx_db', sql);
+									//定时方法
+									setTimeout(function(){
+											//更新用户数据
+											H.execScript('root','mine','bindUserData();');
+											H.closeWin();
+									},2000);
+									H.toast('退出成功');
+						}
+						dialogBox.close({
+								dialogName: 'alert'
+						});
+					});
+		}
+	//清除缓存
+function clearCache(ret,err){
+				api.clearCache(function() {
+					H.toast('清除完成');
+					H.getCacheSize(getCacheSizeCallback);
+			});
+}
+	</script>
+</html>
+<script id="updatePress" type="text/x-dot-template">
+		<div class="updatePress">
+			<div class="updatePress-main">
+			<h2>更新进度</h2>
+			<div class="jidu"><div class="jdt"></div></div>
+			<div class="jixiazai">已下载：<span id="press"></span>%</div>
+			</div>
+		</div>
+</script>

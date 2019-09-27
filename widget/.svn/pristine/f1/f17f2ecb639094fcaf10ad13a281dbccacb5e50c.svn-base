@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>闪付通</title>
+	<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+</head>
+
+<body>
+	<!--header start-->
+	<div class="headers">
+		<header class="subpageHeader">
+			<a class="aBackBtn" onclick="H.closeWin();"><img src="../../images/backIcon.png" /></a>交易明细
+		</header>
+	</div>
+	<section class="subpageMain">
+		<!--选择支付平台-->
+		<div class="tradingRecordFixed clearfix">
+			<div class="tradingRecordHeader">
+				<a class="rightArr"><em id="name">全部分类</em></a>
+				<select id="posid" onchange="changePid(this);">
+					</select>
+			</div>
+			<div class="search_date clearfix">
+				<input type="button" onclick="search();" value="搜索" /><input type="month" id="months" placeholder="点击选择月份" />
+			</div>
+			<div class="nav-fenge"></div>
+			<div class="CommissionRecordTab bottom-line">
+			</div>
+		</div>
+	</section>
+</body>
+<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/H.js"></script>
+<script type="text/javascript" src="../../script/db.js"></script>
+<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../script/base64.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="../../script/doT.min.js"></script>
+<script type="text/javascript">
+	var height;
+	var $bid, $plat;
+	var db;
+	H.ready(function() {
+		H.fixStatusBar(null, '.headers');
+		db = api.require('db');
+		//取出用户信息
+		var sql = 'select * from kltx_login',
+			userInfo = selectSql('kltx_db', sql);
+		$bid = userInfo[0].id;
+		$plat = userInfo[0].plat;
+		openFrameGroup();
+		getData();
+	});
+
+	function openDate(obj) {
+		api.openPicker({
+			type: 'date',
+			title: '选择日期'
+		}, function(ret, err) {
+			if (ret) {
+				alert(JSON.stringify(ret));
+			} else {
+				alert(JSON.stringify(err));
+			}
+		});
+	}
+	//请求POS分类数据
+	function getData() {
+		var $url = url + 'Home/PersonalPublic/posClass';
+		H.ajax(getDataCallback, $url, 'post', {
+			values: {
+				plat: $plat
+			}
+		}, 'json', {});
+	}
+	//请求POS分类数据返回
+	function getDataCallback(ret, err) {
+		if (ret) {
+			// J(ret);
+			// return false;
+			if (ret.body.status) {
+				var data = ret.body.data;
+				if (data.length > 0) {
+					var interText = doT.template($("#poscpid").text());
+					$("select#posid").html(interText(data));
+				} else {
+					$("select#posid").html('<option value="0">暂无分类</option>');
+				}
+			}
+		} else {
+			H.toast(err);
+		}
+	}
+	//切换分类
+	function changePid(obj) {
+		var $name = $(obj).find("option:selected").text();
+		var $id = $(obj).find("option:selected").attr("value");
+		$("#name").html($name);
+	}
+	//搜索
+	function search() {
+		var posid = $("#posid > option:selected").attr("value");
+		var months = $("#months").attr("value");
+		var selectedid = $(".CommissionRecordTab > a.Selected").index();
+		switch (selectedid) {
+			case 0:
+				H.execScript('tradingRecord', 'TradingCashback_body', 'getIncome(' + posid + ',"' + months + '",1);');
+				break;
+			case 1:
+				H.execScript('tradingRecord', 'ActivateReward_body', 'getIncome(' + posid + ',"' + months + '",1);');
+				break;
+			case 2:
+				H.execScript('tradingRecord', 'Count_body', 'getIncome(' + posid + ',"' + months + '",1);');
+				break;
+			default:
+				reuturn;
+		}
+	}
+	//搜索返回
+	function searchCallback(ret, err) {
+		if (ret) {
+			J(ret);
+		} else {
+			J(err);
+		}
+	}
+	//打开一个Frame组
+	function openFrameGroup() {
+		var h = api.systemType == 'ios' ? 20 : 25;
+		height = $(".headers").height() + 89 + h;
+		if (api.systemType == 'android') {
+			var interText = doT.template($("#isMarsk").text());
+			$(".CommissionRecordTab").html(interText());
+			isOpenFrames();
+			//noOpenFrames();
+		} else if (api.systemType == 'ios') {
+			var $url = iosUrl;
+			H.ajax(getIosCallback, $url, 'post', {}, 'json', {});
+		}
+	}
+	//请求ios审核
+	function getIosCallback(ret, err) {
+		if (ret) {
+			if (ret.body.status) {
+				var audit = ret.body.audit;
+				if (audit == '1') {
+					var interText = doT.template($("#isMarsk").text());
+					$(".CommissionRecordTab").html(interText());
+					isOpenFrames();
+
+				} else {
+					var interText = doT.template($("#noMarsk").text());
+					$(".CommissionRecordTab").html(interText());
+					noOpenFrames();
+				}
+			}
+		} else {
+		}
+	}
+	function noOpenFrames() {
+		api.openFrameGroup({
+			name: 'tradingRecord',
+			background: '#f5f5f5',
+			scrollEnabled: true,
+			rect: {
+				x: 0,
+				y: height,
+				w: 'auto',
+				h: 'auto'
+			},
+			index: 0,
+			frames: [{
+				name: 'TradingCashback_body',
+				url: 'TradingCashback_body.html',
+				bgColor: '#f5f5f5'
+			}]
+		}, function(ret, err) {
+			var index = ret.index;
+			$(".CommissionRecordTab a:eq(" + index + ")").addClass("Selected").siblings().removeClass("Selected");
+		});
+	}
+	function isOpenFrames() {
+		api.openFrameGroup({
+			name: 'tradingRecord',
+			background: '#f5f5f5',
+			scrollEnabled: true,
+			rect: {
+				x: 0,
+				y: height,
+				w: 'auto',
+				h: 'auto'
+			},
+			index: 0,
+			frames: [{
+				name: 'TradingCashback_body',
+				url: 'TradingCashback_body.html',
+				bgColor: '#f5f5f5',
+				vScrollBarEnabled:false
+			}, {
+				name: 'ActivateReward_body',
+				url: 'ActivateReward_body.html',
+				bgColor: '#f5f5f5',
+				vScrollBarEnabled:false
+			}, {
+				name: 'Count_body',
+				url: 'Count_body.html',
+				bgColor: '#f5f5f5',
+				vScrollBarEnabled:false
+			}]
+		}, function(ret, err) {
+			var index = ret.index;
+			$(".CommissionRecordTab a:eq(" + index + ")").addClass("Selected").siblings().removeClass("Selected");
+			var posid = $("#posid > option:selected").attr("value");
+			var months = $("#months").attr("value");
+			var selectedid = index;
+			switch (selectedid) {
+				case 0:
+					H.execScript('tradingRecord', 'TradingCashback_body', 'getIncome(' + posid + ',"' + months + '",1);');
+					break;
+				case 1:
+					H.execScript('tradingRecord', 'ActivateReward_body', 'getIncome(' + posid + ',"' + months + '",1);');
+					break;
+				case 2:
+					H.execScript('tradingRecord', 'Count_body', 'getIncome(' + posid + ',"' + months + '",1);');
+					break;
+				default:
+					reuturn;
+			}
+
+
+		});
+	}
+
+
+	//点击导航菜单设置index
+	function setFrameGroupIndex(id) {
+		api.setFrameGroupIndex({
+			name: 'tradingRecord',
+			index: id,
+			scroll: true
+		});
+	}
+	//更换支付平台名称
+	function changeName(name) {
+		$("#name").html(name);
+	}
+</script>
+<script id="noMarsk" type="text/x-dot-template">
+	<a href="javascript:;" class="Selected" onclick="setFrameGroupIndex(0);">交易明细</a>
+</script>
+<script id="isMarsk" type="text/x-dot-template">
+	<a href="javascript:;" class="Selected" onclick="setFrameGroupIndex(0);">交易分润</a>
+	<a href="javascript:;" onclick="setFrameGroupIndex(1);">激活返现</a>
+	<a href="javascript:;" onclick="setFrameGroupIndex(2);">笔数返现</a>
+</script>
+<script id="poscpid" type="text/x-dot-template">
+	<option value="0">全部分类</option>
+	{{ for(var index in it){ }}
+	<option value="{{=it[index].id}}">{{=it[index].name}}</option>
+	{{ } }}
+</script>
+
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../../css/css.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/Hui.css"/>
+     <link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+</head>
+<body>
+	<!--头部-->
+	<div class="wld_header">
+		<div class="wld_header_main">
+			<em onclick="H.closeWin();"><img src="../../image/icon/icon_back_nav_black.png"/></em>
+			<span>添加银行卡</span>
+		</div>
+	</div>
+<!--/头部-->
+<!--添加银行卡-->
+<div class="bankCardTip">请绑定持卡人本人的银行卡，旺利贷保证您好的用卡安全</div>
+<div class="addBankCard">
+	<ul>
+		<li class="bottom-line clearfix">
+			<span>持卡人</span>
+			<input type="text" id="userName" placeholder="请输入持卡人姓名"/>
+			<em><img src="../../image/icon/icon_inform_n.png"/></em>
+		</li>
+		<li class="bottom-line clearfix">
+			<span>卡号</span>
+			<input type="number" id="bankCardNum" placeholder="请输入银行卡卡号"/>
+		</li>
+	</ul>
+
+</div>
+<div class="bankCardTip bankCardXe">支持的银行卡和限额</div>
+
+<div class="login_button next_btn" onclick="selectArea();">下一步</div>
+<!--/添加银行卡-->
+
+</body>
+<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../script/H.js"></script>
+<script type="text/javascript" src="../../script/db.js"></script>
+<script type="text/javascript">
+	H.ready(function(){
+		H.fixStatusBar(null,'.wld_header');
+		getBindCard();
+	});
+	
+	//查询是否已绑定银行卡
+	function getBindCard(){
+		var selectRowSql='select uid from wld_login';
+		var uid=selectData('wld_db',selectRowSql).uid;
+		var $url=url+'Home/Bank/idBindCard';
+		H.ajax(getBindCardCallback, $url, 'post', {values:{uid:uid}}, 'json', {});
+	
+	}
+	//
+	function getBindCardCallback(ret,err){
+		if(ret){
+			//J(ret);
+			if(ret.body.statusCode==200){
+				var userName=ret.body.name;
+				$("#userName").attr('value',userName).attr('disabled','disabled');
+			
+			}else{
+				return false;
+			}
+		}else{
+			H.toast('网络错误');
+			setTimeout(function(){
+				H.closeWin();
+			},2000);
+		}
+	
+	}
+
+	//查询银行卡归属地
+	var bankCardNumber;
+	function selectArea(){
+		/**
+		 *	阿凡达数据API
+		 * 	名称	类型	必填	说明
+		 	key	String	是	应用APPKEY
+		 	cardnum	String	是	银行卡卡号
+		 	dtype	String	否	返回结果格式：可选JSON/XML，默认为JSON
+		 	format	Boolean	否	当返回结果格式为JSON时，是否对其进行格式化，为了节省流量默认为false，测试时您可以传入true来熟悉返回内容
+		 * 
+		 *  **/
+		bankCardNumber=$("#bankCardNum").val();
+		var $url=url+'Home/Bank/bankType';
+		H.ajax(bankCardCallback, $url, 'post', {values:{bankCardNumber:bankCardNumber}}, 'json', {});
+	}
+	
+	//查询银行卡归属地回调
+	function bankCardCallback(ret,err){
+		if(ret){
+			//J(ret);
+			//持卡人姓名
+			if(ret.body.result!=null){
+			var userName=$("#userName").val();
+				//银行名称
+				var bankName=ret.body.result.bankname;
+				//银行卡类型
+				var cardType=ret.body.result.cardtype;
+				//银行卡名称
+				var cardName=ret.body.result.cardname;
+				//银行行号
+				var bankNum=ret.body.result.banknum;
+				//打开四要素验证界面
+				H.openWin('bankCardCheck','bankCardCheck.html',{userName:userName,bankCardNumber:bankCardNumber,bankName:bankName,cardType:cardType,cardName:cardName,bankNum:bankNum},{});
+			}else{
+				H.toast(ret.body.reason);
+			
+			}
+		}else{
+			return false;
+		}
+	
+	}
+	
+</script>
+</html>

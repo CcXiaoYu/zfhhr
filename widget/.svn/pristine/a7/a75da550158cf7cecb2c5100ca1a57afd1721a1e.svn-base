@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../../css/css.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/Hui.css"/>
+     <link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+
+
+</head>
+<body>
+	<!--头部-->
+	<div class="wld_header">
+		<div class="wld_header_main">
+			<em onclick="H.closeWin();"><img src="../../image/icon/icon_back_nav_black.png"/></em>
+			<span>添加银行卡</span>
+		</div>
+	</div>
+<!--/头部-->
+<!--添加银行卡-->
+<div class="bankCardTip">请绑定持卡人本人的银行卡，旺利贷保证您好的用卡安全</div>
+<div class="addBankCard">
+	<ul>
+		<li class="bottom-line clearfix">
+			<span>身份证号</span>
+			<input type="text" id="idNumber" placeholder="请输入身份证号"/>
+			<em><img src="../../image/icon/icon_inform_n.png"/></em>
+		</li>
+		<li class="bottom-line clearfix">
+			<span>预留手机号</span>
+			<input type="tel" maxlength="11" id="checkTel" id="bankCardNum" placeholder="请输入银行预留手机号"/>
+		</li>
+	</ul>
+
+</div>
+<div class="bankCardTip bankCardXe">支持的银行卡和限额</div>
+
+<div class="login_button next_btn" id="bind" onclick="postBind();">提交绑定</div>
+<!--/添加银行卡-->
+
+</body>
+<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../script/H.js"></script>
+
+<script type="text/javascript">
+	var flag=true;
+	//持卡人姓名
+	var userName;
+	//银行卡号
+	var bankCardNumber;
+	//银行名称
+	var bankName;
+	//银行卡类型
+	var cardType;
+	//银行卡名称
+	var cardNmae;
+	//银行行号
+	var bankNum;
+	//uid
+	var wlduid
+	//身份证号
+	var idNumber;
+	//手机号
+	var checkTel;
+	H.ready(function(){
+		H.fixStatusBar(null,'.wld_header');
+		//持卡人姓名
+		userName=H.pageParam.userName;
+		//银行卡号
+		bankCardNumber=H.pageParam.bankCardNumber;
+		//银行名称
+		bankName=H.pageParam.bankName;
+		//银行卡类型
+		cardType=H.pageParam.cardType;
+		//银行卡名称
+		cardName=H.pageParam.cardName;
+		//银行行号
+		bankNum=H.pageParam.bankNum;
+		//uid
+		wlduid=H.getStorage('wlduid');
+		//alert(bankCardNumber+"__"+bankName+"__"+cardType+"__"+cardName+"__"+bankNum+"__"+wlduid);
+	});
+
+	function postBind(){
+		idNumber=$("#idNumber").val();
+		checkTel=$("#checkTel").val();
+
+		if(!testIdNum(idNumber)){
+            H.toast('身份证号不正确');
+
+		}else if(!testPhone(checkTel)){
+            H.toast('手机号不正确');
+		}else{
+			/**
+			 *名称	类型	必填	示例值	描述
+			accName	String	是	姓名	姓名
+			cardPhone	String	是	手机号	手机号
+			certificateNo	String	是	身份证号	身份证号
+			cardNo	String	是	银行卡号	银行卡卡号
+			 *  **/
+			if(flag){
+				flag=false;
+				$("#bind").html('验证中...');
+				var $url=url+"Home/Bank/bankVerification";
+				H.ajax(checkBankCardCallback, $url, 'post', {values:{accName:userName,cardPhone:checkTel,certificateNo:idNumber,cardNo:bankCardNumber}}, 'json', {});
+			}
+		}
+
+	}
+	//
+	function checkBankCardCallback(ret,err){
+		if(ret){
+			//alert(JSON.stringify(ret));
+			//错误码
+			var code=ret.body.code;
+			//状态码
+			var respCode=ret.body.result.respCode;
+			//状态描述
+			//var respMsg=ret.body.result.respMsg;
+			/**
+			 *名称	类型	示例值	描述
+			respCode	string	000000	状态码
+			serialNo	string	5590601f953b512ff9695bc58ad49269	流水号
+			respMsg	string	验证通过	验证说明
+			comfrom	string	jd_query	来源渠道
+			success	string	true	验证结果。true：通过，false：未通过
+			 *
+			 *  **/
+			//成功
+			//000000
+			//身份证号有误
+			//899992
+			//银行卡预留手机号有误,持卡人姓名有误,卡号有误
+			//899999
+			//var
+			/**
+			 *错误码	说明
+			10000	查询成功
+			10001	错误的请求appkey
+			11010	商家接口调用异常，请稍后再试
+			11030	商家接口返回格式有误
+			10003	不存在相应的数据信息
+			10004	URL上appkey参数不能为空
+			10010	接口需要付费，请充值
+			10020	万象系统繁忙，请稍后再试
+			10030	调用万象网关失败， 请与万象联系
+			10040	超过每天限量，请明天继续
+			10050	用户已被禁用
+			10060	提供方设置调用权限，请联系提供方
+			10070	该数据只允许企业用户调用
+			10090	文件大小超限，请上传小于1M的文件
+			 *
+			 *  **/
+			switch(code){
+				case '10000':
+					switch(respCode){
+						//验证成功
+						case '000000':
+							$("#bind").html("正在绑定...");
+							var $url=url+"Home/Bank/bankAdd";
+							H.ajax(bindBankCardCallback, $url, 'post', {values:{uid:wlduid,name:userName,tel:checkTel,certificateNo:idNumber,bankCardNumber:bankCardNumber,bankName:bankName,cardName:cardName,cardType:cardType,bankNum:bankNum}}, 'json', {});
+							break;
+						//身份证号有误
+						case '899992':
+							 H.toast('身份证号有误');
+							 flag=true;
+							 $("#bind").html("提交绑定");
+							break;
+						//银行卡预留手机号有误,持卡人姓名有误,卡号有误
+						case '899999':
+							H.toast('预留手机号或持卡人姓名或卡号有误');
+							flag=true;
+							$("#bind").html("提交绑定");
+							break;
+						default:
+						 	H.toast('验证失败，错误代码:'+respCode+'，请联系客服');
+						 	flag=true;
+						 	$("#bind").html("提交绑定");
+							break;
+					}
+					break;
+				default:
+					H.toast('查询失败，错误代码:'+code+'，请联系客服');
+					break;
+			}
+		}else{
+			H.toast(''+JSON.stringify(err)+'');
+		}
+	}
+	//绑定成功回调
+	function bindBankCardCallback(ret,err){
+		flag=true;
+		if(ret){
+			//alert(JSON.stringify(ret));
+
+			if(ret.status){
+				if(ret.body.statusCode==200){
+					H.execScript('bankCard_header','bankCardList_body','getBankCardList();');
+					setTimeout(function(){
+						H.closeToWin("bankCard_header");
+					},1000);
+					$("#bind").html("绑定成功");
+				}else{
+					$("#bind").html("提交绑定");
+				}
+
+				H.toast(''+ret.body.message+'');
+			}
+		}else{
+			 H.toast(''+JSON.stringify(err)+'');
+		}
+	}
+	//手机号验证
+	function testPhone(tel){
+		var reg=/^1[34578]\d{9}$/;
+			if(reg.test(tel)){
+				return true;
+			}else{
+				return false;
+			}
+	}
+	//身份证号验证
+	function testIdNum(idNum){
+		var reg=/(^\d{15}$)|(^\d{17}([0-9]|X)$)/;
+			if(reg.test(idNum)){
+				return true;
+			}else{
+				return false;
+			}
+	}
+
+
+
+</script>
+</html>

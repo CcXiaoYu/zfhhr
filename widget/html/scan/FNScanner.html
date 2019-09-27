@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html manifest="../cache.manifest">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>小洪干洗-扫码取件</title>
+    <link rel="stylesheet" type="text/css" href="../../css/css.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/Hui.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css"/>
+</head>
+<body>
+</body>
+</html>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../script/H.js"></script>
+<script type="text/javascript" src="../../script/db.js"></script>
+<script type="text/javascript" src="../../script/loading1.js"  charset="utf-8"></script>
+<script type="text/javascript">
+  var flag = 0;
+	var flags=true;
+	var db;
+	var userInfo;
+	var $bid,$plat,subid;
+	H.ready(function(){
+			db=api.require('db');
+			//取出用户信息
+			var sql='select * from kltx_login',
+					userInfo=selectSql('kltx_db', sql);
+					$bid = userInfo[0].id;
+					$plat = userInfo[0].plat;
+					subid=H.getStorage("subid");
+      		openFNS();
+	});
+  //打开扫描器
+  function openFNS(){
+    //打开二维码扫描器
+			var obj = api.require('FNScanner');
+			obj.openView({
+				rect : {
+					x : 0,
+					y : 0,
+					w : api.winWidth,
+					h : api.winHeight
+				},
+				sound : 'widget://sound/fnscanner.wav',
+				autorotation : false,
+				saveToAlbum : false,
+				fixedOn : 'FNScanner',
+				fixed : true
+			}, function(ret) {
+				if (ret) {
+					if(ret.eventType=='success'){
+					if(flags){
+						flags=false;
+						var did=ret.content;
+						if(did!=undefined){
+								postPosCode(did);
+						}
+					}
+					}
+				}
+			});
+  }
+//请求拨码
+function postPosCode(did){
+	showLoading();
+		var $url=url+'Home/PersonalPublic/scanDialCode';
+			H.ajax(postPosCodeCallback, $url, 'post', {values:{bid:$bid,plat:$plat,subId:subid,terminal:did}}, 'json', {});
+}
+//请求拨码返回
+function postPosCodeCallback(ret,err){
+	hideLoading();
+	flags=true;
+	if(ret){
+		//J(ret);
+			H.toast(ret.body.msg);
+	}else{
+		J(err);
+	}
+}
+
+//关闭
+  function closeView() {
+			var obj = api.require('FNScanner');
+			obj.closeView();
+		}
+//开灯
+		function light() {
+			var obj = api.require('FNScanner');
+			if (!flag) {
+				obj.switchLight({
+					status : 'on'
+				});
+				flag = 1;
+				api.execScript({
+				    name: 'scanMain',
+				    frameName: 'FNScannerBottomBtn',
+				    script: 'tabImg(2);'
+				});
+
+
+			} else {
+				obj.switchLight({
+					status : 'off'
+				});
+				flag = 0;
+				api.execScript({
+						name: 'scanMain',
+						frameName: 'FNScannerBottomBtn',
+						script: 'tabImg(1);'
+				});
+			}
+		}
+
+</script>

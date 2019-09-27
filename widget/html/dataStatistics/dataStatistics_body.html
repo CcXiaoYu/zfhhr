@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>闪付通</title>
+	<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+</head>
+
+<body>
+	<div class="gushitubiao" id="chartss" style=" height:300px;background-color:#eee;">
+
+	</div>
+</body>
+<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../script/H.js"></script>
+<script type="text/javascript" src="../../script/db.js"></script>
+
+<script src="../../script/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	var db;
+	var userInfo;
+	var $bid, $plat;
+	H.ready(function() {
+		$("#chartss").width(api.winWidth);
+		db = api.require('db');
+		//取出用户信息
+		var sql = 'select * from kltx_login',
+			userInfo = selectSql('kltx_db', sql);
+		$bid = userInfo[0].id;
+		$plat = userInfo[0].plat;
+		//请求团队数量
+		dataStatisticss();
+	});
+
+	//数据统计图表
+	function dataStatisticss() {
+		var dom = document.getElementById("chartss");
+		var myChart = echarts.init(dom);
+		var app = {};
+		option = null;
+		var posList = [
+				'left', 'right', 'top', 'bottom',
+				'inside',
+				'insideTop', 'insideLeft', 'insideRight', 'insideBottom',
+				'insideTopLeft', 'insideTopRight', 'insideBottomLeft', 'insideBottomRight'
+		];
+
+		app.configParameters = {
+				rotate: {
+						min: -90,
+						max: 90
+				},
+				align: {
+						options: {
+								left: 'left',
+								center: 'center',
+								right: 'right'
+						}
+				},
+				verticalAlign: {
+						options: {
+								top: 'top',
+								middle: 'middle',
+								bottom: 'bottom'
+						}
+				},
+				position: {
+						options: echarts.util.reduce(posList, function(map, pos) {
+								map[pos] = pos;
+								return map;
+						}, {})
+				},
+				distance: {
+						min: 0,
+						max: 100
+				}
+		};
+
+		app.config = {
+				rotate: 90,
+				align: 'left',
+				verticalAlign: 'middle',
+				position: 'insideBottom',
+				distance: 15,
+				onChange: function() {
+						var labelOption = {
+								normal: {
+										rotate: app.config.rotate,
+										align: app.config.align,
+										verticalAlign: app.config.verticalAlign,
+										position: app.config.position,
+										distance: app.config.distance
+								}
+						};
+						myChart.setOption({
+								series: [{
+										label: labelOption
+								}, {
+										label: labelOption
+								}, {
+										label: labelOption
+								}, {
+										label: labelOption
+								}]
+						});
+				}
+		};
+
+
+		var labelOption = {
+				normal: {
+						show: true,
+						position: app.config.position,
+						distance: app.config.distance,
+						align: app.config.align,
+						verticalAlign: app.config.verticalAlign,
+						rotate: app.config.rotate,
+						formatter: '{c}  {name|{a}}',
+						fontSize: 10,
+						rich: {
+								name: {
+										textBorderColor: '',
+										color:'#fff'
+								}
+						}
+				}
+		};
+
+		option = {
+				color: ['#4cabce', '#e5323e'],
+				tooltip: {
+						trigger: 'axis',
+						axisPointer: {
+								type: 'shadow'
+						}
+				},
+				legend: {
+						data: ['团队数量', '创造收益']
+				},
+				toolbox: {
+						show: true,
+						orient: 'vertical',
+						left: 'right',
+						top: 'center',
+						feature: {
+								mark: {
+										show: true
+								},
+								dataView: {
+										show: true,
+										readOnly: false
+								},
+								magicType: {
+										show: true,
+										type: ['line', 'bar', 'stack', 'tiled']
+								},
+								restore: {
+										show: true
+								},
+								saveAsImage: {
+										show: true
+								}
+						}
+				},
+				calculable: true,
+				xAxis: [{
+						type: 'category',
+						axisTick: {
+								show: false
+						},
+						data: ['直属', '间属']
+				}],
+				yAxis: [{
+						type: 'value'
+				}],
+				series: [{
+						name: '团队数量',
+						type: 'bar',
+						barGap: 0,
+						label: labelOption,
+						data: [320, 332]
+				}, {
+						name: '创造收益',
+						type: 'bar',
+						label: labelOption,
+						data: [220, 182]
+				}]
+		};
+		if (option && typeof option === "object") {
+			myChart.setOption(option, true);
+		}
+	}
+</script>
+
+</html>

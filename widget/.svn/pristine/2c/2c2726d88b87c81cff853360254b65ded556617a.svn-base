@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+	</head>
+	<body>
+		<!--header start-->
+		<div class="headers">
+			<header class="subpageHeader"><a class="aBackBtn" onclick="H.closeWin();"><img src="../../images/backIcon.png"/></a>实名认证
+			</header>
+	</div>
+		<!--header end-->
+		<section class="subpageMain">
+			<div class="noticeTip">
+			 <img src="../../images/noticeIcon.png"/>
+			 请填写您的真实信息，一经通过将无法修改
+			</div>
+			<div class="checkStep">
+			 <div>
+			 <em class="stepOneIcon"></em>
+			 <p>填写基本信息</p>
+			 </div>
+			 <div>
+			 <em class="stepTwoIcon"></em>
+			 <p>绑定结算卡</p>
+			 </div>
+			</div>
+
+			<div class="FormsGroup">
+			 <div class="line_bottom">
+				 <input type="text" id="name" placeholder="请输入您的真实姓名" emp="{empty:true}" mess="输入真实姓名"/>
+			 </div>
+			 <div>
+				 <input type="text" id="idCard" placeholder="请输入您的身份证号" emp="{empty:true,sfz:true}" mess="输入身份证号"/>
+			 </div>
+			</div>
+			<div class="buttonMain">
+			 <a class="submitBtn" onclick="next();">下一步</a>
+			</div>
+		</section>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+		<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	var db;
+	var userInfo;
+	var $bid,$plat;
+		H.ready(function(){
+					H.fixStatusBar(null,'.headers');
+					db=api.require('db');
+				    //查询是否已经认证过,认证过绑定信息
+					certBind();
+					//取出用户信息
+					var sql='select * from kltx_login',
+				        userInfo=selectSql('kltx_db', sql);
+				    $bid = userInfo[0].id;
+						  $plat = userInfo[0].plat;
+
+
+		});
+//查询是否已经认证过,认证过绑定信息
+function certBind(){
+	var certificationInfo = H.getStorage('certificationInfo');
+		if(certificationInfo!=undefined){
+				var $name=certificationInfo.name,
+					$idCard=certificationInfo.idCard;
+					$("#name").val($name);
+					$("#idCard").val($idCard);
+		}
+}
+
+//验证
+function next(){
+	if ($('[emp]').checkinput()){
+		var name=$("#name").val();
+		var idCard=$("#idCard").val();
+			var info=H.getStorage('certificationInfo')==undefined ? {} : H.getStorage('certificationInfo');
+			info.name=name;
+			info.idCard=idCard;
+		 H.setStorage('certificationInfo',info);
+		 //提交信息
+		 postInfo();
+
+	}
+}
+//提交信息
+function postInfo(){
+	showLoading();
+	var $name=$("#name").val();
+	var $idCard=$("#idCard").val();
+	var $url=url+'Home/AuthManage/RealNameAuth';
+	H.ajax(postInfoCallBack, $url, 'post', {values:{bid:$bid,name:$name,plat:$plat,idCard:$idCard}}, 'json', {});
+}
+//提交信息返回
+function postInfoCallBack(ret,err){
+	hideLoading();
+	if(ret){
+			H.toast(ret.body.msg);
+			if(ret.body.status){
+			    var $NAME = $("#name").val();
+				H.openWin('certificationThree','../certificationCenter/certificationThree.html',{realName:$NAME});
+			}else{
+//				J(err);
+			// H.openWin('certificationTwo','../certificationCenter/certificationTwo.html');
+			return false;
+	}
+}
+}
+	</script>
+</html>

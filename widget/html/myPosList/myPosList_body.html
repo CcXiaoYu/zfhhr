@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css?4564" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+	</head>
+	<body>
+		<section class="subpageMain">
+			<div class="myPosListMain">
+				<ul class="myPosListUl">
+				</ul>
+			</div>
+			<div class="loadings" style="display:none;">加载中...</div>
+		</section>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/doT.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/refresh.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	var db;
+	var userInfo;
+	var $bid,$plat,$page=1,flag=true;
+		apiready = function() {
+			db=api.require('db');
+			//取出用户信息
+			var sql='select * from kltx_login',
+					userInfo=selectSql('kltx_db', sql);
+					$bid = userInfo[0].id;
+					$plat = userInfo[0].plat;
+					refresh(refreshCallback);
+					fnRefreshHeaderLoading();
+				  up_load();
+		}
+		//下拉刷新
+ function refreshCallback(){
+	 	//请求我的终端码
+		$page=1;
+		getPosCode();
+ }
+ var $type=1,$month='',$id='';
+ //获取终端状态
+ function getPosType(type){
+	$page=1;
+ 	flag=true;
+		$type=type==undefined?"":type;
+		getPosCode();
+ }
+ //获取时间
+ function getMonth(month){
+	$page=1;
+ 	flag=true;
+	 $month=month==undefined?"":month;
+	 getPosCode();
+ }
+ //获取分类ID
+function getID(id){
+	$id = id;
+	$page=1;
+	flag=true;
+	getPosCode();
+}
+		//请求我的终端码
+		function getPosCode(){
+			var $url=url+'Home/PersonalPublic/posDialCode';
+			H.ajax(getPosCodeCallback, $url, 'post', {values:{bid:$bid,plat:$plat,page:$page,status:$type,classid:$id,dates:$month}}, 'json', {});
+		}
+		function getPosCodeCallback(ret,err){
+			 api.refreshHeaderLoadDone();
+				if(ret){
+					J(ret);
+					if(ret.body.status){
+					var data=ret.body.data;
+					var interText = doT.template($("#posCodeMarsk").text());
+					if(data.length>0){
+						if($page==1){
+								$(".myPosListUl").html(interText(data));
+							}else{
+								$(".myPosListUl").append(interText(data));
+							}
+							$(".loadings").hide();
+								$page++;
+				}else{
+					if($page==1){
+						$(".myPosListUl").html('<div style="text-align:center;height:50px; line-height:50px;">暂无数据</div>');
+					}else{
+						 $(".loadings").show().html('<div style="text-align:center;height:50px; line-height:50px;">暂无数据</div>');
+					}
+				}
+						flag=true;
+				}else{
+					return false;
+				}
+				}else{
+					J(err);
+				}
+
+		}
+
+		//上划加载
+		 function up_load() {
+			 api.addEventListener({
+				 name : 'scrolltobottom'
+			 }, function(ret, err) {
+				 if(flag){
+					 	$(".loadings").show();
+					 getPosCode();
+					 flag=false;
+				 }
+
+			 });
+		 }
+		 //绑定商户
+		 function bindBus(pos){
+			 var dialogBox = api.require('dialogBox');
+						dialogBox.input({
+							 keyboardType: 'default',
+							 texts: {
+									 title: '绑定商户手机号',
+									 placeholder: '请输入商户手机号',
+									 leftBtnTitle: '取消',
+									 rightBtnTitle: '确定'
+							 },
+							 styles: {
+									 bg: '#fff',
+									 corner: 2,
+									 w: 300,
+									 h: 240,
+									 title: {
+											 h: 60,
+											 alignment: 'center',
+											 size: 16,
+											 color: '#005bd8'
+									 },
+									 input: {
+											 h: 60,
+											 marginT: 6,
+											 textSize: 20,
+											 textColor: '#000'
+									 },
+									 dividingLine: {
+											 width: 0.5,
+											 color: '#696969'
+									 },
+									 left: {
+											 bg: 'rgba(0,0,0,0)',
+											 color: '#999',
+											 size: 14
+									 },
+									 right: {
+											 bg: 'rgba(0,0,0,0)',
+											 color: '#007FFF',
+											 size: 14
+									 }
+							 }
+						}, function(ret) {
+							 if (ret.eventType == 'right') {
+									var phone=ret.text;
+
+									var reg=/^1[3|4|5|7|8][0-9]\d{4,8}$/;
+									if(reg.test(phone)){
+									//绑定商户
+									posBindBus(pos,phone);
+								}else{
+									H.toast("手机号码有误");
+									return false;
+								}
+							 }
+							 dialogBox.close({
+									 dialogName: 'input'
+							 });
+						});
+		 }
+		 //绑定商户
+		 function posBindBus(pos,phoneNum){
+			 var $url=url+'Home/PersonalPublic/bindPos';
+			 H.ajax(bindBusCallback, $url, 'post', {values:{bid:$bid,plat:$plat,terminal:pos,phone:phoneNum}}, 'json', {});
+		 }
+			//绑定商户返回
+		 function bindBusCallback(ret,err){
+			 if(ret){
+				  H.toast(ret.body.msg);
+			 }else{
+					J(err);
+			 }
+		 }
+	</script>
+		<script id="posCodeMarsk" type="text/x-dot-template">
+			{{
+				for(var index in it){
+				}}
+						<li class="{{?it[index].status=='1'}}unBindedLi{{?? it[index].status=='2'}}BindedLi{{?? it[index].status=='3'}}agentLi{{?}}">
+						{{? it[index].status=='1' && it[index].bingtype=='2'}}
+							<a class="bindbtn" onclick="bindBus('{{=it[index].terminal}}');">绑定商户</a>
+						{{?}}
+							<div class="myPosListLiHeader">
+								<span><b><img src="{{=it[index].posurl}}"/></b>{{=it[index].title}}</span>
+								<em>{{=it[index].statusn}}</em>
+							</div>
+							<div class="myPosListNumber">
+								<p>
+									终端号
+								</p>
+								<div class="line_bottom">
+									{{=it[index].terminal}}
+								</div>
+							</div>
+							{{? it[index].status=='3'}}
+							<div class="myPosAgent">
+								<span> 代理商：{{=it[index].agent}} </span>
+							</div>
+							{{?? it[index].status=='2'}}
+							<div class="myPosAgent">
+								<span> 商户名：{{=it[index].busname}} </span>
+							</div>
+							{{?}}
+							<div class="myPosGetTime">
+								<p>
+									领机时间：{{=it[index].addtime}}
+								</p>
+								{{? it[index].status=='3'}}
+								<p>
+									拨码时间：{{=it[index].diatime}}
+								</p>
+								{{?? it[index].status=='2'}}
+								<p>
+									绑定时间：{{=it[index].bindtime}}
+								</p>
+								<p>
+									绑定手机号：{{=it[index].phone}}
+								</p>
+								{{?}}
+							</div>
+						</li>
+				{{
+				}
+			}}
+		</script>
+</html>

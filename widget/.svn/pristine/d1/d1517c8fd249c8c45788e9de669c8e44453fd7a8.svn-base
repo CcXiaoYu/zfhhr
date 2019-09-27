@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>支付合伙人</title>
+	<link rel="stylesheet" type="text/css" href="../../../css/reset.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/Hui.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/Rcommon.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/loading1.css" />
+	<style>
+	  html,body{
+		  background:#fff;
+	  }
+	</style>
+</head>
+
+<body>
+	<section class="subPageSection">
+		<div class="confirmContainer">
+			<!-- 收货地址 -->
+			<!-- addressOn  -->
+			<div class="confirmAddressMain line_bottom"></div>
+			<!-- 产品 -->
+			<div class="confirmPorMain">
+				<div>
+					<img src="" alt="产品" id="porImg">
+				</div>
+				<div>
+					<h3 class="ellipsis" id="porName"></h3>
+					<span id="reMark"></span>
+					<p>
+						<span id="proPric"></span>
+						<em id="bookNum"></em>
+					</p>
+				</div>
+			</div>
+			<!-- <div class="confirmDepositBox">
+				<span>支付押金</span>
+				<em>￥150.00</em>
+			</div> -->
+			<!-- 流程说明 -->
+			<!-- <div class="spacingNav"></div> -->
+			<!-- <div class="confirmProcessMain">
+				<img src="../../../images/confirmPressImg.png" alt="流程">
+				<div>
+					<h3>为什么收押金？</h3>
+					<p>为什么收押金为什么收押金为什么收押金为什么收押金为什么收押金为什么收押金为什么收押金为什么收押金为什么收押金为什么收押金为什么收押金</p>
+				</div>
+			</div> -->
+			<!-- 支付方式 -->
+			<div class="spacingNav"></div>
+			<div class="payWayMain">
+				<span><img src="../../../images/wxfrind.png" alt="weixin">微信支付</span>
+				<em>需支付：<b id="totalMoney"></b></em>
+			</div>
+		</div>
+	</section>
+	<a href="javascript:;" class="footerBtn">确认支付</a>
+</body>
+<script type="text/javascript" src="../../../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../../script/H.js"></script>
+<script src="../../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../script/doT.min.js" type="text/javascript"></script>
+<script src="../../../script/refresh.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	var $plat,$addressId,$bid,$porId,$porImg,$porName,$reMark,$proPric,$bookNum,$totalMoney,PayTimer;
+	var $isAddress=false;
+	H.ready(function () {
+		$plat = H.pageParam.platId;
+		$bid = H.pageParam.Bid;
+		$porId = H.pageParam.porId;
+		$porImg = H.pageParam.porImg;
+		$porName = H.pageParam.porName;
+		$reMark = H.pageParam.reMark;
+		$proPric = H.pageParam.proPric;
+		$bookNum = H.pageParam.bookNum;
+		$totalMoney = parseFloat($proPric) * parseInt($bookNum);
+		dftAddress();
+    $('#porImg').attr('src',$porImg);
+		$('#porName').text($porName);
+		$('#reMark').text($reMark);
+		$('#proPric').text('单价：'+$proPric);
+		$('#bookNum').text('x'+$bookNum);
+		$('#totalMoney').text('￥'+$totalMoney);
+		//确认支付
+		$('.footerBtn').click(function(){
+			if($isAddress){
+				confirmPay();
+			}else{
+				H.toast('请选择收货地址');
+			}
+		})
+	});
+	// 默认收货地址
+	function dftAddress(){
+		var $url = url + "Colorder/Holorder001/dftaddrData";
+		H.ajax(getDftAddressCallBack, $url, 'post', {
+			values: {
+				bid: $bid
+			}
+		}, 'json', {});
+	}
+	function getDftAddressCallBack(ret,err){
+     if(ret){
+			 if (ret.body.statusCode==200) {
+		 		var data = ret.body.datas;
+				$addressId = data.id;
+		 		var interText = doT.template($("#addressMarsk").text());
+				$(".confirmAddressMain").html(interText(data));
+				if(data == ''){
+					$('.confirmAddressMain').addClass('addressOn');
+					$isAddress = false;
+				}else{
+          $isAddress = true;
+					$('.confirmAddressMain').removeClass('addressOn');
+				}
+			}
+		 }
+	}
+	//确认支付
+	function confirmPay(){
+		showLoading();
+		var $url = url + "Colorder/Holorder002/addorder";
+		H.ajax(getConfirmPayCallBack, $url, 'post', {
+			values: {
+				bid :$bid,　//商户ID
+				plat : $plat,　//平台ID
+				id :$porId,　//产品ID
+				num :$bookNum,　//订购数量
+				addrid :$addressId　//收货地址ID
+			}
+		}, 'json', {});
+	}
+	function getConfirmPayCallBack(ret,err){
+		if(ret){
+			hideLoading();
+			if(ret.body.statusCode==200){
+				  var $orderNum = ret.body.datas;
+          H.openWin('payCode','../payCode/payCode.html',{orderNum:$orderNum,Rname:$porName,Rnum:$bookNum})
+			}
+		}
+	}
+	function closePage(){
+		H.closeWin();
+	}
+</script>
+<script id="addressMarsk" type="text/x-dot-template">
+	{{? it!=''}}
+		 <div class="confirmAddressBox" onclick = "H.openWin('selectAddress','../selectAddress/selectAddress.html')">
+	 		<div>
+	 			<span>{{=it.name}}</span>
+	 			<em>{{=it.phone}}</em>
+	 		</div>
+	 		<p>{{=it.address}}{{=it.detail}}</p>
+	 	</div>
+	{{??}}
+		<a href="javascript:;" onclick = "H.openWin('selectAddress','../selectAddress/selectAddress.html')">添加收货地址</a>
+	{{?}}
+	</script>
+</html>

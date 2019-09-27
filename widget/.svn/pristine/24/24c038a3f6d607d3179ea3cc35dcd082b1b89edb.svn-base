@@ -1,0 +1,145 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>闪付通</title>
+    <link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+      <link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+</head>
+<body>
+  <!--subpage start-->
+     <section class="subpageMain">
+       <div class="informationList" id='informationList'>
+        <!--暂无数据-->
+        <ul class="informationListUl">
+        </ul>
+        <div class="loadings">加载中...</div>
+       </div>
+     </section>
+</body>
+<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../script/H.js"></script>
+<script type="text/javascript" src="../../script/db.js"></script>
+<script src="../../script/doT.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../script/common.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/refresh.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../../script/chackLogin.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+var db;
+var userInfo;
+var $bid,$plat,$page=1;
+var flag=true;
+  H.ready(function(){
+    db=api.require('db');
+    //取出用户信息
+      getUserInfo();
+  });
+  //取出用户信息
+  function getUserInfo(){
+    if(!checkOpenWin()){
+      var sql='select * from kltx_login';
+          userInfo=selectSql('kltx_db', sql);
+          $bid = userInfo[0].id;
+          $plat = userInfo[0].plat;
+          refresh(refreshCallback);
+          fnRefreshHeaderLoading();
+          up_load();
+      }else{
+          var interText = doT.template($("#loginMarsk").text());
+          $("#informationList ul").html(interText());
+          H.openWin('login','../login/login.html',{},{animation : {type : 'movein',subType : 'from_bottom',duration : 300}});
+      }
+  }
+  //下拉刷新
+  function refreshCallback(){
+      $page=1;
+      getMessageData();
+  }
+  function getMessageData(){
+    //alert($page);
+    var $url=url+"Home/PublicInterface/message";
+    H.ajax(getMessageCallBack, $url, 'post', {values:{plat:$plat,page:$page}}, 'json', {});
+  }
+  function getMessageCallBack(ret,err){
+     hideLoading();
+     api.refreshHeaderLoadDone();
+   if(ret){
+     //J(ret);
+        if(ret.body.status){
+            var data=ret.body.data;
+            var interText = doT.template($("#messageMarsk").text());
+            if(data.length>0){
+          if($page==1){
+  					$("#informationList ul").html(interText(data));
+          }else{
+            $("#informationList ul").append(interText(data));
+            $(".loadings").removeClass('loadingsShow');
+          }
+          flag=true;
+          $page++;
+          }else{
+              $(".loadings").addClass('loadingsShow').html("已经到底了");
+          }
+
+        }else{
+          return false;
+        }
+   }else{
+     J(err);
+   }
+  }
+  //上划加载
+   function up_load() {
+     api.addEventListener({
+       name : 'scrolltobottom'
+     }, function(ret, err) {
+          if(flag){
+             $(".loadings").addClass('loadingsShow');
+             getMessageData();
+             flag=false;
+         }
+       //  alert(1111111111);
+       //$page++;
+
+     });
+   }
+</script>
+<script id="messageMarsk" type="text/x-dot-template">
+
+    {{
+      for(var index in it){
+      }}
+          {{? it.length>0}}
+          <li>
+               <a onclick = "H.openWin('messageDetail','../message/messageDetail.html',{Mid:{{=it[index].id}}});">
+                 <h3>{{=it[index].title}}</h3>
+                 <time>TIME:{{=it[index].sendTime}}</time>
+                 <div>
+                   <img src="{{=it[index].imgUrl}}"/>
+                   <p>{{=it[index].content}}</p>
+                 </div>
+                 <em>查看全文</em>
+               </a>
+              </li>
+              {{??}}
+              <li class="teamLevelOneNoData">
+                 <div class="noDataaMain">
+                       <img src="../../images/noDataIcon.png"/>
+                       <p>暂无数据</p>
+                       </div>
+                </li>
+              {{?}}
+      {{
+      }
+    }}
+	</script>
+  <script id="loginMarsk" type="text/x-dot-template">
+  <div class="myLoginButton">
+    <a onclick="H.openWin('login','../login/login.html',{},{animation : {type : 'movein',subType : 'from_bottom',duration : 300}});">立即登录</a>
+    </div>
+  </script>
+</html>

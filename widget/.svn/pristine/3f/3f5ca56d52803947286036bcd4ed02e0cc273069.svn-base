@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+		<style>
+			#title{display:block; width:70%; margin-left: 25%; text-align: left;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;-webkit-text-overflow:ellipsis;}
+		</style>
+	</head>
+	<body>
+		<!--header start-->
+		<div class="headers">
+			<header class="subpageHeader"><a class="aBackBtn" onclick="historyBack();"><img src="../../images/backIcon.png"/></a><a class="aBackBtn" style="margin-left:40px;top:3px;" onclick="H.closeWin();"><img src="../../images/closeIcon.png" style="width:15px; height:15px;"/></a><span id="title"></span>
+			</header>
+	</div>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+		<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/base64.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/rand.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	var height;
+	var db;
+	var userInfo;
+	var $bid,$plat;
+		H.ready(function(){
+					H.fixStatusBar(null,'.headers');
+					db=api.require('db');
+					height=$(".headers").height()+25;
+					var sql='select * from kltx_login';
+		          userInfo=selectSql('kltx_db', sql);
+		          $bid = userInfo[0].id;
+		          $plat = userInfo[0].plat;
+							var url=H.pageParam.hurl;
+							openBrower(url);
+							AndroidBack();
+		});
+
+			//打开浏览器
+		 function openBrower(url){
+			 var browser = api.require('webBrowser');
+					 browser.openView({
+							 url: url,
+							 rect: {
+									 x: 0,
+									 y: height,
+									 w: 'auto',
+									 h: 'auto'
+							 },
+							 scaleEnabled:true
+					 }, function(ret, err) {
+						// J(ret);
+							 switch (ret.state) {
+									 case 0:
+											 break;
+									 case 1:
+											 break;
+									 case 2:
+											 break;
+									 case 3:
+											$("#title").html(ret.title);
+											 break;
+									 case 4:
+											 break;
+									 default:
+											 break;
+							 }
+					 });
+		 }
+		 /*
+	 		 * 监听Android手机返回键
+	 		 */
+	 		function AndroidBack(){
+	 			 api.addEventListener({
+	 			        name: 'keyback'
+	 			    }, function(ret, err){
+	 			    	if(ret){
+	 			    		historyBack();
+	 			    	}
+	 			    });
+	 		}
+	 		/*
+	 		 * 网页后退
+	 		 */
+	 		function historyBack(){
+	 			var browser = api.require('webBrowser');
+	 				browser.historyBack(
+	 				    function(ret,err){
+	 				        if(!ret.status){
+	 				            H.closeWin();
+	 				        }
+	 				    }
+	 				);
+	 		}
+
+	</script>
+</html>

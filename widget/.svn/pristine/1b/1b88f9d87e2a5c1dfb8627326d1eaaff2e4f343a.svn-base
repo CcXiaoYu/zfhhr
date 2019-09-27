@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+	</head>
+	<body>
+		<!--header start-->
+		<div class="headers">
+			<header class="subpageHeader">
+				<a class="aBackBtn" onclick="H.closeToWin('root');"><img src="../../images/closeIcon.png"/></a>实名认证
+			</header>
+		</div>
+		<!--header end-->
+		<!--subpage start-->
+		<section class="subpageMain">
+			<div class="noticeTip">
+				<img src="../../images/noticeIcon.png" /> 恭喜您，审核通过
+			</div>
+			<div class="checkStep">
+				<div>
+					<em class="stepOneIcon complete"></em>
+					<p>
+						填写基本信息
+					</p>
+				</div>
+				<!--<div>
+				<em class="stepTwoIcon complete"></em>
+				<p>上传身份证照</p>
+				</div>-->
+				<div>
+					<em class="stepThreeIcon complete"></em>
+					<p>
+						绑定结算卡
+					</p>
+				</div>
+			</div>
+			<div class="CertificationResult">
+				<!--提交审核中-->
+				<div class="CertificationSubmit">
+					<img src="../../images/checkingIcon.png"/>
+					<p>
+						恭喜您，审核通过
+					</p>
+				</div>
+				<!--认证成功-->
+				<div class="CertificationSuccess" style="display:none;">
+					<img src="images/successIcon.png" />
+					<p>
+						恭喜您！<em>认证成功</em>
+					</p>
+					<div class="buttonMain buttonMainOne">
+						<a href="CertificationOne.html"  style="border-radius:45px;width:50%;margin:0 auto; height:40px; line-height:42px; overflow:hidden;">重新认证</a>
+					</div>
+					<div class="CertificationSuccessMain line_top">
+						<h3>基本信息</h3>
+						<div class="line_bottom">
+							<p>
+								姓名：<em id="realName">任勇强</em>
+							</p>
+							<p>
+								身份证号：<em id="idCard">**** **** **** **3616</em>
+							</p>
+						</div>
+						<h3>结算卡信息</h3>
+						<div>
+							<p>
+								所属银行：<em id="bank">中国银行</em>
+							</p>
+							<!--<p>
+								卡片类型：<em>储蓄卡</em>
+							</p>-->
+							<p>
+								银行卡号：<em id="cardNum">**** **** **** 3650</em>
+							</p>
+						</div>
+					</div>
+				</div>
+				<!--认证未通过-->
+				<div class="CertificationFail" style="display:none;">
+					<img src="../../images/failIcon.png" />
+					<p>
+						认证未通过
+					</p>
+					<p>
+						失败原因:身份证模糊
+					</p>
+					<div class="buttonMain">
+						<a href="CertificationOne.html" style="border-radius:45px;">重新认证</a>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!--subpage start-->
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+	<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/base64.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/rand.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		var db;
+		H.ready(function() {
+			H.fixStatusBar(null, '.headers');
+			db = api.require('db');
+			basicInformation();
+			debitCard();
+			H.dblclickToCloseApp();
+		});
+			//判断是否已经实名认证
+			//1、基本信息认证
+			function basicInformation() {
+				var certificationInfo = H.getStorage('certificationInfo');
+				if (certificationInfo != undefined) {
+					var $name = certificationInfo.name,
+					    $idCard = certificationInfo.idCard;
+					$("#realName").text($name);
+					$("#idCard").text($idCard);
+				}else{
+				  $('.CertificationSuccessMain').hide();
+				  $('.buttonMainOne').hide();
+				}
+			}
+			//2、结算卡认证
+		    function debitCard(){
+			var certificationInfo = H.getStorage('certificationInfo');
+				if(certificationInfo!=undefined){
+					var $cardNum=certificationInfo.cardNum,
+						$bank=certificationInfo.bank;
+						$("#cardNum").text($cardNum);
+						$("#bank").text($bank);
+				}else{
+				 $('.buttonMainOne').hide();
+				}
+		    }
+		//请求登录
+		function loginPost() {
+			if ($('[emp]').checkinput()) {
+				//获取用户名
+				var userName = $('#phone').val();
+				//获取密码
+				var userPassWord = $('#password').val();
+				var base64PassWord = $.base64.encode(userPassWord + NumberRandom());
+				//显示loading
+				showLoading();
+				//请求登录
+				var $url = url + 'home/Login/index';
+				H.ajax(loginPostCallback, $url, 'post', {
+					values : {
+						un : userName,
+						up : base64PassWord
+					}
+				}, 'json', {});
+			}
+		}
+
+		//请求登陆返回
+		function loginPostCallback(ret, err) {
+			hideLoading();
+			if (ret) {
+				if (ret.body.status) {
+					//打开数据库
+					openDatabase('kltx_db');
+					//创建表
+					var sql = 'CREATE TABLE if not exists kltx_login(id char(32), userName char(32),userTel char(32), loginTime datetime)';
+					//	var sql='drop table if exists kltx_login';
+					executeSql('kltx_db', sql);
+					//清空表
+					var clearSql = 'delete from kltx_login';
+					executeSql('kltx_db', clearSql);
+					//插入数据
+					var userId = ret.body.userinfo.id;
+					var userName = ret.body.userinfo.bname;
+					var userTel = ret.body.userinfo.phone;
+					var insertSql = 'insert into kltx_login values("' + userId + '","' + userName + '","' + userTel + '",datetime("now"))';
+					executeSql('kltx_db', insertSql);
+					//定时方法
+					setTimeout(function() {
+						//更新用户数据
+						H.execScript('root', 'mine', 'bindUserData();');
+						//关闭登陆页面
+						H.closeWin();
+					}, 2000);
+				}
+				H.toast(ret.body.message);
+				// var ssql='select * from kltx_login';
+				// J(selectSql('kltx_db', ssql));
+			} else {
+				J(err);
+			}
+		}
+	</script>
+</html>

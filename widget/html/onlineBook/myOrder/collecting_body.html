@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>支付合伙人</title>
+	<link rel="stylesheet" type="text/css" href="../../../css/reset.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/Hui.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/loading1.css" />
+	<style>
+		html,
+		body {
+		  background: #f1f1f1;
+		}
+</style>
+</head>
+<body>
+	<section class="subPageSection">
+		<div class="myOrderContainer">
+			<div class="myOrderBodyMain">
+				<ul class="myOrderListUl"></ul>
+				<div class="loadings" style="color:#333; padding-bottom:10px;">加载中...</div>
+			</div>
+		</div>
+	</section>
+</body>
+<script type="text/javascript" src="../../../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../../script/H.js"></script>
+<script type="text/javascript" src="../../../script/db.js"></script>
+<script src="../../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../script/doT.min.js" type="text/javascript"></script>
+<script src="../../../script/refresh.js" type="text/javascript"></script>
+<script type="text/javascript">
+	var db;
+	var userInfo;
+	var $bid;
+	var $plat, $page = 1,$limit = 5;
+	var flag = true;
+	H.ready(function () {
+		db = api.require('db');
+ 		//取出用户信息
+ 		getUserInfo();
+	});
+	//取出用户信息
+	function getUserInfo() {
+		var sql = 'select * from kltx_login';
+		userInfo = selectSql('kltx_db', sql);
+		$bid = userInfo[0].id;
+		$plat = userInfo[0].plat;
+		refresh(refreshCallback);
+		fnRefreshHeaderLoading();
+		up_load();
+	}
+	function refreshCallback() {
+		$page = 1;
+		$(".loadings").hide();
+		getOrderList($page);
+	}
+	//获取代付款列表
+	function getOrderList(Pages) {
+		var $url = url + "Colorder/Holorder002/listData";
+		H.ajax(getOrderListCallBack, $url, 'post', {
+			values: {
+				bid: $bid,
+				page: Pages,
+				limit:$limit,
+				ostatus:2,
+				paystatus:2
+			}
+		}, 'json', {});
+	}
+
+	function getOrderListCallBack(ret, err) {
+		hideLoading();
+		api.refreshHeaderLoadDone();
+		if (ret) {
+			if (ret.body.statusCode==200) {
+				var data = ret.body.datas;
+				var interText = doT.template($("#myOrderListMark").text());
+				if (data.length > 0) {
+					if ($page == 1) {
+						$(".myOrderListUl").html(interText(data));
+					} else {
+						$(".myOrderListUl").append(interText(data));
+						$(".loadings").hide();
+					}
+					flag = true;
+					$page++;
+				} else{
+					if(ret.body.type == 3){
+						$(".loadings").show().html("已经到底了");
+					}else if(ret.body.type == 2) {
+            var noData = '<div class="listNoDataMain"><img style="width:168px;height:100px;" src="../../../images/noOrderIcon.png" alt="暂无数据"><p style="color:#57d5ff;font-size:18px;">暂无数据</p></div>';
+						$('.myOrderListUl').html(noData);
+					}
+				}
+			} else {
+				return false;
+			}
+		} else {
+			J(err);
+		}
+	}
+	//上划加载
+	function up_load() {
+		api.addEventListener({
+			name: 'scrolltobottom'
+		}, function (ret, err) {
+			if (flag) {
+				$(".loadings").show();
+				getOrderList($page);
+				flag = false;
+			}
+		});
+	}
+	//确认收货
+	function comfirmOrderFn(RorderNum){
+		var $url = url + "Colorder/Holorder002/comfirmway";
+			if(confirm('您确定已收到货？')){
+				H.ajax(comfirmOrderFnCallBack, $url, 'post', {
+					values: {
+						bid:$bid,
+						orderno:RorderNum
+					}
+				}, 'json', {});
+		}
+
+	}
+	function comfirmOrderFnCallBack(ret,err){
+		if(ret){
+				if(ret.body.statusCode==200){
+					 H.toast(ret.body.message);
+					 fnRefreshHeaderLoading();
+				}
+		}
+	}
+</script>
+<script id="myOrderListMark" type="text/x-dot-template">
+{{
+		for(var index in it){
+		}}
+				{{? it.length>0}}
+				<li>
+					<div class="myOrderListHeader line_bottom">
+						<span>{{=it[index].name}}</span>
+						<em>待收货</em>
+					</div>
+					<div class="myOrderListBody line_bottom" onclick = 'H.openWin("myOrderDetail","../myOrderDetail/myOrderDetail.html",{Bid:$bid,ROrderNo:"{{=it[index].ordernoEn}}"})'>
+						<img src="{{=it[index].src}}" alt="产品">
+						<div>
+							<p>{{=it[index].remark}}</p>
+							<p>订单总额：<b>￥</b><i>{{=it[index].tm}}</i></p>
+							<p>
+								<span>订货数量</span>
+								<em>x {{=it[index].tn}}台</em>
+							</p>
+						</div>
+					</div>
+					<div class="myOrderListFooter">
+						<a href="javascript:;" onclick = "comfirmOrderFn('{{=it[index].ordernoEn}}')">确认收货</a>
+					</div>
+				</li>
+					{{?}}
+		{{
+		}
+	}}
+</script>
+
+</html>

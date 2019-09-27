@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+		<style type="text/css">
+			html, body {
+				background: url(../../images/paihangbang.jpg) #f5f5f5 no-repeat center 0;
+				background-size:100% auto;
+			}
+		</style>
+	</head>
+	<body>
+		 <header class="Ranktop_header">
+	     	<a class="RankHeaderLeft" onclick="H.closeWin();"><img src="../../images/backIcon.png"/></a>
+	     </header>
+		<div class="rank_content">
+			<div class="rank_header_box">
+				<!-- <div class="rank_tab clearfix">
+						<a class="actives">激活排名</a>
+						<a>交易排名</a>
+						<a>分润排名</a>
+				</div> -->
+				<div class="touxiang_top">
+				<div class="touxiang_box">
+					<em> <img src="../../images/touxiang.jpg"/> </em>
+				</div>
+				<div class="grid_box">
+				</div>
+			</div>
+			</div>
+<div class="dangyueleiji_tabs">
+	<div class="dangyueleiji_tabs_main clearfix">
+		<a class="actives" onclick="tabdylj(this,0);">当月</a>
+		<a onclick="tabdylj(this,1);">累计</a>
+	</div>
+</div>
+<div class="quanbupaihang line_bottom clearfix">
+	<div class="quanbupaihang_left">
+		<span id="posidName">全部分类</span>
+		<select id="posid" onchange="changePid(this);">
+		</select>
+	</div>
+	<div class="quanbupaihang_tab">
+		<a class="actives" onclick="setFrameGroupIndex(0,this);">收益排名</a>
+		<a onclick="setFrameGroupIndex(1,this);">激活排名</a>
+	</div>
+</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+	<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/doT.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	var db;
+	var userInfo;
+	var $bid,$plat;
+		H.ready(function() {
+			H.fixStatusBar(null, '.Ranktop_header');
+			var systemType=H.systemType;
+			var height;
+			if(systemType=='android'){
+				height = $('.rank_content').height()+101;
+			}else{
+				height = $('.rank_content').height()+97;
+			}
+			var $winHeight = api.winHeight;
+			api.openFrameGroup({
+				name : 'rank',
+				background : '#f5f5f5',
+				scrollEnabled : true,
+				rect : {
+					x : 0,
+					y : height,
+					w : 'auto',
+					h : 'auto'
+				},
+				index : 0,
+				bounces : false,
+				frames : [{
+					name : 'rank_body',
+					url : 'rank_body.html',
+					bgColor : '#f5f5f5',
+					vScrollBarEnabled:false
+				}, {
+					name : 'rank_body1',
+					url : 'rank_body1.html',
+					bgColor : '#f5f5f5',
+					vScrollBarEnabled:false
+				}]
+			}, function(ret, err) {
+				var index = ret.index;
+				$(".quanbupaihang_tab > a:eq("+index+")").addClass("actives").siblings().removeClass("actives");
+				var $index=$(".dangyueleiji_tabs_main > a.actives").index();
+				var $id=$('#posid').find("option:selected").attr("value");
+				if(index==0){
+						if($index==0){
+							H.execScript('rank','rank_body','getRanking("sameMonth",'+$id+');');
+						}else{
+							H.execScript('rank','rank_body','getRanking("total",'+$id+');');
+						}
+				}else{
+					if($index==0){
+						H.execScript('rank','rank_body1','getRanking("sameMonth",'+$id+');');
+					}else{
+						H.execScript('rank','rank_body1','getRanking("total",'+$id+');');
+					}
+				}
+			});
+
+			db=api.require('db');
+			//取出用户信息
+			var sql='select * from kltx_login',
+					userInfo=selectSql('kltx_db', sql);
+					$bid = userInfo[0].id;
+					$plat = userInfo[0].plat;
+					getRanking();
+					getRankings();
+					//请求POS分类数据
+					getData();
+		});
+		//点击导航菜单设置index
+		function setFrameGroupIndex(id,obj) {
+			api.setFrameGroupIndex({
+				name : 'rank',
+				index : id,
+				scroll : true
+			});
+		}
+		//请求POS分类数据
+		function getData(){
+			var $url=url+'Home/PersonalPublic/posClass';
+			H.ajax(getDataCallback, $url, 'post', {values:{plat:$plat}}, 'json', {});
+		}
+		//请求POS分类数据返回
+		function getDataCallback(ret,err){
+			if(ret){
+				// J(ret);
+				// return false;
+				if(ret.body.status){
+					var data=ret.body.data;
+					if(data.length>0){
+						var interText = doT.template($("#poscpid").text());
+						$("select#posid").html(interText(data));
+					}else{
+							$("select#posid").html('<option value="0">暂无分类</option>');
+					}
+
+				}
+			}else{
+				H.toast(err);
+			}
+		}
+		//切换POS分类
+		function changePid(obj){
+				var $name=$(obj).find("option:selected").text();
+				var $id=$(obj).find("option:selected").attr("value");
+				$("#posidName").html($name);
+				//当月，累计索引值
+				var $index=$(".dangyueleiji_tabs_main > a.actives").index();
+				//收益，激活索引值
+				var $index1=$(".quanbupaihang_tab > a.actives").index();
+				if($index1==0){
+						if($index==0){
+						H.execScript('rank','rank_body','getRanking("sameMonth",'+$id+');');
+					}else{
+							H.execScript('rank','rank_body','getRanking("total",'+$id+');');
+					}
+				}else{
+					if($index==0){
+						H.execScript('rank','rank_body1','getRanking("sameMonth",'+$id+');');
+							}else{
+								H.execScript('rank','rank_body1','getRanking("total",'+$id+');');
+							}
+				}
+
+
+		}
+		//切换当月累计
+		function tabdylj(obj,index){
+			var $index=$(".quanbupaihang_tab > a.actives").index();
+			$(obj).addClass("actives").siblings("a").removeClass("actives");
+			var $id=$('#posid').find("option:selected").attr("value");
+			if(index==0){
+					if($index==0){
+						H.execScript('rank','rank_body','getRanking("sameMonth",'+$id+');');
+				}else{
+						H.execScript('rank','rank_body1','getRanking("sameMonth",'+$id+');');
+				}
+			}else{
+				if($index==0){
+					H.execScript('rank','rank_body','getRanking("total",'+$id+');');
+				}else{
+						H.execScript('rank','rank_body1','getRanking("total",'+$id+');');
+				}
+			}
+		}
+		//请求排行榜
+		function getRankings(){
+			var $url=url+'Home/Distribution/ranking';
+			H.ajax(getRankingsCallback, $url, 'post', {values:{bid:$bid,plat:$plat,type:"Per"}}, 'json', {});
+		}
+		function getRankingsCallback(ret,err){
+			if(ret){
+					if(ret.body.status){
+							var data=ret.body.data;
+					if(data.length>0){
+							data=ret.body.data[0];
+							var rank=Number(data.rank);
+							var jnli=rank-1;
+							var text;
+							if(rank>1){
+								text='您当月排名第'+rank+'，距离第一名还差'+jnli+'名，继续加油！'
+							}else if(rank!=0){
+								text='您当月排名第'+rank+'，实在是太牛了！'
+							}
+							readText(text);
+						}
+					}
+				}
+		}
+		//请求排行榜
+		function getRanking(){
+			var $url=url+'Home/Distribution/ranking';
+			H.ajax(getRankingCallback, $url, 'post', {values:{bid:$bid,plat:$plat,type:"Per"}}, 'json', {});
+		}
+		function getRankingCallback(ret,err){
+			api.refreshHeaderLoadDone();
+			if(ret){
+					if(ret.body.status){
+					var data=ret.body.data;
+					var interText = doT.template($("#rankingMarsk1").text());
+					if(data.length>0){
+							data=ret.body.data[0];
+							$(".grid_box").html(interText(data));
+				}else{
+						data={money:'-_-',busName:'****',phone:'****',rank:'**'};
+						$(".grid_box").html(interText(data));
+				}
+				}else{
+					return false;
+				}
+			}else{
+				return false;
+				//J(err);
+			}
+		}
+		//语音朗读
+		function readText(text){
+			if(text!=''&&text!=undefined){
+			var speechRecognizer = api.require('speechRecognizer');
+					speechRecognizer.read({
+							readStr: text,
+							speed: 70,
+							volume: 80,
+							voice: 'vixq',
+							rate: 16000,
+							audioPath: 'fs://speechRecogniser/read.mp3'
+					}, function(ret, err) {
+							if (ret.status) {
+									ret.speakProgress
+							} else {
+									api.alert({ msg: err.msg });
+							}
+					});
+				}else{
+					return false;
+				}
+		}
+	</script>
+	<script id="rankingMarsk1" type="text/x-dot-template">
+		<div class="rank_main clearfix">
+				<div class="rank_main_left">
+					<div>{{=it.busName}}</div><div class="paimingname">{{=it.phone}}</div>
+				</div>
+				<div class="rank_main_right">
+						<div class="paimingname">当月排行</div><div class="paiming">NO.{{=it.rank}}</div>
+				</div>
+		</div>
+		<div class="rank_bysy clearfix">
+			<div class="rank_bysy_left">本月收益</div><div class="rank_bysy_right">￥{{=it.money}}</div>
+		</div>
+	</script>
+	<script id="poscpid" type="text/x-dot-template">
+	<option value="0">全部分类</option>
+	{{
+		for(var index in it){
+			}}
+				<option value="{{=it[index].id}}">{{=it[index].name}}</option>
+			{{
+		}
+		}}
+	</script>
+</html>

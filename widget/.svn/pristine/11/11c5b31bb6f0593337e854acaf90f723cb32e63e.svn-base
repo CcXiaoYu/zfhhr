@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+		<style>
+			html, body {
+				background: #fff;
+			}
+        </style>
+	</head>
+	<body>
+		<section class="subpageMain">
+		     <div class="changePhoneNumber">
+		    	<div class="titleFromGroup">
+		    		<div class="line_bottom">
+		    			<em>新手机号:</em>
+		    			<input type="tel" id="newPhone" placeholder="新手机号" />
+		    		</div>
+		    		<div class="verificationCodeDiv line_bottom">
+		    			<em>验证码:</em>
+		    			<input type="number" id="code" placeholder="验证码" />
+		    			<a onclick="sendCode(this);">获取验证码</a>
+		    		</div>
+		    		<div class="line_bottom">
+		    			<em>登录密码:</em>
+		    			<input type="text" id="passWord" placeholder="登录密码" />
+		    		</div>
+		    	</div>
+		    </div>
+			<div class="buttonMain">
+				<a onclick="updataPhone();">确认更换</a>
+			</div>
+		</section>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+		<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	var db;
+	var userInfo;
+	var $bid,$plat;
+	var flag=true;
+	H.ready(function(){
+			db=api.require('db');
+			//取出用户信息
+			var sql='select * from kltx_login',
+					userInfo=selectSql('kltx_db', sql);
+					$bid = userInfo[0].id;
+					$plat = userInfo[0].plat;
+		});
+		var th;
+				function sendCode(obj){
+					th=obj;
+						var newPhone=$("#newPhone").val();
+						var reg = /^1[3|4|5|7|8][0-9]{9}$/; //验证规则
+						if(reg.test(newPhone)){
+							if(flag){
+									//发送验证码
+									showLoading();
+								var $url=url+"Home/PublicInterface/sendVerify";
+								H.ajax(sendCodeCallback, $url, 'post', {values:{bid:$bid,plat:$plat,phone:newPhone,sendType:'phone'}}, 'json', {});
+							}
+						}else{
+							H.toast("请输入正确的手机号");
+						}
+				}
+				//发送验证码返回
+				function sendCodeCallback(ret,err){
+					hideLoading();
+						if(ret){
+								H.toast(ret.body.msg);
+								if(ret.body.status){
+									//倒计时
+								settime();
+							}else{
+								return false;
+							}
+						}else{
+								J(err);
+						}
+				}
+			var countdown=120;
+					function settime() {
+					    if (countdown == 0) {
+								flag=true;
+					      //  obj.removeAttribute("disabled");
+					        $(th).html("获取验证码");
+					        countdown = 120;
+					        return;
+					    } else {
+								flag=false;
+					      //  obj.setAttribute("disabled", true);
+									$(th).html("重新发送(" + countdown + ")");
+					        countdown--;
+					    }
+					setTimeout(function() {
+					    settime(th)
+						},1000)
+					}
+
+					//修改手机号
+					function updataPhone(){
+						//手机号
+						var newPhone=$("#newPhone").val();
+						var reg = /^1[3|4|5|7|8][0-9]{9}$/; //验证规则
+						//验证码
+						var code=$("#code").val();
+						//密码
+						var passWord=$("#passWord").val();
+						if(reg.test(newPhone)&&code!=''&&passWord!=''){
+							showLoading();
+							var $url=url+"Home/PublicInterface/changLoginPhone";
+							H.ajax(updataPhoneCallback, $url, 'post', {values:{bid:$bid,plat:$plat,phone:newPhone,verify:code,loginPwd:passWord}}, 'json', {});
+						}else if(!reg.test(newPhone)){
+								H.toast("手机号码有误");
+						}else if(code==''){
+								H.toast("验证码有误");
+						}else if(passWord==''){
+							H.toast("请输入密码");
+						}
+					}
+					//修改手机号返回
+					function updataPhoneCallback(ret,err){
+						hideLoading();
+						if(ret){
+								H.toast(ret.body.msg);
+								if(ret.body.status){
+									//清除数据库
+									var sql="delete from kltx_login";
+										executeSql('kltx_db', sql);
+										setTimeout(function(){
+												H.execScript('root','mine','bindUserData();');
+												H.closeToWin("root");
+										},1000);
+								}else{
+										return false;
+								}
+						}else{
+								J(err);
+						}
+					}
+
+
+
+
+	</script>
+</html>

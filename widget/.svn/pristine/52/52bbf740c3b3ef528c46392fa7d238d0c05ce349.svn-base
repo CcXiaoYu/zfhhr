@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>闪付通</title>
+	<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.css?4564" />
+	<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+</head>
+<body>
+	<div id="page">
+		<!-- 收货地址 -->
+		<div class='h_addr bottom-line'>
+			<!-- 添加地址 -->
+			<div class='add'><img src='images/zwdz.png' />您还没有填写收货地址，请<span onclick="">添加地址+</span></div>
+			<!-- 地址 -->
+			<div class='ads_box' onclick="jump('addressList.html')">
+				<i></i>
+				<div>海大炮 <span>15112345678</span></div>
+				<span>呼和浩特市 新城区 润宇 鼎盛华世纪广场1603</span>
+			</div>
+		</div>
+		<!-- 商品 -->
+		<div class='shoping bottom-line'>
+			<div>
+				<img src='images/timg.jpg' />
+				<div>OPPO Find X 高端旗舰全面屏手机</div>
+				<span><em>x1</em>RMB:￥8000.00</span>
+			</div>
+			<p><span>小计：￥100.00</span>免运费</p>
+		</div>
+
+		<div class='shoping bottom-line'>
+			<div>
+				<img src='images/timg.jpg' />
+				<div>OPPO Find X 高端旗舰全面屏手机</div>
+				<span><em>x100</em>RMB:￥8000.00</span>
+			</div>
+			<p><span>小计：￥110.00</span>运费：￥10.00</p>
+		</div>
+
+		<!-- 按钮 -->
+		<div style='height:80px;'></div>
+		<div class='h_button' onclick="jump('task.html')">
+			<div>确认兑换</div>合计：<span>￥<em>220</em>.00</span></div>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../script/H.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/db.js"></script>
+<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../script/base64.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+<script>
+	var db;
+	var userInfo;
+	var $bid, $plat;
+	var $dataArr=H.pageParam.data;
+	H.ready(function() {
+		db = api.require('db');
+		//取出用户信息
+		var sql = 'select * from kltx_login',
+			userInfo = selectSql('kltx_db', sql);
+		$bid = userInfo[0].id;
+		$plat = userInfo[0].plat;
+		getData();
+	});
+
+	//请求数据
+	function getData() {
+		var $url = url + 'Home/PublicInterface/Introduct';
+		H.ajax(getDataCallback, $url, 'post', {
+			values: {
+				plat: $plat
+			}
+		}, 'json', {});
+	}
+
+	function getDataCallback(ret, err) {
+		if (ret) {
+			if (ret.body.status) {
+				var data = ret.body.data;
+				$(".aboutContainer").html(data);
+			}
+		} else {
+			//J(err);
+		}
+	}
+	var num1 = 0;
+
+	function less() {
+		if (num1 > 10) {
+			num1 = num1 - 10
+		} else {
+			num1 = 0
+		}
+		document.getElementById('num').innerHTML = num1
+	}
+
+	function plus() {
+		num1 = num1 + 10
+		document.getElementById('num').innerHTML = num1
+	}
+</script>
+
+</html>

@@ -1,0 +1,317 @@
+﻿<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>Hui</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+	</head>
+	<body class="grayBg">
+		<!--my start-->
+		<section class="subpageMyMain">
+			<!--头部 信息-->
+			<div class="myHeaderMain">
+				<div id="user_main"></div>
+			</div>
+			<!--四个按钮-->
+			<div class="myheaderButtonGroup">
+
+			</div>
+			<!--列表按钮-->
+			<div class="myButtonList">
+				<ul class="myButtonListUl">
+					<li>
+						<a onclick="checkOpenWins('myOrder','../onlineBook/myOrder/myOrder.html');" class="bottom-line  rightArr"> <img src="../../images/myOrderIcon.png"/> <span>我的订单</span> <em class="buttonEm"></em> </a>
+					</li>
+					<li>
+						<a onclick="checkOpenWins('wallet','../wallet/wallet.html');" class="bottom-line  rightArr"> <img src="../../images/goldCoinIcon.png"/> <span>我的钱包 </span> <em class="buttonEm"></em> </a>
+					</li>
+					<li>
+						<a onclick="checkOpenWins('myPosList','../myPosList/myPosList.html');" class="bottom-line rightArr"> <img src="../../images/myPosIcon.png"/> <span>我的终端POS</span> </a>
+					</li>
+					<div id="shouyi"></div>
+					<li>
+						<a onclick="checkOpenWins('about','../about/about.html');" class="line_bottom rightArr"> <img src="../../images/aboutIcon.png"/> 关于我们 </a>
+					</li>
+					<li>
+						<a onclick="H.openWin('address','../onlineBook/address/address.html');" class="rightArr"> <img src="../../images/mineAddressIcon.png"/> <span>我的收货地址</span>  </a>
+					</li>
+				</ul>
+			</div>
+			<!--/-->
+			<!--数据统计-->
+			<!-- <div class="myButtonList">
+				<ul class="myButtonListUl">
+					<li>
+						<a onclick="checkOpenWins('dataStatistics','../dataStatistics/dataStatistics.html');" class="rightArr"> <img src="../../images/goldCoinIcon.png"/> <span>数据统计</span> <em class="buttonEm"></em> </a>
+					</li>
+				</ul>
+			</div> -->
+			<!--/数据统计-->
+			<!--联系我们-->
+			<div class="myContactMain">
+				<div class="myContactItem" id="kefu">
+
+				</div>
+				<!-- <div class="myContactItem">
+					<a href="javascript:;" class="rightArr bottom-line"> <img src="../../images/ServiceTelIcon.png"/> 在线客服 </a>
+				</div> -->
+				<div class="myContactItem">
+					<a onclick="checkOpenWins('setting','../settingCenter/setting.html');" class="rightArr"> <img src="../../images/settingIcon.png"/> 设置 </a>
+				</div>
+			</div>
+		</section>
+		<!--my end-->
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script src="../../script/H.js" type="text/javascript"></script>
+	<script src="../../script/chackLogin.js" type="text/javascript"></script>
+	<script src="../../script/db.js" type="text/javascript"></script>
+	<script type="text/javascript" src="../../script/doT.min.js"></script>
+	<script type="text/javascript">
+		var db;
+		var userInfo;
+	    var $bid;
+			var $plat;
+		H.ready(function() {
+			db = api.require('db');
+			//绑定用户数据
+			bindUserData();
+			//取出用户信息
+			var sql='select count(*) as amount from kltx_login';
+			var length=selectSql('kltx_db', sql)[0].amount;
+			if(length=='1'){
+				var sql='select * from kltx_login';
+				userInfo=selectSql('kltx_db', sql);
+				$bid = userInfo[0].id;
+				$plat = userInfo[0].plat;
+				//请求客服电话
+				getPhone();
+			}
+		//请求横排模块
+		//	getModelOne();
+//			$platId =
+			//ios上线审核
+			iosLine();
+		});
+		//请求横排模块
+		function getModelOne(){
+			var $url=url+'Home/ModuleApi/HomeModule';
+			H.ajax(getModelOneCallBack, $url, 'post', {values:{type:'S'}}, 'json', {});
+		}
+		//请求横排模块返回
+		function getModelOneCallBack(ret,err){
+			if(ret){
+				J(ret);
+
+			}else{
+				J(err);
+				return false;
+			}
+		}
+		//查询是否登陆
+		function selectLogin() {
+			var ssql = 'select count(*) as length from kltx_login';
+			return selectSql('kltx_db', ssql).length;
+		}
+	//点击实认证
+	function openSM(){
+		if(checkOpenWin()){
+				H.openWin('login','../login/login.html',{},{animation : {type : 'movein',subType : 'from_bottom',duration : 300}});
+		}else{
+			var sql='select count(*) as amount from kltx_login';
+			var length=selectSql('kltx_db', sql)[0].amount;
+			if(length=='1'){
+				var sql='select * from kltx_login';
+				userInfo=selectSql('kltx_db', sql);
+				$bid = userInfo[0].id;
+				$plat = userInfo[0].plat;
+			}
+			//查询认证状态
+			var $url=url+'Home/AuthManage/auditStatus';
+			H.ajax(selectRzCallBack, $url, 'post', {values:{bid:$bid,plat:$plat}}, 'json', {});
+		}
+		// checkOpenWin('certificationOne', '../certificationCenter/certificationOne.html');
+	}
+//查询认证状态返回
+function selectRzCallBack(ret,err){
+	if(ret){
+		//J(ret);
+	if(ret.body.status){
+		/**
+			1：审核通过
+			2：未实名认证
+		**/
+		switch(ret.body.data.status){
+				case '1':
+					H.toast(ret.body.data.audit);
+					return false;
+				break;
+				case '2':
+						H.openWin('certificationOne','../certificationCenter/certificationOne.html');
+				break;
+				default:
+					return false;
+				break;
+		}
+
+	}else{
+
+		return false;
+	}
+	}else{
+		return false;
+	}
+}
+
+
+
+		//绑定用户数据
+		function bindUserData() {
+			var sql = 'select * from kltx_login';
+			var ret = (selectSql('kltx_db', sql))[0];
+			var interText = doT.template($("#memberMarsk").text());
+			$("#user_main").html(interText(ret));
+		}
+
+		//退出登陆
+		function exitLogins() {
+			exitLogin();
+			if (!sqliteGetLogin()) {
+				H.openWin('loginRegistered', '../loginRegistered/loginRegistered.html', {}, {
+					slidBackEnabled : false,
+					animation : {
+						type : 'fade',
+						duration : 200
+					}
+				});
+			}
+			return false;
+		}
+		//全局绑定
+		function bindData(tel) {
+		}
+		//客服电话
+		function getPhone(){
+			var $url=url+'Home/PublicInterface/onlineSer';
+			H.ajax(getPhoneCallBack, $url, 'post', {values:{bid:$bid,plat:$plat}}, 'json', {});
+		}
+		//请求客服电话成功
+		function getPhoneCallBack(ret,err){
+			if(ret){
+				//J(ret);
+				if(ret.body.status){
+				$('#kefu').html('<a class="bottom-line" onclick="call('+ret.body.data.telephone+');"> <img src="../../images/phoneIcon.png"/> <span>客服电话</span> <em> <i>'+ret.body.data.telephone+'</i>'+ret.body.data.service+'</em> </a>');
+				}
+			}else{
+			//	J(err)
+			}
+		}
+
+		function call(tel){
+			H.call('tel_prompt',tel);
+		}
+
+//ios审核
+function iosLine(){
+	if(api.systemType=='android'){
+		var interText = doT.template($("#isMarsk").text());
+		$(".myheaderButtonGroup").html(interText());
+		/***********************/
+		var interText = doT.template($("#iosline").text());
+		$("#shouyi").html(interText());
+	}else if(api.systemType=='ios'){
+		var $url=iosUrl;
+		H.ajax(getIosCallback, $url, 'post', {}, 'json', {});
+	}
+}
+//请求ios审核
+function getIosCallback(ret,err){
+	if(ret){
+		if(ret.body.status){
+			var audit=ret.body.audit;
+			if(audit=='1'){
+				var interText = doT.template($("#isMarsk").text());
+				$(".myheaderButtonGroup").html(interText());
+				/***********************/
+				var interText = doT.template($("#iosline").text());
+				$("#shouyi").html(interText());
+			}else{
+				var interText = doT.template($("#noMarsk").text());
+				$(".myheaderButtonGroup").html(interText());
+			}
+		}
+	}else{
+
+	}
+}
+
+	</script>
+	<script id="memberMarsk" type="text/x-dot-template">
+		{{? selectLogin() > 0 && it!=undefined}}
+		<div class="myHeader">
+		<div class="headerPortrait"><img src="../../images/touxiangD.jpg"/></div>
+		<div class="headerInformation">
+		<p>{{= (it.userTel).replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')}}</p>
+		<p>普通用户</p>
+		</div>
+		</div>
+		{{??}}
+		<div class="myLoginButton">
+		<img src="../../images/myLoginImg.png"/>
+		<p>高效 · 便捷 · 省心</p>
+		<a onclick="H.openWin('login','../login/login.html',{},{animation : {type : 'movein',subType : 'from_bottom',duration : 300}});">立即登录</a>
+		</div>
+		{{?}}
+	</script>
+	<script id="modelMarskOne" type="text/x-dot-template">
+	</script>
+
+<script id="iosline" type="text/x-dot-template">
+	<li>
+		<a onclick="checkOpenWins('rank','../rank/rank.html');" class="bottom-line rightArr"> <img src="../../images/rankingIcon.png"/> 收益排行榜 </a>
+	</li>
+	</script>
+	<!--ios-->
+	<script id="noMarsk" type="text/x-dot-template">
+	<a onclick="openSM();"> <img src="../../images/attestationIcon.png"/>
+	<p>
+		实名认证
+	</p> </a>
+	<a onclick="checkOpenWins('myPosList','../myPosList/myPosList.html');"> <img src="../../images/subordinateIcon.png"/>
+	<p>
+		绑定商户
+	</p> </a>
+	<a onclick="checkOpenWins('tradingRecord','../tradingRecord/tradingRecord.html');"> <img src="../../images/commissionIcon.png"/>
+	<p>
+		收益明细
+	</p> </a>
+	<a onclick="checkOpenWins('changePassWord','../changePassWord/changePassWord.html');"> <img src="../../images/cardIcon.png"/>
+	<p>
+		修改密码
+	</p> </a>
+	</script>
+	<!--ios-->
+	<script id="isMarsk" type="text/x-dot-template">
+	<a onclick="openSM();"> <img src="../../images/attestationIcon.png"/>
+	<p>
+		实名认证
+	</p> </a>
+	<a onclick="checkOpenWins('team','../team/team.html');"> <img src="../../images/subordinateIcon.png"/>
+	<p>
+		我的伙伴
+	</p> </a>
+	<a onclick="checkOpenWins('tradingRecord','../tradingRecord/tradingRecord.html');"> <img src="../../images/commissionIcon.png"/>
+	<p>
+		收益明细
+	</p> </a>
+	<a onclick="checkOpenWins('teamLevelOne','../team/teamLevelOne.html');"> <img src="../../images/cardIcon.png"/>
+	<p>
+		拨码
+	</p> </a>
+	</script>
+
+</html>

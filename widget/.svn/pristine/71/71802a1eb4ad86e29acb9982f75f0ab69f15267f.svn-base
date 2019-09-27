@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+		<style>
+		html,body{
+		  background:#fff;
+		}
+		</style>
+	</head>
+	<body>
+		<!--header start-->
+		<div class="headers">
+			<header class="subpageHeader">登录<a class="headerCloseIcon" onclick="H.closeWin();"><img src="../../images/closeIcon.png"/></a>
+			</header>
+	</div>
+		<!--header end-->
+		<section class="subpageMain">
+			<div class="loginLogo">
+				<img src="../../images/sftLogoImg.png" />
+				<p>支付合伙人</p>
+			</div>
+			<div class="loginMain">
+				<div class='input_div login_input_div'>
+					<!--单条数据-->
+					<div class="input_list line_bottom">
+						<em>手机号码</em>
+						<div>
+							<input id="phone" type="tel" maxlength="11" placeholder="请输入您的手机号码" emp="{empty:true,tel:true}" value="" mess="输入手机号">
+						</div>
+					</div>
+					<!--单条数据-->
+					<div class="input_list line_bottom">
+						<em>登录密码</em>
+						<div class="password_div">
+							<input type="password" id="password" class="passWord" placeholder="请输入登录密码" value="" emp="{empty:true}" mess="输入登录密码">
+							<input type="text" placeholder="请输入登录密码" id="passwd2" class="passWord" style="display: none;" />
+							<span onclick="show(this)"></span>
+						</div>
+					</div>
+				</div>
+				<a class="login_btn" onclick="loginPost();">登录</a>
+			<p class="agreement_p">
+				<a onclick="H.openWin('forgetPasswordStepOne', 'forgetPasswordStepOne.html', {}, {
+					slidBackEnabled : false,
+					animation : {
+						type : 'fade',
+						duration : 200
+					}
+				});">忘记密码</a>
+			</p>
+			</div>
+		</section>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+		<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/base64.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/rand.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	var db;
+		H.ready(function(){
+			H.fixStatusBar(null,'.headers');
+			db=api.require('db');
+		});
+		//请求登录
+		function loginPost() {
+			var sql="select * from kltx_login";
+			if ($('[emp]').checkinput()){
+				//获取用户名
+				var userName=$('#phone').val();
+				//获取密码
+				var userPassWord=$('#password').val();
+				var base64PassWord=$.base64.encode(userPassWord+NumberRandom(10));
+					//显示loading
+					showLoading();
+					//请求登录
+					var $url=url+'Home/Login/index';
+					H.ajax(loginPostCallback, $url, 'post', {values:{un:userName,up:base64PassWord}}, 'json', {});
+			}
+		}
+//请求登陆返回
+function loginPostCallback(ret,err){
+	hideLoading();
+		if(ret){
+			//J(ret);
+			if(ret.body.status==1){
+				//清空表
+				var clearSql='delete from kltx_login';
+				executeSql('kltx_db', clearSql);
+				//插入数据
+				var userId=ret.body.uid;
+				var userTel=ret.body.utel;
+				var platId = ret.body.plat;
+				var insertSql='insert into kltx_login values("'+userId+'","'+userTel+'","'+platId+'",datetime("now"))';
+				 	executeSql('kltx_db', insertSql);
+					H.setStorage('mid',ret.body.userinfo.id);
+					//定时方法
+					setTimeout(function(){
+							//更新用户数据
+							H.execScript('root','mine','bindUserData();');
+							//更新推广数据
+							H.execScript('root','tuiguang','getUserInfo();');
+							//更新消息数据
+							H.execScript('root','message','getUserInfo();');
+							//更新首页排行榜
+							H.execScript('root','index','getData();');
+							//极光推送
+							H.execScript('root','','jiguang();');
+
+						//	H.execScript('root','common_index','getRanking();');
+							//关闭登陆页面
+							H.closeWin();
+					},2000);
+				}
+				H.toast(ret.body.message);
+		}else{
+			H.toast(JSON.stringify(err));
+		}
+}
+	</script>
+	<script type="text/javascript">
+
+	        //密码显示
+			function show(obj) {
+				if (!$(obj).hasClass("active")) {
+					$(obj).addClass('active');
+					$("#passwd2").val($("#password").val());
+					$("#password").hide();
+					$("#passwd2").show();
+				} else {
+					$(obj).removeClass('active');
+					$("#password").val($("#passwd2").val());
+					$("#passwd2").hide();
+					$("#password").show();
+				}
+			}
+			$('#password').keyup(function() {
+				$("#passwd2").val($("#password").val());
+			});
+			$('#passwd2').keyup(function() {
+				$("#password").val($("#passwd2").val());
+			});
+	</script>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html manifest="../cache.manifest">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/css.css"/>
+		<style>
+			.bottomBtnMain{
+			  padding:0 10%;
+			}
+			.bottomBtnItme{
+			  float:left;
+			}
+			.bottomBtnItme.right{
+			   float:right;
+			}
+			.light,.manual {
+				background: rgba(0,0,0,0.5);
+				border-radius: 50px;
+				width: 24px;
+				height: 24px;
+				padding:8px;
+				font-size: 28px;
+				text-align: center;
+				line-height: 20px;
+				color: #fff;
+				position:relative;
+				z-index: 9999;
+				margin:0 auto;
+			}
+			.light img,.manual img{
+			  max-width:100%;
+			}
+			.bottomBtnItme{
+			  text-align:center;
+			}
+			.bottomBtnItme p{
+			  line-height:40px;
+			  font-size:14px;
+			  color:#fff;
+			}
+		</style>
+	</head>
+	<body>
+	<div class='bottomBtnMain'>
+	   <div class='bottomBtnItme' onclick="H.openWin('selectPosList','../selectPosList/selectPosList.html');">
+			<div class="manual">
+				<img src="../../images/handIcon.png"/>
+			</div>
+			<p>
+				手动选择
+			</p>
+		</div>
+	   	<div class='bottomBtnItme right'>
+			<div class="light" onclick="light();">
+				<img id="tabLight" src="../../images/openLight.png"/>
+			</div>
+			<p id="tabText">
+				打开手电筒
+			</p>
+		</div>
+	</div>	
+	</body>
+</html>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../script/H.js"></script>
+<script type="text/javascript">
+  	function light() {
+		api.execScript({
+			name : 'scanMain',
+			frameName : 'FNScanner',
+			script : 'light();'
+		});
+	}
+	function tabImg(id) {
+		// alert(id);
+		if (id == 1) {
+			$("#tabLight").attr('src', '../../images/openLight.png');
+			$('#tabText').text('打开手电筒')
+		} else {
+			$("#tabLight").attr('src', '../../images/closeLight.png');
+			$('#tabText').text('关闭手电筒')
+		}
+	}
+</script>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+			<link rel="stylesheet" type="text/css" href="../../css/swiper.min.css" />
+			<style>
+				html,body{background-color: #fff;}
+			</style>
+	</head>
+	<body>
+		<section class="subpageMain">
+			<!--banner start-->
+			<div class="payBannerMain">
+				<div class="swiper-container">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide"><img src="../../images/bannerImg.jpg" /></div>
+						<div class="swiper-slide"><img src="../../images/bannerImg01.jpg" /></div>
+					</div>
+					<!-- Add Pagination -->
+					<div class="swiper-pagination"></div>
+				</div>
+			</div>
+			<!--banner end-->
+			<!--支付金额 开始-->
+			<div class="payNumberDiv"><span>支付金额</span><em>当前费率:<i>0.38%</i></em></div>
+			<div class="syt_money line_bottom">
+				<span>￥</span><em class="srprice-1" id="money">0.0</em>
+			</div>
+			<!--支付金额 结束-->
+			<!--支付键盘 开始-->
+			<div class="syt_keybord" id="number_input">
+				<ul class="syt_keybordUl">
+					<li class="rb-line">
+						<span>1</span>
+					</li>
+					<li class="rb-line">
+						<span>2</span>
+					</li>
+					<li class="bottom-line">
+						<span>3</span>
+					</li>
+					<li class="rb-line">
+						<span>4</span>
+					</li>
+					<li class="rb-line">
+						<span>5</span>
+					</li>
+					<li class="bottom-line">
+						<span>6</span>
+					</li>
+					<li class="rb-line">
+						<span>7</span>
+					</li>
+					<li class="rb-line">
+						<span>8</span>
+					</li>
+					<li class="bottom-line">
+						<span>9</span>
+					</li>
+					<li style="line-height:33px;background-color:#fff;" class="rb-line">
+						<!-- <span style="font-size:50px;">.</span> -->
+					</li>
+					<li class="rb-line">
+						<span>0</span>
+					</li>
+					<li class="backKeyLi">
+						<em class="backKeyIconEm"></em>
+						<span class="backKeyIcon">←</span>
+						<img src="../../images/backKeyIcon.png"/>
+					</li>
+				</ul>
+			</div>
+			<!--支付键盘 结束-->
+			<div class="rightPay">立即支付</div>
+			<div class="PayTip">
+			  <p>单笔最多2万，单日最高20万，支付后直接到绑定银行卡，秒到时间9:05-18:25;9:05之前支付，9:05之后到账；18:25之后支付，第二天11:30左右自动到绑定的银行卡。每笔收取手续费3元！</p>
+
+			</div>
+		</section>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+	<script src="../../js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/nub.js"></script>
+
+		<script type="text/javascript" src="../../script/db.js"></script>
+		<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	var db;
+		H.ready(function(){
+
+		});
+
+	</script>
+	<script type="text/javascript">
+		window.onload = function() {
+			new $.numberInput({
+				Display: '#money',
+				Keyboard: '#number_input',
+				Params: '.syt_keybord li span',
+				HideKeyboard: '#number_hide',
+				Backspace: '←',
+				Clear: 'Ｃ',
+				Confirmation: '确认',
+				ErrorBorder: '.srprice-1',
+				PayButton: '.pay_button',
+				PayButtonJJ: '.surepay'
+			});
+			var swiper = new Swiper('.swiper-container', {
+				autoplay: 3000,
+				loop: true,
+				autoplayDisableOnInteraction: false,
+				pagination: '.swiper-pagination',
+				paginationClickable: true
+			});
+			//回退按钮点击添加背景色
+			var backKeyIconSpan = document.querySelector('.backKeyIcon');
+			var backKeyIconEm = document.querySelector('.backKeyIconEm');
+			backKeyIconSpan.addEventListener('touchstart',function(){
+				backKeyIconEm.style.background = '#eee'
+			}, false);
+            backKeyIconSpan.addEventListener('touchend',function(){
+            	backKeyIconEm.style.background = 'none'
+            }, false);
+		}
+	</script>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+		<style>
+		  html,body{
+		  background:#fff;
+		  }
+		</style>
+	</head>
+	<body>
+		<div class="CommissionRecordList">
+			<ul class="CommissionRecordListUl">
+			</ul>
+		</div>
+		<div class="loadings" style="display:none;">加载中...</div>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+	<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/doT.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/refresh.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	var db;
+	var userInfo;
+	var $bid,$plat,$page=1,flag=true;
+	var $posId='All';
+		H.ready(function() {
+			db=api.require('db');
+			//取出用户信息
+			var sql='select * from kltx_login',
+					userInfo=selectSql('kltx_db', sql);
+					$bid = userInfo[0].id;
+					$plat = userInfo[0].plat;
+					refresh(refreshCallback);
+					fnRefreshHeaderLoading();
+					up_load();
+				});
+				//下拉刷新
+		 function refreshCallback(){
+			 $page=1;
+				getIncome();
+		 }
+		 //改变POS分类id;
+		 function changePosId(id){
+			 $posId=id;
+			 $page=1;
+			 getIncome();
+		 }
+		//请求数据
+		 function getIncome(){
+			 //alert($page);
+			 var $url=url+'Home/Distribution/CashBack';
+			 H.ajax(getIncomeCallback, $url, 'post', {values:{bid:$bid,plat:$plat,cid:$posId,page:$page,types:'O'}}, 'json', {});
+		 }
+		 function getIncomeCallback(ret,err){
+			  api.refreshHeaderLoadDone();
+			 if(ret){
+				 //J(ret);
+				 if(ret.body.status){
+				 var data=ret.body.data;
+				 flag=true;
+				 if(data.length>0){
+					  var interText = doT.template($("#incomeMarsk").text());
+					 		if(flag){
+								if($page==1){
+							 	$(".CommissionRecordListUl").html(interText(data));
+							 }else{
+									$(".CommissionRecordListUl").append(interText(data));
+							 }
+							$page++;
+							$(".loadings").hide();
+					 }else{
+						 return false;
+					 }
+			 }else{
+				 if($page==1){
+					 $(".CommissionRecordListUl").empty();
+				 }
+					 $(".loadings").show().html('<div style="text-align:center;height:50px; line-height:50px;">暂无数据</div>');
+			 }
+			 }
+		 }else{
+			J(err);
+		 }
+	 }
+		 //上划加载
+			function up_load() {
+				api.addEventListener({
+					name : 'scrolltobottom'
+				}, function(ret, err) {
+					if(flag){
+						$(".loadings").show();
+						getIncome();
+						flag=false;
+					}
+				});
+			}
+	</script>
+<script id="incomeMarsk" type="text/x-dot-template">
+	{{
+		for(var index in it){
+		}}
+		<li class="line_bottom">
+			<img src="../../images/CommissionRecordOneIcon.png" />
+			<div class="CommissionRecordListDiv">
+				<div>
+					<h3>{{=it[index].posbusname}}</h3>
+					<p>
+						开通顶级返现
+					</p>
+				</div>
+				<div>
+					<p>
+						+{{=it[index].fmoney}}
+					</p>
+					<time>
+						{{=it[index].cashTime}}
+					</time>
+				</div>
+			</div>
+		</li>
+		{{
+		}
+	}}
+
+	</script>
+</html>

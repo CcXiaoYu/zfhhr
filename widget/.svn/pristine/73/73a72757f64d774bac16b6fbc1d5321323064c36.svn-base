@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+		<style>
+			html,body{height: 100%; width: 100%; overflow: hidden; position:relative;}
+			.daoTime{position: fixed;right:10px; top:30px; border-radius: 3px; background: rgba(0,0,0,0.5); color: #fff; text-align: center; height: 38px; line-height: 38px; font-size: 14px; padding: 0 15px;}
+		</style>
+	</head>
+	<body>
+
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+	<script type="text/javascript" src="../../script/db.js"></script>
+		<script type="text/javascript" src="../../script/doT.min.js"></script>
+	<script type="text/javascript">
+		var flag=false;
+		H.ready(function(){
+		getAds();
+		});
+		//获取广告图
+		function getAds(){
+			var $url=url+'Home/PublicInterface/adpic';
+			H.ajax(getAdsCallback, $url, 'post', {}, 'json', {});
+		}
+	//获取广告图返回
+		function getAdsCallback(ret,err){
+			if(ret){
+				if(ret.body.status){
+					var data=ret.body.data;
+					var interText = doT.template($("#ads").text());
+						$("body").html(interText(data));
+						//倒计时
+						settime();
+				}
+			}else{
+				//J(err);
+			}
+		}
+		var countdown=3;
+				function settime() {
+						if (countdown == 0) {
+									$(".daoTime > span").empty();
+									flag=true;
+								countdown = 3;
+								return;
+						} else {
+							flag=false;
+								$(".daoTime > span").html(countdown+'s后');
+								countdown--;
+						}
+				setTimeout(function() {
+						settime();
+					},1000)
+				}
+	</script>
+	<script id="ads" type="text/x-dot-template">
+	<div class="daoTime" onclick="if(flag==true)H.closeFrame();"><span></span> 关闭</div>
+	<img src="{{=it.picUrl}}" onclick="H.openWin('adsDetail','adsDetail.html',{hurl:'{{=it.htmlUrl}}'});"/>
+	</script>
+</html>

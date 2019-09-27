@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+		<style>
+		  html,body{
+		    height:auto;
+		  }
+		</style>
+	</head>
+	<body>
+	<!--header start-->
+		<div class="headers">
+			<header class="subpageHeader"><a class="aBackBtn" onclick="H.closeWin();"><img src="../../images/backIcon.png"/></a>忘记密码</header>
+	    </div>
+		<section class="subpageMain">
+			<div class="forgetPasswordStepOne">
+				<div class='forgetPasswordContainer'>
+					<div class='forgetPasswordHeader'>
+						<img src="../../images/forgetPasswordOneImg.png"/>
+					</div>
+					<div class='forgetPasswordPhone'>
+						<input type='tel' maxlength='11' id="phoneNum" placeholder='请输入手机号' name="telPhoneNumber" emp="{empty:true,tel:true}" mess="输入手机号" />
+					</div>
+					<div class='forgetPasswordCode' id="btn">
+						点击<span onclick="getCode(this);">获取验证码</span>以验证身份
+					</div>
+					<div class='forgetPassVerification' id="vCode">
+						<input type="tel" maxlength="1" mess="请填写验证码"/>
+						<input type="tel" maxlength="1" mess="请填写验证码"/>
+						<input type="tel" maxlength="1" mess="请填写验证码"/>
+						<input type="tel" maxlength="1" mess="请填写验证码"/>
+					</div>
+					<div class='forgetPasswordBtn'>
+						<a onclick="checkCode();">下一步</a>
+					</div>
+				</div>
+			</div>
+		</section>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+	<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	var $bid;
+	H.ready(function(){
+		H.fixStatusBar(null,'.headers');
+	})
+
+		$(function() {
+			//四位验证码
+			$('.forgetPassVerification input').keydown(function() {
+				if ($(this).val() != '') {
+					$(this).next('input').focus();
+				} else {
+					$(this).prev('input').focus();
+				}
+			})
+
+		})
+
+	//请求验证码
+		function getCode(obj){
+			if ($('[emp]').checkinput()) {
+				showLoading();
+				time(obj);
+				var $url=url+'Home/publicInterface/forgetPassVerify';
+				var $phone=$("#phoneNum").val();
+				H.ajax(getCodeCallback, $url, 'post', {values:{phone:$phone,types:'forget'}}, 'json', {});
+			}
+		}
+
+		//请求验证码返回
+		function getCodeCallback(ret,err){
+			hideLoading();
+			if(ret){
+				H.toast(ret.body.msg);
+				if(ret.body.status){
+					$bid=ret.body.data.bid;
+				}
+			}else{
+				J(err);
+			}
+		}
+
+	//验证验证码是否正确
+	var $phone;
+	function checkCode(){
+		if ($('[emp]').checkinput() && $('[emps]').checkinput() && $bid!=undefined) {
+				var $code=$("#vCode input:eq(0)").val()+$("#vCode input:eq(1)").val()+$("#vCode input:eq(2)").val()+$("#vCode input:eq(3)").val();
+				$phone=$("#phoneNum").val();
+				var $url=url+'Home/publicInterface/checkVerify';
+				H.ajax(checkCodeCallback, $url, 'post', {values:{phone:$phone,verify:$code,bid:$bid}}, 'json', {});
+
+		}
+	}
+//验证验证码是否正确返回
+	function checkCodeCallback(ret,err){
+		if(ret){
+		//	J(ret);
+			if(ret.body.status){
+				H.openWin('forgetPasswordStepTwo', 'forgetPasswordStepTwo.html', {bid:$bid,phone:$phone}, {
+					slidBackEnabled : false,
+					animation : {
+						type : 'fade',
+						duration : 200
+					}
+				});
+			}
+			H.toast(ret.body.msg);
+		}else{
+			J(err);
+		}
+	}
+
+	//倒计时方法
+	var wait = 120;
+	function time(obj) {
+		if (wait == 0) {
+			$('#btn').html('点击<span onclick="getCode(this);">获取验证码</span>以验证身份');
+
+			wait = 120;
+			// setTimeout(function() {
+			// 	$('[tishi]:first').hide();
+			// 	$('[tishi]:last').show();
+			// },1000);
+		} else {
+			$('#btn').html(wait + "s");
+			wait--;
+			setTimeout(function() {
+				time();
+			}, 1000)
+		}
+	}
+
+
+	</script>
+</html>

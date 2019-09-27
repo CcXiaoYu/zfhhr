@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../../css/css.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/Hui.css"/>
+     <link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+</head>
+<body>
+	<div class="bankCardTip">我的银行卡</div>
+	<div class="bankCardList">
+		<ul>
+			<!--<li class="bottom-line clearfix" onclick="H.openWin('bankCardDetail','bankCardDetail.html');">
+				<img src="../../image/icon/user.jpg"/>
+				<div class="bankCardList_right">
+					<h2>中国建设银行</h2>
+					<p>尾号4713　储蓄卡</p>
+				</div>
+			</li>-->
+		</ul>
+	
+	</div>
+	
+
+	<div class="bankCardAddBtn bottom-line" onclick="H.openWin('bankCardAdd','bankCardAdd.html');"><img src="../../image/icon/icon_add_nav_black.png"/>添加银行卡</div>
+</body>
+<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../script/H.js"></script>
+<script type="text/javascript" src="../../script/db.js"></script>
+<script type="text/javascript" src="../../script/doT.min.js"></script>
+<script type="text/javascript" src="../../script/refresh.js"></script>
+<script type="text/javascript">
+	H.ready(function(){
+		fnRefreshHeaderLoading();
+		refresh(callback);
+	});
+	//下拉刷新回调
+	function callback(){
+		getBankCardList();
+	}
+	
+	function getBankCardList(){
+		
+		var selectRowSql='select uid from wld_login';
+		var uid=selectData('wld_db',selectRowSql).uid;
+		var $url=url+"Home/Bank/getBankInfo";
+		H.ajax(getBankCardListCallback, $url, 'post', {values:{uid:uid}}, 'json', {});
+	}
+	//请求银行卡列表信息成功
+	function getBankCardListCallback(ret,err){
+		api.refreshHeaderLoadDone();
+		if(ret){
+			//J(ret);
+			if(ret.body.statusCode==200){
+				var interText = doT.template($("#bankCardListMarsk").text());
+					$(".bankCardList").html(interText(ret.body.bankInfo));
+				}else{
+					$(".bankCardList").empty();
+				
+				}
+		}else{
+			JSON.stringify(err);
+		
+		}
+	}
+</script>
+<script id="bankCardListMarsk" type="text/x-dot-template">
+	{{
+		for(var index in it){
+			}}
+				<li class="bottom-line clearfix" onclick="H.openWin('bankCardDetail','bankCardDetail.html',{id:'{{= it[index].id}}'});">
+					<img src="{{= url+it[index].cardCode}}"/>
+					<div class="bankCardList_right">
+						<h2>{{= it[index].bankName}}</h2>
+						<p>尾号{{= it[index].bankCardNumber.substr(it[index].bankCardNumber.length-4, 4)}}　{{= it[index].cardType}}</p>
+					</div>
+				</li>
+			
+			{{
+		}
+	}}
+</script>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+		<style>
+			html, body {
+				background: #fff;
+			}
+		</style>
+	</head>
+<body>
+	<section class="subpageMain">
+	  <div class="teamLevelOneContainer">
+				<div class="teamLevelOneTotal">
+					<span>二级代理商成员</span>
+					<em id="con"></em>
+				</div>
+				<div class="teamLevelOneListMain" id="teamLevelOneListMain"></div>
+			</div>
+	</section>
+</body>
+        <script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+		<script type="text/javascript" src="../../script/H.js"></script>
+		<script type="text/javascript" src="../../script/db.js"></script>
+		<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/base64.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/doT.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/common.js" type="text/javascript" charset="utf-8"></script>
+			<script src="../../script/refresh.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+		var db;
+		var userInfo;
+		var $bid,$plat;
+		apiready = function() {
+			db=api.require('db');
+			//取出用户信息
+			var sql='select * from kltx_login',
+					userInfo=selectSql('kltx_db', sql);
+					$bid = userInfo[0].id;
+					$plat = userInfo[0].plat;
+					refresh(refreshCallback);
+					fnRefreshHeaderLoading();
+				//	up_load();
+
+		}
+		function refreshCallback(){
+			//请求团队数据
+				getTeamData();
+					//请求团队数量
+				getTeamAmount();
+
+		}
+		//请求团队数量
+	function getTeamAmount(){
+		var $url=url+'Home/Distribution/DistributionCount';
+		H.ajax(getTeamAmountCallback, $url, 'post', {values:{bid:$bid,plat:$plat,level:2}}, 'json', {});
+	}
+
+	function getTeamAmountCallback(ret,err){
+			if(ret){
+				if(ret.body.status){
+					var con=ret.body.con;
+					$("#con").html('共'+con+'人');
+				}
+			}else{
+			return false;
+			}
+
+	}
+//请求团队数据
+		function getTeamData(){
+			var $url=url+'Home/Distribution/DistributionGet';
+			H.ajax(getTeamDataCallback, $url, 'post', {values:{bid:$bid,plat:$plat,level:2}}, 'json', {});
+		}
+
+		function getTeamDataCallback(ret,err){
+			api.refreshHeaderLoadDone();
+			if(ret){
+				//J(ret);
+				if(ret.body.status){
+						var data=ret.body.data;
+						var interText = doT.template($("#teamMarsk").text());
+						$("#teamLevelOneListMain").html(interText(data));
+				}
+			}else{
+				H.toast(JSON.stringify(err));
+			}
+		}
+
+
+	</script>
+		<script type="x-dot-template" id="teamMarsk">
+		<ul class="teamLevelOneListUl">
+		{{? it.length>0}}
+		{{
+				for(var index in it){
+				}}
+				<li class="line_bottom">
+					<img src="../../images/teamLevelTwoIcon.png" />
+					<div>
+						<p>{{=it[index].name}}</p>
+						<p>{{=it[index].mobile}}</p>
+					</div>
+				</li>
+				{{
+				}
+
+		}}
+		{{??}}
+			<!--暂无成员-->
+			<li class="teamLevelOneNoData">
+				<div class="noDataaMain">
+					<img src="../../images/noDataIconImg.png" />
+					<p>暂无团队成员</p>
+				</div>
+			</li>
+			{{?}}
+		</ul>
+	</script>
+
+</html>

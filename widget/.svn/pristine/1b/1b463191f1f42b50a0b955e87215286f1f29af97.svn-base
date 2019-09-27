@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../../css/css.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/Hui.css"/>
+     <link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+</head>
+<body>
+	<!--头部-->
+	<div class="wld_header">
+		<div class="wld_header_main">
+			<em onclick="H.closeWin();"><img src="../../image/icon/icon_back_nav_black.png"/></em>
+			<i onclick="confirms();"><img src="../../image/icon/abc_ic_menu_moreoverflow_mtrl_alpha.png"/></i>
+			<span>银行卡详细</span>
+		</div>
+	</div>
+<!--/头部-->
+<!--添加银行卡-->
+
+<!--/添加银行卡-->
+
+</body>
+<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../script/H.js"></script>
+<script type="text/javascript">
+	var cardId;
+	var bankCardNumber;
+	var bankName;
+	var cardType;
+	var cardImg;
+	var bankCardTail;
+	H.ready(function(){
+		H.fixStatusBar(null,'.wld_header');
+		cardId=H.pageParam.id;
+		getBankCardDetail();
+	});
+	
+	//获取银行卡详细信息
+	function getBankCardDetail(){
+		var $url=url+'Home/Bank/getOneBankInfo';
+		H.ajax(getBankCardDetailCallback, $url, 'post', {values:{cardid:cardId}}, 'json', {});
+	}
+	//返回
+	function getBankCardDetailCallback(ret,err){
+		if(ret){
+			bankCardNumber=ret.body.bankInfo.bankCardNumber;
+			bankName=ret.body.bankInfo.bankName;
+			cardType=ret.body.bankInfo.cardType;
+			cardImg=ret.body.bankInfo.cardCode;
+			//alert(bankCardNumber+"__"+bankName+"__"+cardType+"__"+cardImg);
+			bankCardTail=bankCardNumber.substr(bankCardNumber.length-4, 4);
+			
+		}else{
+			H.toast(JSON.stringify(err));
+		}
+	
+	}
+	//解除绑定银行卡
+	function delBankCard(){
+		var $url=url+'Home/Bank/deleteBankCard';
+		H.ajax(delBankCardCallback, $url, 'post', {values:{cardid:cardId}}, 'json', {});
+	
+	}
+	//返回
+	function delBankCardCallback(ret,err){
+		if(ret){
+			if(ret.body.statusCode==200){
+				H.execScript('bankCard_header','bankCardList_body','getBankCardList();');
+				setTimeout(function(){
+					H.closeWin();
+				},1000);
+			}
+			H.toast(ret.body.message);
+		}else{
+			H.toast(JSON.stringify(err));
+		}
+		
+	}
+
+	
+	//提示框 
+	function confirms(){
+		var dialogBox = api.require('dialogBox');
+			dialogBox.confirm({
+			    tapClose: true,
+			    msg: {
+			        content:'解除绑定银行卡',
+			        leftBtnTitle: '取消',
+			        rightBtnTitle:'确定'
+			    }, 
+			    styles: {
+			        bg: '#fff',                
+			        maskBg:'rgba(0,0,0,0.3)', 
+			        h: 120, 
+			        msg :{            
+			            color : '#000000', 
+			            size  : 14,
+			            align : 'center'    
+			        },                     
+			        
+			        leftBtn :{                     
+			           	bg: '#f5f5f5',
+				        highlightBg : '#eee',
+				        color: '#000',
+				        size: 14
+			        },
+			        rightBtn :{                  
+			            bg: '#f5f5f5',
+				        highlightBg : '#eee',
+				        color: '#000',
+				        size: 14
+			        }
+			    }
+			}, function(ret) {
+				//J(ret);
+			   if(ret.eventType=="ok"){
+			   		alerts();
+			  }else{
+			  		dialogBox.close({
+					    dialogName: 'confirm'
+					});
+			  }
+
+			});
+	
+	}
+	
+	function alerts(){
+		var dialogBox = api.require('dialogBox');
+			dialogBox.alert({
+			    texts: {
+			        title: '',
+			        content: '确定解绑尾号'+bankCardTail+'的银行卡吗？',
+			        leftBtnTitle: '取消',
+			        rightBtnTitle: '确认'
+			    },
+			    tapClose:true,
+			    styles: {
+			        bg: '#fff',
+			        w: 260,
+			       
+			        content: {
+			            color: '#000',
+			            size: 14
+			        },
+			        left: {
+			            marginB: 7,
+			            marginL: 20,
+			            w: 100,
+			            h: 35,
+			            corner: 2,
+			            bg: '#f5f5f5',
+			            size: 14,
+			            color: '#000'
+			        },
+			        right: {
+			            marginB: 7,
+			            marginL: 20,
+			            w: 100,
+			            h: 35,
+			            corner: 2,
+			            bg: '#f5f5f5',
+			            size: 14,
+			            color: '#000'
+			        }
+			    }
+			}, function(ret) {
+			    if (ret.eventType == 'right') {
+			    	//解除绑定银行卡
+			       	delBankCard();
+			       
+			    }
+			     dialogBox.close({
+			            dialogName: 'alert'
+			        });
+			});
+	
+	}
+	
+	
+</script>
+</html>

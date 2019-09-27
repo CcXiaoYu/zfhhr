@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+	</head>
+	<body>
+		<section class="subpageMain">
+			   <div class="WithdrawRecordContainer">
+		       	    <ul class="WithdrawRecordListUl">
+		       	    </ul>
+		       </div>
+		</section>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+	<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/doT.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/refresh.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+	var db;
+	var userInfo;
+	var $bid,$plat;
+		H.ready(function(){
+			db=api.require('db');
+			//取出用户信息
+			var sql='select * from kltx_login',
+					userInfo=selectSql('kltx_db', sql);
+					$bid = userInfo[0].id;
+					$plat = userInfo[0].plat;
+					refresh(refreshCallback);
+						fnRefreshHeaderLoading();
+					//up_load();
+		});
+		//下拉刷新
+	 function refreshCallback(){
+			getDrawCord();
+	 }
+	 //请求提现记录
+	 function getDrawCord(){
+		// var $url=url+'Home/Withdrawal/drawCord';
+		 var $url=url+'Raise/Newport/balance';
+		 H.ajax(getDrawCordCallback, $url, 'post', {values:{AgentsId:$bid}}, 'json', {});
+	 }
+//请求提现记录返回
+	 function getDrawCordCallback(ret,err){
+		 	api.refreshHeaderLoadDone();
+		 if(ret){
+			 //J(ret);
+			 if(ret.body.statusCode=='200'){
+			 var data=ret.body.data;
+			 if(data.length>0){
+			 var interText = doT.template($("#drawMarsk").text());
+				$(".WithdrawRecordListUl").html(interText(data));
+			}else{
+				$(".WithdrawRecordListUl").html("暂无数据");
+			}
+				}
+		 }else{
+			J(err);
+		 }
+	 }
+	</script>
+	<script id="drawMarsk" type="text/x-dot-template">
+			{{
+				for(var index in it){
+				}}
+				<li>
+					{{? it[index].Accounts=="已到账"}}
+						<div class="yidaozhang"><img src="../../images/yidaozhang.png"/></div>
+					{{?}}
+					<div class="WRTitleTime">
+						<h3>余额提现</h3>
+						<time>{{=it[index].Times}}</time>
+					</div>
+					<div class="WRListMain">
+						<p>提现金额</p>
+						<p>{{=it[index].Amount}}</p>
+						<div>
+							手续费:{{=it[index].Tax}}元  |  税金:{{=it[index].Fee}}元  | 实到账:{{=it[index].Actual}}元
+						</div>
+					</div>
+					<div class="WRTip">
+						<p>提现银行:{{=it[index].Bank}}</p>
+						<p>订单号:{{=it[index].Number}}</p>
+						<p>到帐状态:{{=it[index].Checks}} | {{=it[index].Accounts}}</p>
+					</div>
+				</li>
+				{{
+				}
+			}}
+	</script>
+</html>

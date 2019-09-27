@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+	</head>
+	<body>
+		<!--header start-->
+		<div class="headers">
+			<header class="subpageHeader"><a class="aBackBtn" onclick="H.closeWin();"><img src="../../images/backIcon.png"/></a>实名认证
+			</header>
+	</div>
+		<!--header end-->
+		<!--subpage start-->
+		   <section class="subpageMain">
+		     <div class="noticeTip">
+		     	<img src="../../images/noticeIcon.png"/>
+		     	请上传本人清晰身份证照片
+		     </div>
+		     <div class="checkStep">
+		     	<div>
+		     	<em class="stepOneIcon complete"></em>
+		     	<p>填写基本信息</p>
+		     	</div>
+		     	<div>
+		     	<em class="stepTwoIcon"></em>
+		     	<p>上传身份证照</p>
+		     	</div>
+		     	<div>
+		     	<em class="stepThreeIcon"></em>
+		     	<p>绑定结算卡</p>
+		     	</div>
+		     </div>
+
+		    <div class="idCardUploadContainer">
+		        <div class="idCardUploadMain line_bottom">
+		           <div>
+		           	<img onclick="selectPicture(this,'Z');" src="../../images/identityCard01.png"  id="Z" alt="身份证正面" />
+		           	<p>身份证正面</p>
+		           </div>
+		           <div>
+		           	<img onclick="selectPicture(this,'F');" src="../../images/identityCard02.png" id="F" alt="身份证反面" />
+		           	<p>身份证反面</p>
+		           </div>
+		           <div>
+		           	<img onclick="selectPicture(this,'S');" src="../../images/identityCard03.png" id="S" alt="手持身份证" />
+		           	<p>手持身份证</p>
+		           </div>
+		        </div>
+		        <div class="idCardUploadTip">
+		        	<em>拍摄示例</em>
+		        	<div class="idCardUploadTipMain">
+		        		<div>
+		        			<img src="../../images/ic_auth_corret.png" alt="标准" />
+		        			<p>标准</p>
+		        		</div>
+		        		<div>
+		        			<img src="../../images/ic_auth_incomplete.png" alt="不完整"/>
+		        			<p>不完整</p>
+		        		</div>
+		        		<div>
+		        			<img src="../../images/ic_auth_dim.png" alt="模糊"/>
+		        			<p>模糊</p>
+		        		</div>
+		        		<div>
+		        			<img src="../../images/ic_auth_over_light.png" alt="闪光强烈"/>
+		        			<p>闪光强烈</p>
+		        		</div>
+		        	</div>
+		        </div>
+		    </div>
+		     <div class="buttonMain">
+		     	<a onclick="next();">下一步</a>
+		     </div>
+		   </section>
+		<!--subpage start-->
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+		<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/base64.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/rand.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	var db;
+		H.ready(function(){
+					H.fixStatusBar(null,'.headers');
+					db=api.require('db');
+					//查询是否已经认证过,认证过绑定信息
+					certBind();
+		});
+		//查询是否已经认证过,认证过绑定信息
+		function certBind(){
+			var certificationInfo = H.getStorage('certificationInfo');
+				if(certificationInfo!=undefined){
+						var $Z=certificationInfo.Z,
+								$F=certificationInfo.F,
+								$S=certificationInfo.S;
+								if($Z!=''){
+										$("#Z").attr('src',$Z);
+										$("#Z").addClass('Y');
+								};
+								if($F!=''){
+										$("#F").attr('src',$F);
+										$("#F").addClass('Y');
+								};
+								if($S!=''){
+										$("#S").attr('src',$S);
+										$("#S").addClass('Y');
+								};
+				}
+		}
+		//选择相册，相机
+		var $this;
+		function selectPicture(obj,type){
+			$this=$(obj);
+			var dialogBox = api.require('dialogBox');
+					dialogBox.actionMenu ({
+					    rect:{
+					        h: 150
+					    },
+					    texts:{
+					         cancel: '取消'
+					    },
+					    items:[
+					    {
+					        text: '相机',
+					        icon: 'widget://image/caramer.png'
+					    },
+					    {
+					        text: '机册',
+					        icon: 'widget://image/picture.png'
+					    }
+					    ],
+					    styles:{
+					        bg:'#FFF',
+					        column: 3,
+					        itemText: {
+					            color: '#000',
+					            size: 12,
+					            marginT:8
+					        },
+					        itemIcon:{
+					            size:40
+					        },
+					        cancel:{
+					            bg: 'fs://icon.png',
+					            color:'#000',
+					            h: 44 ,
+					            size: 14
+					        }
+					    }
+					}, function(ret){
+					    //alert(JSON.stringify(ret));
+							if(ret.index==0){
+								H.getPicture(getPictureCallback,'camera','pic','url',{saveToPhotoAlbum:true});
+							}else if(ret.index==1){
+									H.getPicture(getPictureCallback,'album','pic','url',{saveToPhotoAlbum:true});
+							}
+									dialogBox.close({
+									    dialogName: 'actionMenu'
+									});
+					});
+		}
+//相机
+function getPictureCallback(ret,err){
+	if(ret){
+		var data=ret.data;
+		if(data!=''){
+			$this.attr("src",data);
+			$this.addClass("Y");
+		}
+	}else{
+		J(err);
+	}
+}
+
+//下一步
+function next(){
+	var info=H.getStorage('certificationInfo');
+	if($("#Z").hasClass('Y')&&$("#F").hasClass('Y')&&$("#S").hasClass('Y')){
+	var Z=$("#Z").attr("src"),
+			F=$("#F").attr("src"),
+			S=$("#S").attr("src");
+			info.Z=Z;
+			info.F=F;
+			info.S=S;
+
+	H.setStorage('certificationInfo',info);
+	H.openWin('certificationThree','../certificationCenter/certificationThree.html');
+}else{
+	H.toast('请上传完整信息');
+}
+}
+
+	</script>
+</html>

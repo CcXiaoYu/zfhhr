@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>闪付通</title>
+	<link rel="stylesheet" type="text/css" href="../../../css/reset.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/Hui.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/Rcommon.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/loading1.css" />
+	<style>
+		html,
+        body {
+            background: #fff;
+		}
+		input,textarea{outline: none;}
+	</style>
+</head>
+
+<body>
+	<section class="editorAddressSection">
+		<div class="addAddressMain">
+			<div class="itemDiv line_bottom">
+				<span>收货人</span>
+				<input type="text" placeholder="请输入收货人姓名" id="nameVal" emp="{empty:true}" value="" mess="输入收货人姓名">
+			</div>
+			<div class="itemDiv line_bottom">
+				<span>电话</span>
+				<input type="tel" maxlength="11" placeholder="请输入您的电话号码" id="phoneVal" emp="{empty:true,tel:true}" value="" mess="输入手机号">
+			</div>
+			<div class="itemDiv line_bottom">
+				<span>省份</span>
+				<select name="province" id="province" emp="{empty:true,select:true}" mess="请选择省份">
+					<option value="">请选择省份</option>
+				</select>
+			</div>
+			<div class="itemDiv line_bottom">
+				<span>城市</span>
+				<select name="city" id="city" emp="{empty:true,select:true}" mess="请选择城市">
+					<option value="">请选择城市</option>
+				</select>
+			</div>
+			<div class="itemDiv line_bottom">
+				<span>区县</span>
+				<select name="town" id="town" emp="{empty:true,select:true}" mess="请选择区县">
+					<option value="">请选择区县</option>
+				</select>
+			</div>
+			<div class="itemDiv">
+				<em>详细地址</em>
+				<div>
+					<textarea placeholder="请输入详细地址" id="detailAddress" emp="{empty:true}" mess="详细地址"></textarea>
+				</div>
+			</div>
+			<div class="itemDiv line_bottom">
+				<span>设为默认</span>
+				<i id="defaultBtn"></i>
+			</div>
+			<div class="buttonGroup">
+				<a href="javascript:;" id="submitBtn">保　存</a>
+			</div>
+		</div>
+	</section>
+</body>
+<script type="text/javascript" src="../../../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../../script/H.js"></script>
+<script type="text/javascript" src="../../../script/db.js"></script>
+<script src="../../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../script/area.js"></script>
+<script src="../../../script/select.js"></script>
+<script type="text/javascript">
+	var db;
+	var userInfo;
+	var $bid;
+	H.ready(function () {
+		db = api.require('db');
+		//取出用户信息
+		var sql = 'select count(*) as amount from kltx_login';
+		var length = selectSql('kltx_db', sql)[0].amount;
+		if (length == '1') {
+			var sql = 'select * from kltx_login';
+			userInfo = selectSql('kltx_db', sql);
+			$bid = userInfo[0].id;
+		}
+		// 是否设为默认
+		$('#defaultBtn').attr('statusVal', 0);
+		$('#defaultBtn').click(function () {
+			if ($(this).hasClass('active')) {
+				$(this).attr('statusVal', 0).removeClass('active');
+			} else {
+				$(this).attr('statusVal', 1).addClass('active');
+			}
+		})
+		$('#submitBtn').click(function () {
+			if ($('[emp]').checkinput()) {
+				var $nameVal = $('#nameVal').val();
+				var $phoneVal = $('#phoneVal').val();
+				var $province = $('#province').val();
+				var $city = $('#city').val();
+				var $town = $('#town').val();
+				var $detailAddress = $('#detailAddress').val();
+				var $statusVal = $('#defaultBtn').attr('statusVal');
+				//提交收货信息
+				var $url = url + "Colorder/Holorder001/addaddrway";
+				H.ajax(setAddressCallBack, $url, 'post', {
+					values: {
+						bid: $bid, //商户ID
+						name: $nameVal, //收货人姓名
+						phone: $phoneVal, //收货人电话
+						province: $province, //省份
+						city: $city, //城市
+						area: $town, //地区
+						detail: $detailAddress, //详细地址
+						isdft: $statusVal, //是否默认 1-默认 0-非默认
+					}
+				}, 'json', {});
+			}
+		})
+	});
+
+	function setAddressCallBack(ret, err) {
+		if (ret) {
+			H.toast(ret.body.message);
+			if (ret.body.statusCode == 200) {
+				setTimeout(function(){
+					H.closeWin();  //关闭添加页
+					H.execScript('address','address_body','fnRefreshHeaderLoading();');
+					H.execScript('selectAddress','selectAddress_body','fnRefreshHeaderLoading();');
+					H.openWin('selectAddress','../selectAddress/selectAddress.html')  //跳转收货地址页面
+				},1500)
+			}
+		}
+
+	}
+</script>
+
+</html>

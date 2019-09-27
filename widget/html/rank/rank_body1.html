@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+		<style type="text/css">
+			html, body {
+				background: #fff;
+			}
+		</style>
+	</head>
+	<body>
+
+	  <div class="rank_main_box">
+	               <div class="rank_mian_main">
+	               	   <div class="rank_main_mian_box line_bottom">
+	               	     <ul class="rank_main_mian_left_list" id="ranks">
+											 </ul>
+									   </div>
+	               </div>
+	            </div>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/doT.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/refresh.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/arguments.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	var db;
+	var userInfo;
+	var $bid,$plat;
+		H.ready(function(){
+			db=api.require('db');
+			//取出用户信息
+			var sql='select * from kltx_login',
+					userInfo=selectSql('kltx_db', sql);
+					$bid = userInfo[0].id;
+					$plat = userInfo[0].plat;
+					refresh(refreshCallback);
+					fnRefreshHeaderLoading();
+				  up_load();
+		});
+		//下拉刷新
+ function refreshCallback(){
+		getRanking();
+		H.execScript('rank','','getRanking();');
+ }
+
+//请求排行榜
+function getRanking(){
+	var modes = getArguments(arguments,0,"sameMonth");
+	var pids = getArguments(arguments,1,0);
+	var $url=url+'Home/Rank/ranking';
+	H.ajax(getRankingCallback, $url, 'post', {values:{bid:$bid,plat:$plat,mode:modes,type:"act",pid:pids}}, 'json', {});
+}
+//请求排行榜返回
+function getRankingCallback(ret,err){
+	api.refreshHeaderLoadDone();
+	if(ret){
+		//J(ret);
+			if(ret.body.status){
+			var data=ret.body.data;
+			if(data.length>0){
+						var interText = doT.template($("#rankingMarsk").text());
+						$("#ranks").html(interText(data));
+		}else{
+				$("#ranks").html('<div style="text-align:center;height:50px; line-height:50px;">暂无数据</div>');
+		}
+		}else{
+			return false;
+		}
+	}else{
+		J(err);
+	}
+}
+
+ //上划加载
+	 function up_load() {
+		 api.addEventListener({
+			 name : 'scrolltobottom'
+		 }, function(ret, err) {
+			 //  alert(1111111111);
+			 //$page++;
+
+		 });
+	 }
+	 </script>
+	 <script id="rankingMarsk" type="text/x-dot-template">
+			{{
+				for(var index in it){
+				}}
+				<li class="line_bottom">
+					 <span>
+						 <em>
+							{{? it[index].rank=='1'}}
+						 <img class="rankTopThree" src="../../images/goldMedalIcon.png"/>
+							{{?? it[index].rank=='2'}}
+							<img class="rankTopThree" src="../../images/silverMedalIcon.png"/>
+							{{?? it[index].rank=='3'}}
+							<img class="rankTopThree" src="../../images/copperMedalIcon.png"/>
+							{{??}}
+							{{=it[index].rank}}
+							{{?}}
+						 </em>
+					 </span>
+					 <span>
+						 {{=it[index].ename}}({{=it[index].etel}})
+					 </span>
+					 <span>
+						 <b>{{=it[index].act}}台</b>
+					 </span>
+				</li>
+				{{
+				}
+			}}
+	 </script>
+</html>

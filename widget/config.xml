@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<widget id="A6991227576349" version="0.0.1">
+  <name>HUI</name>
+  <description/>
+  <author email="2725269040@qq.com" href="http://www.apicloud.com">lr18cn</author>
+  <content src="html/index.html"/>
+  <preference name="pageBounce" value="false"/>
+  <preference name="appBackground" value="rgba(255,255,255,1)"/>
+  <preference name="windowBackground" value="rgba(0,0,0,0)"/>
+  <preference name="frameBackgroundColor" value="rgba(0,0,0,0)"/>
+  <preference name="hScrollBarEnabled" value="true"/>
+  <preference name="vScrollBarEnabled" value="true"/>
+  <preference name="autoLaunch" value="true"/>
+  <preference name="fullScreen" value="false"/>
+  <preference name="autoUpdate" value="false"/>
+  <preference name="smartUpdate" value="true"/>
+  <preference name="debug" value="false"/>
+  <preference name="statusBarAppearance" value="true"/>
+  <preference name="customRefreshHeader" value="UIPullRefreshFlash"/>
+  <permission name="readPhoneState"/>
+  <permission name="camera"/>
+  <permission name="record"/>
+  <permission name="location"/>
+  <permission name="fileSystem"/>
+  <permission name="internet"/>
+  <permission name="bootCompleted"/>
+  <permission name="hardware"/>
+  <feature name="ajpush">
+    <param name="app_key" value="e0e1318068a6c3101adc3f48"/>
+    <param name="channel" value="0c7e7512fb6841ff2c7d8e43"/>
+  </feature>
+  <feature name="wx">
+   <param name="urlScheme" value="wxeffc748787634bbd"/>
+   <param name="apiKey" value="wxeffc748787634bbd"/>
+   <param name="apiSecret" value="f1693eb65ebfac3a21c034116fe01065"/>
+ </feature>
+  <access origin="*"/>
+</widget>

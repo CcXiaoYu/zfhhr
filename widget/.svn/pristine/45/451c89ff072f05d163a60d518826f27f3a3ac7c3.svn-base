@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>支付合伙人</title>
+	<link rel="stylesheet" type="text/css" href="../../../css/reset.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/Hui.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/Rcommon.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/loading1.css" />
+	<style>
+		html,body{background-color: #fff;}
+			input,textarea{outline: none;}
+			html,body{
+			  height:100%;
+			  background:#ff4829;
+			}
+		</style>
+</head>
+
+<body>
+	<section class="onlineBookSection">
+		<img src="../../../images/onlineBookBannerImg.jpg" alt="批量进货">
+		<div class="onlineBookMain">
+			<div class="onlineBookBox">
+
+			</div>
+			<div class="loadings" style="color:#fff; padding-bottom:10px;">加载中...</div>
+		</div>
+	</section>
+</body>
+<script type="text/javascript" src="../../../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../../script/H.js"></script>
+<script type="text/javascript" src="../../../script/db.js"></script>
+<script src="../../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../script/doT.min.js" type="text/javascript"></script>
+<script src="../../../script/common.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../script/refresh.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../script/chackLogin.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	var db;
+	var userInfo;
+	// var $bid;
+	var $plat, $page = 1,$limit = 3;
+	var flag = true;
+	H.ready(function () {
+		db = api.require('db');
+		//取出用户信息
+		getUserInfo();
+	});
+	//取出用户信息
+	function getUserInfo() {
+		var sql = 'select * from kltx_login';
+		userInfo = selectSql('kltx_db', sql);
+		// $bid = userInfo[0].id;
+		$plat = userInfo[0].plat;
+		refresh(refreshCallback);
+		fnRefreshHeaderLoading();
+		up_load();
+	}
+	function refreshCallback() {
+		$page = 1;
+		$(".loadings").hide();
+		getonlineBookData();
+	}
+
+	function getonlineBookData() {
+		//alert($page);
+		var $url = url + "Colorder/Holorder000/listData";
+		H.ajax(getOnlineBookCallBack, $url, 'post', {
+			values: {
+				plat: $plat,
+				page: $page,
+				limit:$limit
+			}
+		}, 'json', {});
+	}
+
+	function getOnlineBookCallBack(ret, err) {
+		hideLoading();
+		api.refreshHeaderLoadDone();
+		if (ret) {
+			// J(ret);
+			if (ret.body.statusCode==200) {
+				var data = ret.body.datas;
+				// J(data);
+				var interText = doT.template($("#messageMarsk").text());
+				if (data.length > 0) {
+					if ($page == 1) {
+						$(".onlineBookBox").html(interText(data));
+					} else {
+						$(".onlineBookBox").append(interText(data));
+						$(".loadings").hide();
+					}
+					flag = true;
+					$page++;
+				} else{
+					if(ret.body.type == 3){
+						$(".loadings").show().html("已经到底了");
+					}else if(ret.body.type == 2) {
+            var noData = '<div class="listNoDataMain"><img src="../../../images/uploadIcon.png" alt="暂无数据"><p>更多优质POS机正在上架中</p></div>';
+						$('.onlineBookBox').html(noData);
+					}
+				}
+			} else {
+				return false;
+			}
+		} else {
+			J(err);
+		}
+	}
+	//上划加载
+	function up_load() {
+		api.addEventListener({
+			name: 'scrolltobottom'
+		}, function (ret, err) {
+			if (flag) {
+				$(".loadings").show();
+				getonlineBookData();
+				flag = false;
+			}
+			//  alert(1111111111);
+			//$page++;
+
+		});
+	}
+</script>
+<script id="messageMarsk" type="text/x-dot-template">
+	{{
+      for(var index in it){
+      }}
+					{{? it.length>0}}
+								<div class="onlineBookItem" onclick="H.openWin('onlineBookDetail','../onlineBookDetail/onlineBookDetail.html',{Mid:{{=it[index].id}}})">
+									<div class="onlineBookItemTop">
+										<img src="{{=it[index].src}}" alt="产品列表">
+										<div>
+											<h3 class='ellipsis'>{{=it[index].name}}</h3>
+											<p>售价：{{=it[index].pric}}</p>
+											<p class='ellipsis'>{{=it[index].remark}}</p>
+										</div>
+									</div>
+									<div class="onlineBookItemSub line_top">
+										<span>{{=it[index].cnt}}台起批</span>
+										<a href="javascript:;">立即订货</a>
+									</div>
+								</div>
+            {{?}}
+      {{
+      }
+    }}
+	</script>
+
+</html>

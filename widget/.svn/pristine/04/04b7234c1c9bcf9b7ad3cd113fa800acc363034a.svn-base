@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>支付合伙人</title>
+	<link rel="stylesheet" type="text/css" href="../../../css/reset.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/Hui.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/Rcommon.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/loading1.css" />
+	<style>
+		html,
+        body {
+            background: #f1f1f1;
+        }
+        .subPageSection{
+            padding-bottom:50px;
+        }
+	</style>
+</head>
+
+<body>
+	<section class="subPageSection" style="display:block;">
+		<div class="addressContainer">
+			<ul class="addressListUl">
+
+			</ul>
+			<div class="loadings" style="padding-top:10px;">加载中...</div>
+		</div>
+		<div class="footerBottomBtn line_top">
+			<a href="javascript:;" onclick="H.openWin('selectAddAddress','../selectAddAddress/selectAddAddress.html')">添加收货地址</a>
+		</div>
+	</section>
+	<!-- 暂无收货地址 -->
+	<div class="noAddressDataBox"></div>
+</body>
+<script type="text/javascript" src="../../../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../../script/H.js"></script>
+<script type="text/javascript" src="../../../script/db.js"></script>
+<script src="../../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../script/doT.min.js" type="text/javascript"></script>
+<script src="../../../script/common.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../script/refresh.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../script/chackLogin.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	var db;
+	var userInfo;
+	var $bid;
+	var $plat, $page = 1,
+		$limit = 8;
+	var flag = true;
+	var ids;
+	H.ready(function () {
+		db = api.require('db');
+		//取出用户信息
+		getUserInfo();
+		//请求收货地址列表
+		getAddressListData();
+		//点击收货地址
+		$('.addressListUl').delegate('.addressDiv','click',function(){
+       ids = $(this).parents('li').attr('data-ids');
+			 setDftFn();
+			 H.closeWin();
+       H.execScript('Confirm','Confirm_body','dftAddress();');
+		})
+	});
+	// 删除收货地址
+	$('.addressListUl').delegate('.deleteIcon','click',deleteAddress);
+	//取出用户信息
+	function getUserInfo() {
+		var sql = 'select * from kltx_login';
+		userInfo = selectSql('kltx_db', sql);
+		$bid = userInfo[0].id;
+		refresh(refreshCallback);
+		fnRefreshHeaderLoading();
+		up_load();
+	}
+
+	function refreshCallback() {
+		$page = 1;
+		$(".loadings").hide();
+		getAddressListData();
+	}
+
+	function getAddressListData() {
+		var $url = url + "Colorder/Holorder001/addrlistData";
+		H.ajax(getAddressListCallBack, $url, 'post', {
+			values: {
+				bid: $bid,
+				page: $page,
+				limit: $limit
+			}
+		}, 'json', {});
+	}
+
+	function getAddressListCallBack(ret, err) {
+		hideLoading();
+		api.refreshHeaderLoadDone();
+		if (ret) {
+			// J(ret)
+			if (ret.body.statusCode == 200) {
+				$('.addressListUl').html();
+				var data = ret.body.datas;
+				var interText = doT.template($("#addressMarsk").text());
+				if (data.length > 0) {
+					$('.noAddressDataBox').html('');
+					if ($page == 1) {
+						$(".addressListUl").html(interText(data));
+					} else {
+						$(".addressListUl").append(interText(data));
+						$(".loadings").hide();
+					}
+					flag = true;
+					$page++;
+				} else {
+					if (ret.body.type == 3) {
+						$(".loadings").show().html("已经到底了");
+					} else if (ret.body.type == 2) {
+						$('.addressListUl').html('');
+						var noData ='<img src="../../../images/noDataIcon.png" alt="暂无数据"><p>暂无收货地址</p>';
+						$('.noAddressDataBox').html(noData);
+					}
+				}
+			} else {
+				return false;
+			}
+		} else {
+			J(err);
+		}
+	}
+	//上划加载
+	function up_load() {
+		api.addEventListener({
+			name: 'scrolltobottom'
+		}, function (ret, err) {
+			if (flag) {
+				$(".loadings").show();
+				getAddressListData();
+				flag = false;
+			}
+		});
+	}
+	//设为默认
+	function setDftFn(){
+		var $url = url + "Colorder/Holorder001/defaultaddrway";
+		H.ajax(setDftFnCallBack, $url, 'post', {
+			values: {
+				bid: $bid,
+				id:ids
+			}
+		}, 'json', {});
+	}
+	function setDftFnCallBack(ret,err){
+
+	}
+	// 删除收货地址
+	function deleteAddress(){
+		if(confirm('您确定要删除？')){
+			var Aid = $(this).parents('li').attr('data-ids');
+			var $url = url + "Colorder/Holorder001/deladdrway";
+			H.ajax(getDeleteAddressCallBack, $url, 'post', {
+				values: {
+					bid: $bid,
+					id:Aid
+				}
+			}, 'json', {});
+		}
+		}
+	function getDeleteAddressCallBack(ret,err){
+			if(ret){
+				H.toast(ret.body.message);
+				H.execScript('Confirm','Confirm_body','dftAddress();');
+				setTimeout(function(){
+					fnRefreshHeaderLoading();
+				},1000)
+			}
+	}
+</script>
+
+<script id="addressMarsk" type="text/x-dot-template">
+	{{
+	      for(var index in it){
+	      }}
+						{{? it.length>0}}
+							<li class='{{? it[index].isdft==1}}isDft{{?}}' data-ids = "{{=it[index].id}}">
+								<div class='addressDiv'>
+									<span>{{=it[index].name}}</span>
+									<em>{{=it[index].phone}}</em>
+								</div>
+								<p class='addressDiv line_bottom'>{{=it[index].address}}{{=it[index].detail}}</p>
+								<div class="operationAddress flex">
+								<em class="editorIcon" onclick = "H.openWin('selectEditorAddress','../selectEditorAddress/selectEditorAddress.html',{Mid:{{=it[index].id}},Bid:$bid})"><img src="../../../images/editorIcon.png" alt="编辑">编辑</em>
+								<em class="deleteIcon"><img src="../../../images/shanchu.png" alt="删除">删除</em>
+								</div>
+							</li>
+	            {{?}}
+	      {{
+	      }
+	    }}
+	</script>
+
+</html>

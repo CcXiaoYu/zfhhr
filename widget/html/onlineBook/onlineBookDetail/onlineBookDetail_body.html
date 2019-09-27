@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>闪付通</title>
+	<link rel="stylesheet" type="text/css" href="../../../css/reset.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/Hui.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/Rcommon.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/style.css?89789" />
+	<link rel="stylesheet" type="text/css" href="../../../css/loading1.css" />
+	<style>
+		html,body{background-color: #fff;}
+	</style>
+</head>
+
+<body>
+	<section class="onlineBookDetail" id="onlineBookDetail">
+
+	</section>
+	<footer class="detailFooterBut line_top">
+		<p id='kefu'></p>
+		<a href="javascript:;" id="puponBtn">立即订货</a>
+	</footer>
+	<!-- 选择数量 开始 -->
+	<div class="Roverlazy"></div>
+	<section class="footerPuponMain">
+		<a href="javascript:;" class="closePuponBtn">
+			<img src="../../../images/jinrituijianclose.png" alt="关闭">
+		</a>
+		<div class="puponPorductBox">
+			<img class='proImgSrc' src="" alt="产品">
+			<div>
+				<h3 class="proName"></h3>
+				<p class="proPric"></p>
+			</div>
+		</div>
+		<h4>
+			<span>请选择订货数量</span>
+			<em>注：<i class="proCnt">0</i></em>
+		</h4>
+		<div class="selectNumBox">
+		   <div class="selectMain">
+			 <a href="javascript:;"></a>
+			 <a href="javascript:;"></a>
+			 <a href="javascript:;"></a>
+			 <a href="javascript:;"></a>
+		   </div>
+		   <div class="selectInput line_bottom">
+			   <input type="tel" placeholder="手动输入其他订货数量" id="bookNumInput" emp="{empty:true,number:true}" value="" mess="输入订购台数" >
+		   </div>
+		</div>
+		<a class="orderBtn" href="javascript:;">立即订购</a>
+	</section>
+	<!-- 选择数量 结束 -->
+</body>
+<script type="text/javascript" src="../../../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/H.js"></script>
+<script type="text/javascript" src="../../../script/db.js"></script>
+<script src="../../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../script/doT.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+	var db;
+	var userInfo;
+	var $bid, $plat;
+	var maxCnt=1;
+	var $porId,$porImg,$porName,$reMark,$proPric,$bookNum;
+	H.ready(function () {
+		db = api.require('db');
+		//取出用户信息
+		var sql='select count(*) as amount from kltx_login';
+		var length=selectSql('kltx_db', sql)[0].amount;
+		if(length=='1'){
+			var sql='select * from kltx_login';
+			userInfo=selectSql('kltx_db', sql);
+			$bid = userInfo[0].id;
+			$plat = userInfo[0].plat;
+			//请求客服电话
+			getPhone();
+			}
+		//请求详情
+		var ids = H.pageParam.Did;
+		showLoading();
+		var $url = url + "Colorder/Holorder000/detailData";
+		H.ajax(getOnlineBookDetailCallBack, $url, 'post', {
+			values: {
+				id: ids
+			}
+		}, 'json', {});
+		//选择订货数量
+		$('.selectMain a').click(function(){
+			var thisVal = $(this).text();
+			var thisNum = thisVal.substring(0,thisVal.length - 1);
+          $('#bookNumInput').val(thisNum);
+		})
+		//立即订购
+		$('.orderBtn').click(function(){
+       if($('[emp]').checkinput()){
+				   $bookNum = $('#bookNumInput').val();
+					 if(parseInt($bookNum)>=parseInt(maxCnt)){
+						  H.openWin('Confirm','../Confirm/Confirm.html',{platId:$plat,Bid:$bid,porId:$porId,porImg:$porImg,porName:$porName,reMark:$reMark,proPric:$proPric,bookNum:$bookNum})
+              setTimeout(function(){
+								closePupon();
+							},100)
+					 }else{
+						 H.toast('此产品'+maxCnt+'台起批');
+					 }
+
+			 }
+		})
+	});
+	function getOnlineBookDetailCallBack(ret, err) {
+		hideLoading();
+		if (ret) {
+			if (ret.body.statusCode == 200) {
+				var data = ret.body.datas;
+				var interText = doT.template($("#messageMarsk").text());
+				$(".onlineBookDetail").html(interText(data));
+				$api.html($api.byId('detailBriefBox'),data.detail)
+				//订货操作
+				maxCnt = data.cnt;
+				$('.proImgSrc').attr('src',data.src);
+        $('.proName').html(data.name);
+				$('.proPric').html("单价："+data.pric);
+				$('.proCnt').html(data.cnt+'台起批');
+				$porId = data.id;
+				$porImg = data.src;
+				$reMark = data.remark;
+				$porName = data.name;
+				$proPric = data.pric;
+				//订货数量
+				$('.selectMain a:nth-of-type(1)').html(maxCnt+'台');
+				$('.selectMain a:nth-of-type(2)').html(parseInt(maxCnt)+10+'台');
+				$('.selectMain a:nth-of-type(3)').html(parseInt(maxCnt)+20+'台');
+				$('.selectMain a:nth-of-type(4)').html(parseInt(maxCnt)+30+'台');
+			} else {
+				return false;
+			}
+		} else {
+			H.toast(JSON.stringify(err));
+		}
+	}
+	$(function () {
+		// 底部弹层
+		$('#puponBtn').click(function () {
+			$('.Roverlazy').show();
+			$('.footerPuponMain').css({
+				'bottom': '0'
+			});
+		})
+    $('.Roverlazy,.closePuponBtn').click(function () {
+			closePupon();
+		})
+	})
+	//关闭底部弹层
+	function closePupon(){
+			$('.Roverlazy').hide();
+			$('.footerPuponMain').css({
+				'bottom': '-320px'
+			});
+			$('#bookNumInput').val('');
+	}
+	//客服电话
+	function getPhone(){
+		var $url=url+'Home/PublicInterface/onlineSer';
+		H.ajax(getPhoneCallBack, $url, 'post', {values:{bid:$bid,plat:$plat}}, 'json', {});
+	}
+	//请求客服电话成功
+	function getPhoneCallBack(ret,err){
+		if(ret){
+			//J(ret);
+			if(ret.body.status){
+			$('#kefu').html('<a href="javascript:;" onclick="call('+ret.body.data.telephone+');"><img src="../../../images/SphoneIcon.png" alt="客服"><em>客服</em></a>');
+			}
+		}else{
+		//	J(err)
+		}
+	}
+	function call(tel){
+		H.call('tel_prompt',tel);
+	}
+
+</script>
+<script id="messageMarsk" type="text/x-dot-template">
+<div class="posDetailBannerMain">
+	<img src="{{=it.src}}" />
+</div>
+<div class="posDetailTitle line_bottom">
+	<h3>
+		<p>{{=it.name}}</p>
+		<p>{{=it.remark}}</p>
+	</h3>
+	<div class="line_left">
+		<p>{{=it.cnt}}台</p>
+		起批
+	</div>
+</div>
+<div class="posDetailPrice">
+	<span>售价：￥{{=it.pric}}</span>
+	<em>免费配送</em>
+</div>
+<div class="advantageTip">
+	<span>
+		<em>安全</em>央行支付牌照</span>
+	<span>
+		<em>包邮</em>送货到家</span>
+	<span>
+		<em>省心</em>24小时客服</span>
+</div>
+<div class="spacingNav"></div>
+<section class="detailBriefMain">
+	<h3>优势卖点</h3>
+	<div class="detailBriefBox" id="detailBriefBox">
+
+	</div>
+</section>
+</script>
+
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+		<style>
+			html, body {
+				background: #fff;
+			} 
+        </style>
+	</head>
+	<body>
+		<section class="subpageMain">
+		     <div class="changePhoneHeader">
+		    		<span>
+		    		<img src="../../images/changePhoneIcon.png"/>
+		    		</span>
+		    		<p>132****5340</p>
+		    	</div>	
+		    	<div class="settingChangePhoneOtherWay">
+		    		<p>1、若您原注册手机号码已无法使用（不能接收短信），请使用该方式申请更换，我们将进行人工审核；</p>
+		    		<p>2、请使用没有注册过闪付通的新手机号进行更换操作；</p>
+		    		<p>3、审核时间：工作人员会在1个工作日内完成审核；</p>
+		    		<p>4、审核结果我们将会以手机短信的方式进行通知；若审核通过，则请以新手机号码+登录密码进行登录；若审核未通过，请重新提交或联系客服。</p>
+		    	</div>
+		    	<div class="buttonMain">
+				<a onclick="H.openWin('settingChangePhoneOtherWayTwo','settingChangePhoneOtherWayTwo.html');">立即申请</a>
+			    </div>
+		</section>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+		<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/base64.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/rand.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	var db;
+		H.ready(function(){
+
+		});
+
+	</script>
+</html>

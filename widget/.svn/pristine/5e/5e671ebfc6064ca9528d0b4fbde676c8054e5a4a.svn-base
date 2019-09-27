@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+		<style>
+			html,body{background-color: #fff;}
+			input,textarea{outline: none;}
+		</style>
+	</head>
+	<body>
+		<section class="subpageMain">
+		 <div class="feedbackContainer">
+			 <img src="../../images/feedbackIcon.jpg"/>
+			 <!--文字反馈-->
+			 <div class="feedbackTextarea">
+					<textarea id="textContent" placeholder="感谢你使用支付合伙人，使用过程中有任何意见或建议请反馈给我们！"></textarea>
+			 </div>
+			 <!--图片反馈-->
+			 <div class="feedbackPicMain">
+					 <h3>添加截图</h3>
+
+					  <div class="feedbackPicItem" id="addImg" onclick="selectPicture(this);">
+							<span><img class='picIconBtn' src="../../images/picIcon.png" alt="添加按钮"/></span>
+					 </div>
+			 </div>
+			 </div>
+		</section>
+		 <!--subpage end-->
+		<div class="buttonMain">
+		 <a onclick="postData();">确认提交</a>
+	 </div>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+		<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/doT.min.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	var db;
+	var userInfo;
+	var $bid,$plat;
+	var flag=true;
+	var mam;
+		H.ready(function(){
+			api.require('mam');
+			db=api.require('db');
+			//取出用户信息
+			var sql='select * from kltx_login',
+					userInfo=selectSql('kltx_db', sql);
+					$bid = userInfo[0].id;
+					$plat = userInfo[0].plat;
+		});
+		//选择相册，相机
+		var $this;
+		function selectPicture(obj){
+			if($(".items").length<5){
+			$this=$(obj);
+			var dialogBox = api.require('dialogBox');
+					dialogBox.actionMenu ({
+							rect:{
+									h: 150
+							},
+							texts:{
+									 cancel: '取消'
+							},
+							items:[
+							{
+									text: '相机',
+									icon: 'widget://image/caramer.png'
+							},
+							{
+									text: '机册',
+									icon: 'widget://image/picture.png'
+							}
+							],
+							styles:{
+									bg:'#FFF',
+									column: 3,
+									itemText: {
+											color: '#000',
+											size: 12,
+											marginT:8
+									},
+									itemIcon:{
+											size:40
+									},
+									cancel:{
+											bg: 'fs://icon.png',
+											color:'#000',
+											h: 44 ,
+											size: 14
+									}
+							}
+					}, function(ret){
+							if(ret.index==0){
+								H.getPicture(getPictureCallback,'camera','pic','url',{saveToPhotoAlbum:true});
+							}else if(ret.index==1){
+									H.getPicture(getPictureCallback,'album','pic','url',{saveToPhotoAlbum:true});
+							}
+									dialogBox.close({
+											dialogName: 'actionMenu'
+									});
+					});
+				}else{
+					H.toast("最多可上传5张图片");
+				}
+		}
+//相机
+function getPictureCallback(ret,err){
+	if(ret){
+		var data=ret.data;
+		if(data!=''){
+			var interText = doT.template($("#imgItem").text());
+			$("#addImg").before(interText(data));
+		}
+	}else{
+		J(err);
+	}
+}
+//删除图片
+function removeImg(obj){
+	$(obj).closest(".feedbackPicItem").remove();
+}
+//获取图片数组
+function imgArr(){
+		var item=$(".items");
+		var imgArr=[];
+		for(var i=0;i<item.length;i++){
+					imgArr[i]=item.eq(i).find("img:first").attr("src");
+		}
+		return imgArr;
+}
+
+//上传数据
+function postData(){
+			//反馈内容
+			var textContent=$("#textContent").val();
+			//图片数组
+			var imgArrs=imgArr();
+			if(textContent!=''){
+				var $url=url+'Home/PublicInterface/upload';
+				H.ajax(postDataCallBack, $url, 'post', {values:{bid:$bid,plat:$plat,content:textContent},files:{'file[]':imgArrs}}, 'json', {});
+			}else{
+				H.toast('请输入反馈内容');
+			}
+}
+//上传数据返回
+function postDataCallBack(ret,err){
+	if(ret){
+		H.toast(ret.body.msg);
+		if(ret.body.status){
+				setTimeout(function(){
+					H.closeWin();
+				},1500);
+		}else{
+			return false;
+		}
+	}else{
+		J(err);
+	}
+}
+	</script>
+	<script id="imgItem" type="text/x-dot-template">
+			<div class="feedbackPicItem items">
+				 <span><img class="uploadImg" src="{{=it}}" /><em onclick="removeImg(this);"><img src="../../images/close.png" /></em></span>
+			</div>
+	</script>
+</html>

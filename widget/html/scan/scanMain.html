@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html manifest="../cache.manifest">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>闪付通</title>
+    <link rel="stylesheet" type="text/css" href="../../css/css.css"/>
+</head>
+<body>
+
+</body>
+</html>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../script/H.js"></script>
+<script type="text/javascript">
+
+	H.ready(function(){
+    //打开打描器
+		H.openFrame('FNScanner','FNScanner.html',{},{
+			rect: {	x: 0,
+					y: 0,
+              w:api.winWidth,
+  		        h:api.winHeight
+	    		},
+	    	bounces:false
+	    });
+    //打开顶部菜单
+      H.openFrame('FNScannerMenu','FNScannerMenu.html',{},{
+  			rect: {	x: 0,
+      				y: 0,
+                w:api.winWidth,
+                h:80
+  	    		},
+  	    	bounces:false,
+          bgColor:'rgba(0,0,0,0)'
+  	    });
+        //打开扫描器边框
+          H.openFrame('FNScannerBorder','FNScannerBorder.html',{},{
+      			rect: {	x:(api.winWidth-201)/2,
+        		        y:(api.winHeight-api.winWidth+100)/2,
+        		        w:201,
+        		        h:201
+      	    		},
+      	    	bounces:false,
+              bgColor:'rgba(0,0,0,0)'
+      	    });
+//          //打开文字说明
+              H.openFrame('FNScannerText','FNScannerText.html',{},{
+          			rect: {	x: 0,
+                        y:(api.winHeight-api.winWidth+100)/2+201,
+                        w:'auto',
+                        h:100
+          	    		},
+          	    	bounces:false,
+                  bgColor:'rgba(0,0,0,0)'
+          	    });
+//        	  //打开底部按钮
+              H.openFrame('FNScannerBottomBtn','FNScannerBottomBtn.html',{},{
+          			rect: {	
+          			    x: 0,
+                        y: api.winHeight - 140,
+                        w:'auto',
+                        h:80,
+          	    		},
+          	    	bounces:false,
+                  bgColor:'rgba(0,0,0,0)'
+          	    });    
+	});
+
+</script>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>懒人科技</title>
+	<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+	<link href='http://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/swiper.min.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/animate.css" />
+	<style type="text/css">
+		.swiper-pagination-bullet {
+			width: 4px;
+			height: 4px;
+		}
+		#total .t_num {
+			display: inline-block;
+			line-height: 13px;
+		}
+		#total .t_num i {
+			width: 15px;
+			height: 23px;
+			display: inline-block;
+			background: url("../../image/number1.png") no-repeat;
+			background-position: 0 0;
+			background-size: 23px auto;
+			text-indent: -999em
+		}
+		.topBtn{
+			position:fixed;
+			left:0;
+			top:0;
+			z-index:999999;
+			display:block;
+			width:50px;
+			height:50px;
+			background:#333;
+			color:#fff;
+			text-align:center;
+			line-height:50px;
+		}
+	</style>
+</head>
+<body>
+	<!-- 在线订货 开始 -->
+  <!-- <a href="javascript:;" class="topBtn" onclick="checkOpenWins('onlineBookList','../onlineBook/onlineBookList/onlineBookList.html');">订货</a> -->
+	<!-- 在线订货 结束 -->
+	<!--激活小能手-->
+	<!-- <div class="jihuoxiaonengshou-main" onclick="checkOpenWins('giftList','../gift/giftList.html');"> -->
+	 <!-- onclick="checkOpenWins('dataAnalysis','../dataAnalysis/dataAnalysis.html');" -->
+		<div class="jihuoxiaonengshou-main">
+		<div class="jihuoxiaonengshou-body">
+			<div class="jihuoxiaonengshou-center">
+				<div class="fenrun-gd">
+					<p id="newfenrun" class="animated"></p>
+				</div>
+				<h2>激活小能手</h2>
+				<div class="jihuoxiangxi-main"></div>
+			</div>
+		</div>
+	</div>
+	<!--/激活小能手-->
+	<!--收益状况-->
+	 <!-- onclick="checkOpenWins('sunDrying','../sunDrying/sunDrying.html');" -->
+	<div class="shouyizk clearfix" id="shouyizk">
+	</div>
+	<!--/收益状况-->
+	<!--广告图-->
+	<!--banner start-->
+	<div class="indexBannerMain">
+		<div class="swiper-container">
+			<div class="swiper-wrapper" id="wrapper">
+			</div>
+		</div>
+		<!--必须为png图片-->
+	</div>
+	<!--/广告图-->
+	<!--菜单-->
+	<div class="">
+		<div class="choicenessAppMain">
+			<ul class="AppListUl">
+			</ul>
+		</div>
+	</div>
+	<!--/菜单-->
+</body>
+<script type="text/javascript" src="../../js/jquery-1.8.3.min.js"></script>
+<script src="../../script/H.js" type="text/javascript"></script>
+<script src="../../script/db.js" type="text/javascript"></script>
+<script src="../../script/doT.min.js" type="text/javascript"></script>
+<script src="../../js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../script/jquery.waypoints.min.js"></script>
+<script type="text/javascript" src="../../script/animateBackground-plugin.js"></script>
+<script type="text/javascript" src="../../script/newsTicker.js"></script>
+<script type="text/javascript" src="../../script/rand.js"></script>
+<script src="../../script/refresh.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../script/chackLogin.js" type="text/javascript"></script>
+<script src="../../script/dialog.js" type="text/javascript"></script>
+<script src="../../script/mam.js" type="text/javascript"></script>
+<script type="text/javascript">
+	var db;
+	var userInfo;
+	var $bid, $plat;
+	var flags = true;
+	H.ready(function() {
+		//检测更新
+		//mam();
+		db = api.require('db');
+		//取出用户信息
+		var sql = 'select count(*) as amount from kltx_login';
+		if (Number(selectSql('kltx_db', sql)[0].amount) > 0) {
+			var sql = 'select * from kltx_login';
+			userInfo = selectSql('kltx_db', sql);
+			$bid = userInfo[0].id;
+			$plat = userInfo[0].plat;
+		}
+		//fnRefreshHeaderLoading();
+		refresh(refreshCallback);
+		//请求全部数据
+		getData();
+
+	});
+	//下拉刷新
+	function refreshCallback() {
+		getData();
+	}
+	//登陆成功请求数据
+	function loginSuccessGetData() {
+		flags = true;
+	}
+	//请求数据
+	function getData() {
+		var sql = 'select count(*) as amount from kltx_login';
+		if (Number(selectSql('kltx_db', sql)[0].amount) > 0) {
+			var sql = 'select * from kltx_login';
+			userInfo = selectSql('kltx_db', sql);
+			$bid = userInfo[0].id;
+			$plat = userInfo[0].plat;
+		}
+		//请求精选应用模块
+		getFeaturedApp();
+		var sql = 'select count(*) as amount from kltx_login';
+		if (Number(selectSql('kltx_db', sql)[0].amount) > 0) {
+			//请求banner图
+				getBanner();
+			if (api.systemType == 'android') {
+				//请求直接好友收益
+				getBusData();
+				//首页弹窗广告
+				//	indexAds();
+			} else if (api.systemType == 'ios') {
+
+				var $url = iosUrl;
+				H.ajax(getIosCallback, $url, 'post', {}, 'json', {});
+			}
+			//请求最新收益
+			getNewSy();
+			//请求激活小能手
+			getActiveFirst();
+		}else{
+			//如果没有登陆
+			var interText = doT.template($("#login_marsk").text());
+					$(".jihuoxiangxi-main").html(interText());
+		}
+	}
+	//请求ios审核
+	function getIosCallback(ret, err) {
+		if (ret) {
+			if (ret.body.status) {
+				var audit = ret.body.audit;
+				if (audit == '1') {
+					//通过审核
+					//请求直接好友收益
+					getBusData();
+					//请求精选应用模块
+				//	getCardApp();
+					//首页弹窗广告
+					//indexAds();
+				}
+			}
+		} else {}
+	}
+	//首页弹窗广告
+	function indexAds() {
+		H.openFrame('indexads', '../indexAds/ads.html', {}, {
+			rect: {
+				x: 0,
+				y: 0,
+				w: 'auto',
+				h: 'auto'
+			},
+			bounces: false,
+			bgColor: 'rgba(0,0,0,0)',
+			animation: {
+				type: "fade", //动画类型（详见动画类型常量）
+				duration: 300 //动画过渡时间，默认300毫秒
+			}
+		});
+	}
+	//请求banner图
+	function getBanner() {
+		var $url = url + 'Home/Advertis/getAds';
+		H.ajax(getBannerCallback, $url, 'post', {
+			values: {
+				plat: $plat
+			}
+		}, 'json', {});
+	}
+
+	function getBannerCallback(ret, err) {
+		if (ret) {
+			if (ret.body.status) {
+				var data = ret.body.data;
+				var interText = doT.template($("#banner").text());
+				$("#wrapper").html(interText(data));
+				var swiper = null;
+				swiper = new Swiper('.swiper-container', {
+					autoplay: 4000,
+					loop: true,
+					autoplayDisableOnInteraction: true
+				});
+
+			} else {}
+		} else {
+			H.toast(JSON.stringify(err));
+		}
+	}
+
+	//Banner图详细页
+	function bannerDetail(id, durl, titles) {
+		H.openWin('bannerDetail', '../bannerDetail/bannerDetail.html', {
+			url: durl,
+			title: titles
+		});
+	}
+	//请求精选应用模块
+	function getFeaturedApp() {
+		var $url = url + 'Home/ModuleApi/HomeModule';
+		H.ajax(getFeaturedAppCallback, $url, 'post', {
+			values: {
+				type: 'Y'
+			}
+		}, 'json', {});
+	}
+	//请求精选应用模块返回
+	function getFeaturedAppCallback(ret, err) {
+		api.refreshHeaderLoadDone();
+		if (ret) {
+			//J(ret);
+			if (ret.body.status) {
+				var data = ret.body.data;
+				var interText = doT.template($("#featuredApp").text());
+				$(".AppListUl").html(interText(data));
+			}
+		} else {
+			H.toast(JSON.stringify(err));
+		}
+	}
+	//请求激活小能手
+	function getActiveFirst() {
+		if (!checkOpenWin()) {
+			var $url = url + '/Home/Activeincome/getActiveFirst';
+			H.ajax(getActiveFirstCallback, $url, 'post', {
+				values: {
+					plat: $plat,
+					bid: $bid
+				}
+			}, 'json', {});
+		}
+	}
+
+	function getActiveFirstCallback(ret, err) {
+		if (ret) {
+			if (ret.body.status) {
+				var data = ret.body.data;
+				var interText = doT.template($("#jyxns_marsk").text());
+				$(".jihuoxiangxi-main").html(interText(data));
+			}
+		} else {
+			//	J(err);
+		}
+	}
+	//请求最新收益
+	function getNewSy() {
+		if (!checkOpenWin()) {
+			var $url = url + '/Home/Activeincome/getProfitMsg';
+			H.ajax(getNewSyCallback, $url, 'post', {
+				values: {
+					plat: $plat,
+					bid: $bid
+				}
+			}, 'json', {});
+		 }
+	}
+
+	function getNewSyCallback(ret, err) {
+		if (ret) {
+			if (ret.body.status) {
+				var data = ret.body.data;
+				$("#newfenrun").removeClass("fadeOutUp").addClass("fadeInUp").html(data);
+				setTimeout(function() {
+					$("#newfenrun").addClass("fadeOutUp").removeClass("fadeInUp");
+					setTimeout(getNewSy, 200);
+				}, 8000);
+			}
+		} else {
+			//J(err);
+		}
+	}
+	//请求直接好友收益
+	function getBusData() {
+		var $url=url+'/Home/Activeincome/getTodayData';
+		H.ajax(getBusDataCallback, $url, 'post', {values:{plat:$plat,bid:$bid}}, 'json', {});
+		// var $url = url + '/Home/Partnerincome/partnerDatas';
+		// H.ajax(getBusDataCallback, $url, 'post', {
+		// 	values: {
+		// 		plat: $plat,
+		// 		bid: $bid
+		// 	}
+		// }, 'json', {});
+	}
+
+	function getBusDataCallback(ret, err) {
+		if (ret) {
+			if (ret.body.status == '1') {
+				var data = ret.body.data;
+				var interText = doT.template($("#zj_syzk").text());
+				$("#shouyizk").html(interText(data));
+			}
+		} else {
+			//H.toast(err);
+		}
+	}
+</script>
+<!--Banner-->
+<script id="banner" type="text/x-dot-template">
+	{{ for(var index in it){ }}
+	<div class="swiper-slide" onclick="bannerDetail('{{= it[index].id}}','{{=it[index].accessUrl}}','{{=it[index].title}}');"><img src="{{= it[index].picUrl}}" /></div>
+	{{ } }}
+</script>
+<!--/Banner-->
+<!--精选应用-->
+<script id="featuredApp" type="text/x-dot-template">
+	{{ for(var index in it){ }}
+	<li onclick="checkOpenWins('{{=it[index].curl}}','{{=it[index].hurl}}');">
+		<a href="javascript:;">
+			<img src="{{=it[index].picurl}}" />
+			<h3>{{= it[index].name}}</h3>
+		</a>
+	</li>
+	{{ } }}
+</script>
+<!--精选应用-->
+<!--交易小能手-->
+<script id="jyxns_marsk" type="text/x-dot-template">
+	<div class="jihuoxiangqing clearfix">
+		<div class="jihuoxiangqing-left">{{=it.name}}</div>
+		<div class="jihuoxiangqing-right">当月激活总量</div>
+	</div>
+	<div class="jihuoxiangqing clearfix">
+		<div class="jihuoxiangqing-left">{{=it.tel}}</div>
+		<div class="jihuoxiangqing-right"><span>{{=it.counts}}台</span></div>
+	</div>
+</script>
+<!--登陆-->
+<script id="login_marsk" type="text/x-dot-template">
+	<div class="login-btn" onclick="H.openWin('login','../login/login.html',{},{animation : {type : 'movein',subType : 'from_bottom',duration : 300}});">请先登陆</div>
+</script>
+<!--/登陆-->
+<script id="zj_syzk" type="text/x-dot-template">
+	<div class="shouyizk-left line_right">
+		<div class="shouyizk-left-num">{{=it.activeCnt}}</div>
+		<div class="shouyizk-left-con">我的今日激活</div>
+	</div>
+	<div class="shouyizk-right">
+		<div class="shouyizk-right-sy clearfix line_bottom">
+			<div class="shouyizk-right-sy-name">我的商户今日交易</div>
+			<div class="shouyizk-right-sy-num">{{=it.trademoney}}</div>
+		</div>
+		<div class="shouyizk-right-sy clearfix">
+			<div class="shouyizk-right-sy-name">我的今日总收益</div>
+			<div class="shouyizk-right-sy-num">{{=it.profitmoney}}</div>
+		</div>
+	</div>
+</script>
+<script id="updatePress" type="text/x-dot-template">
+		<div class="updatePress">
+			<div class="updatePress-main">
+			<h2>更新进度</h2>
+			<div class="jidu"><div class="jdt"></div></div>
+			<div class="jixiazai">已下载：<span id="press"></span>%</div>
+			</div>
+		</div>
+</script>
+</html>

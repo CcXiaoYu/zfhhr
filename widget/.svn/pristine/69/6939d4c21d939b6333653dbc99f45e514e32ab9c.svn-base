@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+	</head>
+	<body>
+		<section class="subpageMain">
+		    <div class="helpContainer">
+		    	<div class="helpMainHeader">
+		    	   <img src="../../images/helpMainHeader.png"/>
+		    	   <div>
+		    	   	  您好，我是小闪，请问你需要什么帮助？<a href="javascript:;">点击我咨询</a>哦！
+		    	   </div>
+		    	</div>
+		    	<div class="helpListMain">
+		    		<h3 class="line_bottom"><img src="../../images/familiarQuestIcon.png"/>常见问题</h3>
+		    		<ul class="helpListUl">
+		    			<li>
+		    				<a onclick="H.openWin('helpDetail','helpDetail.html');" class="rightArr line_bottom">常见问题常见问题常见问题常见问题？</a>
+		    			</li>
+		    			<li>
+		    				<a href="detail.html" class="rightArr line_bottom">常见问题常见问题常见问题常见问题？</a>
+		    			</li>
+		    			<li>
+		    				<a href="detail.html" class="rightArr line_bottom">常见问题常见问题常见问题常见问题？</a>
+		    			</li>
+		    		</ul>
+		    		<h3 class="line_bottom"><img src="../../images/approveQuestIcon.png"/>认证问题</h3>
+		    		<ul class="helpListUl">
+		    			<li>
+		    				<a href="detail.html" class="rightArr line_bottom">常见问题常见问题常见问题常见问题？</a>
+		    			</li>
+		    			<li>
+		    				<a href="detail.html" class="rightArr line_bottom">常见问题常见问题常见问题常见问题？</a>
+		    			</li>
+		    			<li>
+		    				<a href="detail.html" class="rightArr line_bottom">常见问题常见问题常见问题常见问题？</a>
+		    			</li>
+		    		</ul>
+		    		<h3 class="line_bottom"><img src="../../images/gatheringQuestIcon.png"/>收款问题</h3>
+		    		<ul class="helpListUl">
+		    			<li>
+		    				<a href="detail.html" class="rightArr line_bottom">常见问题常见问题常见问题常见问题？</a>
+		    			</li>
+		    			<li>
+		    				<a href="detail.html" class="rightArr line_bottom">常见问题常见问题常见问题常见问题？</a>
+		    			</li>
+		    			<li>
+		    				<a href="detail.html" class="rightArr line_bottom">常见问题常见问题常见问题常见问题？</a>
+		    			</li>
+		    		</ul>
+		    		<h3 class="line_bottom"><img src="../../images/applyCardQuestIcon.png"/>办卡问题</h3>
+		    		<ul class="helpListUl">
+		    			<li>
+		    				<a href="detail.html" class="rightArr line_bottom">常见问题常见问题常见问题常见问题？</a>
+		    			</li>
+		    			<li>
+		    				<a href="detail.html" class="rightArr line_bottom">常见问题常见问题常见问题常见问题？</a>
+		    			</li>
+		    			<li>
+		    				<a href="javascript:;" class="rightArr">常见问题常见问题常见问题常见问题？</a>
+		    			</li>
+		    		</ul>
+		    	</div>
+		    </div>
+		</section>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+		<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/base64.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/rand.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	var db;
+		H.ready(function(){
+
+		});
+
+
+		Home/PublicInterface/userHelp
+
+	</script>
+</html>

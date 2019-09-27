@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link href="../../css/css.css" rel="stylesheet" type="text/css" />
+    <link href="../../css/Hui.css" rel="stylesheet" type="text/css" />
+    <link href="../../css/style.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+    	html,body{background:rgba(0,0,0,0.2);height:100%; overflow:hidden;}
+    </style>
+</head>
+<body>
+	<!--发送验证码模板-->
+	<div class="sendCode_mask">
+		<div class="sendCode_mask_header"><em onclick="H.closeFrame();">×</em><h2>请输入验证码</h2><p></p></div>
+		<div class="sendCode_mask_input bottom-line"><input type="tel" id="inputs" maxlength="4"  placeholder="请输入验证码"/><span id="btn" onclick="btnSendCode(this);"></span></div>
+		<div class="login_button next_btn" onclick="postRegisteredInfo();">下一步</div>
+
+	</div>
+	<!--/发送验证码模板-->
+</body>
+<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../script/H.js"></script>
+<script type="text/javascript" src="../../script/dialog.js"></script>
+<script type="text/javascript" src="../../script/md5.js"></script>
+<script type="text/javascript">
+	var tel,passWord1;
+	H.ready(function(){
+		tel=H.pageParam.telPhone;
+		passWord1=H.pageParam.passWords;
+		$(".sendCode_mask_header p").html("验证码已发送到手机号"+tel);
+		time();
+		sendCode();
+	});
+
+	//发送验证码
+	function sendCode(){
+
+		//发送验证码
+		var $url=url+"Home/Login/SMS_send";
+
+		//MD5PassWord();
+		H.ajax(ajaxCallback, $url, 'post', {values:{tel:tel}}, 'json', {});
+
+	}
+	//验证码变量
+	var verificationCode;
+	//请求验证码成功
+	function ajaxCallback(ret,err){
+		if(ret){
+			//alert(JSON.stringify(ret));
+			if(ret.body.statusCode==200){
+				verificationCode=ret.body.verification_Code;
+			}
+		}else{
+			myToast(''+err+'');
+		}
+	}
+	//提交注册信息
+	function postRegisteredInfo(){
+		var value=$("#inputs").val();
+		if(Number(value)==Number(verificationCode)){
+			//提交注册信息
+			var $url=url+"Home/Login/registered";
+			//if(MD5PassWord(passWord)){
+				passWord=MD5PassWord(passWord1);
+				H.ajax(regisiteredCallback, $url, 'post', {values:{tel:tel,password:passWord}}, 'json', {});
+			//}
+		}else{
+			myToast('请输入正确的验证码');
+
+		}
+	}
+	//注册信息提交成功返回
+	function regisiteredCallback(ret,err){
+		if(ret){
+			var msg=ret.body.message;
+			myToast(''+msg+'');
+			if(ret.statusCode==200){
+				setTimeout(function(){
+					H.closeWin();
+				},2000);
+			}
+		}else{
+			myToast(''+err+'');
+		}
+	}
+
+	//倒计时方法
+		var wait = 60;
+		function time() {
+			if (wait == 0) {
+				$('#btn').text("0s");
+				wait = 60;
+				setTimeout(function() {
+					$('#btn').html('重发验证码');
+				},1000);
+			} else {
+				$('#btn').text(wait + "s");
+				wait--;
+				setTimeout(function() {
+					time()
+				}, 1000)
+			}
+		}
+
+	//点击发送验证码
+	function btnSendCode(obj){
+		if($(obj).html()=="重发验证码"){
+			time();
+			sendCode();
+		}
+
+	}
+</script>
+</html>

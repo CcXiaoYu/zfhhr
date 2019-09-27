@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+		<style type="text/css">
+			html, body {
+				background: #fff;
+			}
+		</style>
+	</head>
+	<body>
+		<section class="subpageMain">
+		  <div class="walletContainer">
+				<!--我的钱包 头部-->
+				<div class="walletHeaderMain">
+					<div class="blanceDiv">
+						<p>我的余额<em>(元)</em></p>
+						<span id="yue"><i>￥</i>-_-</span>
+					</div>
+				</div>
+				<!--股势图表-->
+				<!-- <div class="gushitubiao" id="charts">
+
+				</div> -->
+				<!--我的钱包 操作按钮-->
+				<div class="walletMain">
+					<ul class="settingListMain">
+						<li>
+							<a onclick="openSM();" class="line_bottom rightArr"><img src="../../images/walletTxIcon.png" /><span>我要提现</span><em style="color:#f33;">点击提现</em></a>
+						</li>
+						<li>
+							<a onclick="H.openWin('WithdrawRecord','../WithdrawRecord/WithdrawRecord.html');" class="line_bottom rightArr"><img src="../../images/walletTxJlIcon.png" /><span>提现记录</span></a>
+						</li>
+					</ul>
+					<div class="walletMyCard">
+
+					</div>
+				</div>
+			</div>
+		</section>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+	<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/doT.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/refresh.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/echarts.simple.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	var db;
+	var userInfo;
+	var $bid,$plat;
+		H.ready(function(){
+			db=api.require('db');
+			//取出用户信息
+			var sql='select * from kltx_login';
+					userInfo=selectSql('kltx_db', sql);
+					$bid = userInfo[0].id;
+					$plat = userInfo[0].plat;
+					refresh(refreshCallback);
+					fnRefreshHeaderLoading();
+				  //up_load();
+					//股势图表
+					//UIVividLine();
+		});
+		//下拉刷新
+ function refreshCallback(){
+	 //请求余额信息
+		getBalance();
+		//请求银行卡信息
+		getBankCardInfo();
+ }
+
+ //请求余额信息
+ function getBalance(){
+ 	var $url=url+'Home/Withdrawal/balance';
+ 	H.ajax(getBalanceCallback, $url, 'post', {values:{bid:$bid,plat:$plat}}, 'json', {});
+ }
+
+ function getBalanceCallback(ret,err){
+ 	api.refreshHeaderLoadDone();
+ 	if(ret){
+	//	J(ret);
+ 			if(ret.body.status){
+				var sum=ret.body.data.sum;
+ 				$("#yue").html('<i>￥</i>'+sum+'');
+
+ 		}else{
+ 			return false;
+ 		}
+ 	}else{
+ 		J(err);
+ 	}
+ }
+//请求银行卡信息
+function getBankCardInfo(){
+	var $url=url+'Home/BankCard/BankCardsInFor';
+ 	H.ajax(getBankCardInfoCallback, $url, 'post', {values:{bid:$bid,plat:$plat}}, 'json', {});
+}
+
+//请求银行卡信息返回
+function getBankCardInfoCallback(ret,err){
+	if(ret){
+		//J(ret);
+		if(ret.body.status){
+				var data=ret.body.data;
+				if(data!=undefined){
+					var interText = doT.template($("#bankCardMarsk").text());
+					$(".walletMyCard").html(interText(data));
+					}
+	}else{
+		return false;
+	}
+	}else{
+		J(err);
+	}
+}
+
+
+//点击实认证
+function openSM(){
+		//查询认证状态
+		var $url=url+'Home/AuthManage/auditStatus';
+		H.ajax(selectRzCallBack, $url, 'post', {values:{bid:$bid,plat:$plat}}, 'json', {});
+	// checkOpenWin('certificationOne', '../certificationCenter/certificationOne.html');
+}
+//查询认证状态返回
+function selectRzCallBack(ret,err){
+if(ret){
+if(ret.body.status){
+	/**
+		1：审核通过
+		2：未实名认证
+	**/
+	switch(ret.body.data.status){
+			case '1':
+			H.openWin('Withdraw','../Withdraw/Withdraw.html');
+			break;
+			case '2':
+					H.openWin('certificationOne','../certificationCenter/certificationOne.html');
+			break;
+			default:
+				return false;
+			break;
+	}
+
+}else{
+
+	return false;
+}
+}else{
+	return false;
+}
+}
+
+
+//股势图表
+function UIVividLine(){
+	var $height=$(".gushitubiao").offset().top+20;
+	var dom = document.getElementById("charts");
+	var myChart = echarts.init(dom);
+	var app = {};
+	option = null;
+	option = {
+
+	    xAxis: {
+	        type: 'category',
+	        data: ['3.27', '3.28', '3.29', '3.30', '3.31', '4.01', '4.02'],
+					axisLabel:{
+                rotate:30,
+                interval:0
+            },
+	    },
+	    yAxis: {
+	        type: 'value'
+	    },
+	    series: [{
+	        data: [0.01, 0.010010, 0.013010, 0.015010, 0.018010, 0.019010, 0.020010],
+	        type: 'line',
+					itemStyle : { normal: {label : {show: true}}},
+	    }]
+	};
+	;
+	if (option && typeof option === "object") {
+	    myChart.setOption(option, true);
+	}
+}
+ </script>
+<script id="bankCardMarsk" type="text/x-dot-template">
+		<h2><img src="../../images/walletMycardIcon.png"/>我的结算卡</h2>
+		<div class="myBankMain">
+			<div class="myBankList">
+					<img class="deleteIconBtn" src="../../images/unbundleIcon.png" />
+				<h3>{{=it.bankName}}<!--<span>默认</span>--></h3>
+				<p>储蓄卡</p>
+				<div>{{=it.bankCard}}</div>
+			</div>
+		</div>
+</script>
+
+<script id="walletMx" type="text/x-dot-template">
+<div>
+	<p><img src="../../images/walletOneIcon.png"/>交易返现<em>(元)</em></p>
+	<span id="jyfx"><i>￥</i>-_-</span>
+</div>
+<div>
+	<p><img src="../../images/walletTwoIcon.png"/>激活奖励<em>(元)</em></p>
+	<span id="jhjl"><i>￥</i>-_-</span>
+</div>
+<div>
+	<p><img src="../../images/zhaoshang.png"/>招商奖励<em>(元)</em></p>
+	<span id="zsjl"><i>￥</i>-_-</span>
+</div>
+</script>
+</html>

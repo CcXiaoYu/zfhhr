@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>闪付通</title>
+	<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.css?4564" />
+	<style>
+		html,body {
+			background: #fff;
+		}
+	</style>
+</head>
+<body>
+	<div id="page">
+		<!--pages/gift/giftDetail/giftDetail.wxml-->
+		<!--产品图  -->
+		<img class='top_img' src='../../images/timg.jpg' />
+		<!--产品名称  -->
+		<div class='cp_tt'>
+			<div class='cp_tt_left'>
+				<div>产品名称</div>
+				<span>RMB:8000.00</span>
+			</div>
+			<div class='cp_jf'>
+				<div>兑换方式</div>
+				<div>激活奖励</div>
+			</div>
+		</div>
+		<!--兑换方式  -->
+		<div class='cp_ct_tt'>兑换条件</div>
+		<div class='cp_ct_ct'>
+			<div>刷宝激活5台</div>
+			<div>刷宝激活5台</div>
+			<div>刷宝激活5台</div>
+		</div>
+		<!--产品介绍  -->
+		<div class='cp_ct_tt'>商品详情介绍</div>
+		<div class='cp_ct_ct'>
+			<div>一直以来，我们都心存一个设想，期待着能够打造出这样一部 iPhone：它有整面的屏幕，能让你在使用时完全沉浸其中，仿佛忘记了它的存在。它是如此智能，你的一触、一碰、一言、一语，哪怕是轻轻一瞥，都会得到它心有灵犀的回应。而这个设想，终于随着 iPhone X 的到来成为了现实。现在，就跟未来见个面吧。</div>
+		</div>
+
+		<!--按钮  -->
+		<div style='height:57px;'></div>
+		<div class='bottom'>
+			<div class='button' onclick="H.openWin('giftConfirmOrder','giftConfirmOrder.html');">兑换</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../script/H.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/doT.min.js"></script>
+<script>
+	H.ready(function() {
+		//请求礼品数据列表
+		//getData();
+	});
+
+	//请求数据
+	function getData() {
+		var $url = url + 'Home/PublicInterface/Introduct';
+		H.ajax(getDataCallback, $url, 'post', {
+			values: {
+
+			}
+		}, 'json', {});
+	}
+
+	function getDataCallback(ret, err) {
+		if (ret) {
+			var interText = doT.template($("#giftListMarsk").text());
+			$("#container").html(interText(data));
+			waterFlow("container", "list");
+		} else {
+			//J(err);
+		}
+	}
+</script>
+<script id="giftListMarsk" type="text/x-dot-template">
+	<div class='list' onclick="">
+		<img src='../../images/timg.jpg' />
+		<div class='list_tt'>OPPO find-x，兰博基尼特别款（全球限量发售）</div>
+		<div class='pric'>市场价：5000</div>
+		<div class='tj'>
+			<span>领取要求</span>
+			<span>刷宝5台</span>
+			<span>刷宝5台</span>
+			<span>刷宝5台</span>
+		</div>
+	</div>
+</script>
+<script id="giftListClassification" type="text/x-dot-template">
+	<div class="nav_item">电器</div>
+</script>
+
+</html>

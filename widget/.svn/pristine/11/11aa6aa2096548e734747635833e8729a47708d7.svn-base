@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+	</head>
+	<body>
+		<section class="subpageMain">
+				 <div class="changeBankCardContainer">
+					<div class="noticeTip">
+					<img src="../../images/noticeIcon.png"/>
+					只能更换本人的结算卡
+				 </div>
+					 <div class="changeBankCardHeader">
+						<img src="../../images/bankCardImg.png"/>
+						<h3 id="bankName">所属银行</h3>
+						<p id="pBankCardNum">银行卡号</p>
+					 </div>
+					 <div class="changeBankCardMain">
+						<div class="FormsGroup bindCardFormGroup">
+					<div class="line_bottom">
+						<img src="../../images/creditCardIcon.png" alt="储蓄卡卡号"/>
+						<input type="tel" id="inputBankCardNum" maxlength="19" placeholder="请输入储蓄卡卡号" onblur="selectBank(this);" emp="{empty:true,care:true}" mess="输入储蓄卡卡号"/>
+					</div>
+					<div class="line_bottom">
+						<img src="../../images/bankIcon.png" alt="所属银行" />
+						<input type="text" id="bank" placeholder="所属银行" disabled="disabled"/>
+					</div>
+					<div class="line_bottom">
+						<img src="../../images/creditCardIcon.png" alt="开户支行"/>
+						<input type="text" id="branch" onblur="selectBank(this);" placeholder="请输入开户支行" emp="{empty:true}" mess="输入开户支行"/>
+					</div>
+					<div class="line_bottom">
+						<img src="../../images/phoneIcon.png" alt="预留手机号"/>
+						<input type="tel" maxlength="11" id="phone" placeholder="银行预留手机号" emp="{empty:true,tel:true}" mess="输入银行预留手机号"/>
+					</div>
+				 </div>
+				 <div class="buttonMain">
+					 <a class="submitBtn" onclick="next();">确认更换</a>
+				<!-- <a class="submitBtn" onclick="H.openWin('changeCardSuccess','changeCardSuccess.html');">确认更换</a> -->
+					</div>
+					 </div>
+				 </div>
+		</section>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+		<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	var db;
+	var userInfo;
+	var $bid,$plat;
+	var flag=true;
+		H.ready(function(){
+			db=api.require('db');
+			//取出用户信息
+			var sql='select * from kltx_login',
+					userInfo=selectSql('kltx_db', sql);
+					$bid = userInfo[0].id;
+					$plat = userInfo[0].plat;
+
+		});
+		//下一步
+		function next(){
+				if ($('[emp]').checkinput()){
+							//提交信息
+						postInfo();
+			}
+		}
+
+		//提交信息
+		function postInfo(){
+			showLoading();
+			var $cardNum=$("#inputBankCardNum").val();
+			var $bankName=$("#bank").val();
+			var $phone=$("#phone").val();
+			var $branch=$("#branch").val();
+			var $url=url+'Home/PublicInterface/changeBankCard';
+			H.ajax(postInfoCallBack, $url, 'post', {values:{bid:$bid,plat:$plat,cardNum :$cardNum,phone:$phone,bankName:$bankName,openBank:$branch}}, 'json', {});
+		}
+		//提交信息返回
+		function postInfoCallBack(ret,err){
+			hideLoading();
+			if(ret){
+			//	J(ret);
+					H.toast(ret.body.msg);
+					if(ret.body.status){
+						setTimeout(function(){
+								H.closeWin();
+						},1500);
+					}else{
+					return false;
+				}
+		}else{
+			J(err);
+				return false;
+		}
+		}
+		//查询银行归属地
+		function selectBank(obj){
+				var cardNumber=$(obj).val();
+				var $url=url+'Home/BankCard/checkCards';
+				H.ajax(selectBankCallBack, $url, 'post', {values:{cardNum:cardNumber}}, 'json', {});
+
+		}
+		function selectBankCallBack(ret,err){
+			if(ret){
+				if(ret.body.status){
+					var bankName=ret.body.bankName;
+					$("#bank").val(bankName);
+					$("#bankName").html(bankName);
+
+				}
+			}else{
+				J(err);
+			}
+		}
+	</script>
+	<script type="text/javascript">
+		$(function(){
+			//银行卡每逢4位添加空格
+			$('#inputBankCardNum').keyup(function(){
+				var inputBankCardNum = $('#inputBankCardNum').val()
+				var inputBankCardNumStr=inputBankCardNum.replace(/\s/g,'').replace(/(.{4})/g,"$1 ");
+				$('#pBankCardNum').text(inputBankCardNumStr);
+			})
+		})
+
+	</script>
+</html>

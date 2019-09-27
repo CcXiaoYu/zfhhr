@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+	</head>
+	<body>
+		<section class="subpageMain">
+			 <div class="detailContainer">
+					<div class="detailTitleMain line_bottom">
+							<h3>标题标题标题标题标题标题标题标题标题标标题标题标题标题标题标题标题标题标题标</h3>
+							<div>
+							<time>TIME:2017-11-11 13:21</time>
+							<span><img src="../../images/pageViewIcon.png"/>100次</span>
+							</div>
+					</div>
+					<div class="detailContent">
+							详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文详细页正文
+					</div>
+			 </div>
+		</section>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+		<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/base64.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/rand.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	var db;
+		H.ready(function(){
+
+		});
+
+	</script>
+</html>

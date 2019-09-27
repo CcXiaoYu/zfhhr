@@ -1,0 +1,4380 @@
+/*引用字体 开始*/
+a,div,a:hover,a:active{-webkit-tap-highlight-color:rgba(0,0,0,0);}
+@font-face {
+    font-family: 'WebFont';
+    src: url('../font/WebFont.woff2?1321') format('woff2'), url('../font/WebFont.woff?12321') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/*引用字体 结束*/
+/*header start*/
+
+.indexHeaderContainer {
+    position: relative;
+}
+
+.indexHeaderContainer img {
+    display: block;
+}
+
+a.aBackBtn {
+    display: block;
+    width: 40px;
+    height: 30px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    text-align: center;
+    padding-top: 10px;
+}
+
+a.aBackBtn img {
+    display: block;
+    width: 20px;
+    height: 20px;
+    margin: 0 auto;
+}
+
+a.headerRightBtn {
+    display: block;
+    width: 40px;
+    height: 30px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    text-align: center;
+    padding-top: 10px;
+}
+
+a.headerRightBtn img {
+    display: block;
+    width: 20px;
+    height: 20px;
+    margin: 0 auto;
+}
+
+.signInButtonImg {
+    display: block;
+    width: 13%;
+    position: absolute;
+    right: 3%;
+    top: 5%;
+}
+
+.indexBannerMain {
+    width: 100%;
+}
+
+
+/**激活小能手**/
+
+.jihuoxiaonengshou-main {
+    background: #fc7020 url(../images/head_bg.jpg) no-repeat center bottom;
+    background-size: 100% auto;
+    padding: 8% 0;
+}
+
+.jihuoxiaonengshou-body {
+    background: linear-gradient(to bottom right, #e2a55d, #f1c58c);
+    width: 84%;
+    margin: 0 auto;
+    border-radius: 5px;
+    border: 1px solid #ffc09c;
+}
+
+.jihuoxiaonengshou-center {
+    background-size: auto 100%;
+    height: 120px;
+    position: relative;
+    background: url(../images/jhxns_bg.png) no-repeat center center;
+    padding: 3% 5%;
+}
+
+.fenrun-gd {
+    position: absolute;
+    right: 0;
+    top: 15px;
+    width: 55%;
+    height: 24px;
+    line-height: 26px;
+    border-radius: 50px 0 0 50px;
+    text-align: center;
+    padding: 0 3%;
+    color: #c1813b;
+    font-size: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+    overflow: hidden;
+}
+
+.jihuoxiaonengshou-center h2 {
+    height: 42px;
+    line-height: 42px;
+    font-size: 16px;
+    color: #fff;
+}
+
+.jihuoxiangqing {
+    height: 32px;
+    line-height: 32px;
+}
+
+.jihuoxiangqing-left {
+    float: left;
+    width: 60%;
+    color: #fff;
+    font-size: 14px;
+}
+
+.jihuoxiangqing-right {
+    float: right;
+    width: 40%;
+    text-align: right;
+    color: #ffecd6;
+    font-size: 14px;
+}
+
+.jihuoxiangqing-right span {
+    color: #d80000;
+    font-size: 18px;
+}
+
+
+/**收益状况**/
+
+.shouyizk {
+    background-color: #fff;
+}
+
+.shouyizk-left {
+    width: 35%;
+    float: left;
+    height: 80px;
+    padding: 10px 0;
+    text-align: center;
+}
+
+.shouyizk-right {
+    width: 65%;
+    float: right;
+    height: 100px;
+}
+
+.shouyizk-left-num {
+    height: 30px;
+    line-height: 30px;
+    font-size: 13px;
+    color: #777;
+    padding-top: 10px;
+}
+
+.shouyizk-left-con {
+    height: 30px;
+    padding-bottom: 10px;
+    line-height: 30px;
+    font-size: 10px;
+    color: #333;
+}
+
+.shouyizk-right-sy {
+    height: 40px;
+    line-height: 40px;
+    padding: 5px;
+}
+
+.shouyizk-right-sy-name {
+    width: 55%;
+    float: left;
+    font-size: 10px;
+    color: #333;
+}
+
+.shouyizk-right-sy-num {
+    width: 45%;
+    float: right;
+    text-align: right;
+    font-size: 13px;
+    color: #777;
+}
+
+
+/**首页交易激活统计2018-03-06**/
+
+.index_tj {
+    height: 50px;
+    padding: 10px 0;
+    background: url(../images/tj_bg.png) repeat-x 0 0;
+    width: 94%;
+    margin: -10px auto 0;
+    position: relative;
+    z-index: 999;
+    border-radius: 3px 3px 0 0;
+    overflow: hidden;
+}
+
+.index_tj_list {
+    float: left;
+    width: 33%;
+    text-align: center;
+}
+
+.index_tj_list h2 {
+    height: 24px;
+    line-height: 24px;
+    font-size: 14px;
+    color: #5a5a5a;
+}
+
+.index_tj_list p {
+    height: 26px;
+    line-height: 26px;
+    font-size: 14px;
+    color: #ff7323;
+}
+
+
+/**首页弹窗广告**/
+
+.indexads {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: url(../images/jinrituijian.png) no-repeat 0 center;
+    background-size: 100% auto;
+}
+
+.indexads-con {
+    width: 70%;
+    height: 190px;
+    position: absolute;
+    left: 15%;
+    top: 50%;
+}
+
+.lookmore {
+    display: block;
+    width: 60%;
+    height: 42px;
+    position: absolute;
+    left: 20%;
+    top: 50%;
+    margin-top: 46px;
+}
+
+.indexads-con-main {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 120px;
+    bottom: 55px;
+    font-size: 16px;
+    color: #cf1414;
+    line-height: 28px;
+}
+
+.closeindexads {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    right: -10px;
+    top: 50%;
+    margin-top: -260px;
+    background: url(../images/jinrituijianclose.png) no-repeat center center;
+    background-size: 100% auto;
+    z-index: 2;
+}
+
+
+/**激活小能手2018-03-06**/
+
+.jhxns {
+    width: 94%;
+    margin: 5px auto 0;
+    position: relative;
+}
+
+.jhxns img {
+    max-width: 100%;
+}
+
+.jhxns_nr {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+}
+
+.jhxns_nr_con {
+    width: 80%;
+    padding: 10px 0;
+    margin: 0 auto;
+}
+
+.jhxns_nr_con_left {
+    float: left;
+    width: 40%;
+    text-align: center;
+}
+
+.jhxns_nr_con img {
+    max-width: 60%;
+    display: block;
+    margin: 0 auto;
+}
+
+.jhxns_nr_con_left p {
+    height: 32px;
+    line-height: 32px;
+    font-size: 16px;
+    color: #d09c3f;
+}
+
+.jhxns_nr_con_right {
+    float: left;
+    width: 60%;
+    text-align: center;
+    font-size: 16px;
+    color: #d09c3f;
+}
+
+.jhxns_nr_con_right_name, .jhxns_nr_con_right_phone, .jhxns_nr_con_right_jhl {
+    height: 30px;
+    line-height: 30px;
+}
+
+.jhxns_nr_con_right_jhl span {
+    font-size: 20px;
+    color: #f00;
+}
+
+
+/**分润时时提醒2018-03-06**/
+
+.fenrun_tx {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 999;
+}
+
+.fenrun_tx_con {
+    height: 24px;
+    line-height: 24px;
+    padding: 0 10px;
+    border-radius: 0 50px 50px 0;
+    background: url(../images/shishibg.png) no-repeat center center;
+    background-size: 100% auto;
+    border: 1px solid #ead2c9;
+    color: #f00;
+    font-size: 12px;
+    transition: all 0.5s;
+}
+
+.indexBannerMain img {
+    display: block;
+    width: 100%;
+}
+
+.subpageHeader {
+    position: relative;
+    color: #fff;
+    background-color: #ff7323;
+    font-size: 16px;
+}
+
+.NumberOfPeople {
+    width: 70%;
+    margin: 10px auto 0;
+    height: 45px;
+    background: url(../images/bandBgImg.png) no-repeat;
+    background-size: 100% 100%;
+    font-size: 16px;
+    text-align: center;
+    line-height: 45px;
+    color: #fff;
+}
+
+.NumberOfPeople span {
+    display: inline-block;
+    vertical-align: middle;
+    color: #fefb00;
+}
+
+.rollingText {
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0 10px;
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    font-size: 14px;
+    overflow: hidden;
+}
+
+.rollingText span {
+    color: #f8f800;
+}
+
+.rollingText ul li {
+    background: url(../images/WithdrawIcon.png) no-repeat left 5.5px;
+    background-size: 25px 25px;
+    padding-left: 30px;
+    line-height: 38px;
+    height: 35px;
+    overflow: hidden;
+}
+
+
+/*header end*/
+
+
+/*choicenessAppContainer start*/
+
+.choicenessAppContainer {
+    clear: both;
+    background: #ff7323;
+    padding-bottom: 20px;
+}
+
+.indexTitleMain {
+    text-align: center;
+    color: #fbf700;
+}
+
+.indexTitleMain h2 {
+    font-size: 18px;
+    line-height: 30px;
+    padding-top: 13px;
+}
+
+.indexSubTitle {
+    line-height: 25px;
+    padding-bottom: 12px;
+}
+
+.indexSubTitle span {
+    display: block;
+    width: 52%;
+    margin: 0 auto;
+    font-size: 16px;
+    color: #fff;
+    position: relative;
+}
+
+.indexSubTitle span::before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 3px;
+    border: 1px solid #6a1802;
+    background: #fff;
+    border-radius: 5px;
+    position: absolute;
+    top: 11px;
+}
+
+.indexSubTitle span::after {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 3px;
+    border: 1px solid #6a1802;
+    background: #fff;
+    border-radius: 5px;
+    position: absolute;
+    top: 11px;
+    right: 0;
+}
+
+.choicenessAppMain {
+    background: #fff;
+    margin: 0 auto;
+    padding: 30px 0 10px;
+}
+
+.AppListUl {
+    overflow: hidden;
+}
+
+.AppListUl li {
+    width: 33.33333333%;
+    float: left;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.AppListUl li img {
+    width: 35%;
+    vertical-align: middle;
+}
+
+.AppListUl li h3 {
+    font-size: 12px;
+    color: #666;
+    font-weight: 500;
+    line-height: 40px;
+}
+
+.choicenessAppTitleBg {
+    background: url(../images/choicenessTitleBgImg.jpg) no-repeat center top;
+    background-size: 100% auto;
+}
+
+
+/*choicenessAppContainer end*/
+
+
+/*applyCardContainer start*/
+
+.applyCardContainer {
+    background: #fa5e13;
+    padding-bottom: 15px;
+}
+
+.applyCardMain {
+    background: #fff;
+    width: 94%;
+    margin: 0 auto;
+    padding: 30px 0 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.applyCardTitleBg {
+    background: url(../images/applyCardTitleBgimg.jpg) no-repeat center top;
+    background-size: 100% auto;
+}
+
+.swiperAppListUl li {
+    text-align: center;
+    margin-bottom: 5px;
+    float: left;
+}
+
+.swiperAppListUl li img {
+    width: 50%;
+    vertical-align: middle;
+}
+
+.swiperAppListUl li h3 {
+    font-size: 16px;
+    color: #666;
+    font-weight: 500;
+    line-height: 40px;
+}
+
+
+/*applyCardContainer end*/
+
+
+/*copyRight start*/
+
+.copyRightMain {
+    line-height: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: #fff;
+    padding-top: 15px;
+}
+
+
+/*copyRight end*/
+
+
+/*footerTab start*/
+
+.footerTabContainer {
+    overflow: hidden;
+    width: 100%;
+    height: 65px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    background: #fff9fa;
+}
+
+.footerTabContainer a {
+    display: block;
+    width: 25%;
+    float: left;
+    text-align: center;
+    padding-top: 5px;
+}
+
+.footerTabContainer a img {
+    width: 30px;
+    vertical-align: middle;
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+}
+
+.footerTabContainer a.active img {
+    -webkit-filter: grayscale(0);
+    filter: grayscale(0);
+}
+
+.footerTabContainer a p {
+    line-height: 30px;
+    font-size: 14px;
+    color: #666;
+}
+
+
+/*footerTab end*/
+
+
+/*推广 开始*/
+
+.popularizeMain img {
+    display: block;
+}
+
+.bottomBtnMain {
+    height: 45px;
+    padding: 5px;
+    position: fixed;
+    width: 100%;
+    box-sizing: border-box;
+    left: 0;
+    bottom: 0;
+}
+
+.bottomBtnMain a {
+    display: block;
+    width: 100%;
+    height: 35px;
+    line-height: 37px;
+    font-size: 14px;
+    color: #fff;
+    background: #ff7323;
+    text-align: center;
+    overflow: hidden;
+}
+
+
+/*推广 结束*/
+
+
+/*登录 开始*/
+
+.headerCloseIcon {
+    display: block;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    text-align: center;
+}
+
+.headerCloseIcon img {
+    width: 15px;
+    height: 15px;
+    float: left;
+    margin: 12px 0 0 10px;
+}
+
+.loginLogo {
+    text-align: center;
+    padding-top: 35px;
+}
+
+.loginLogo img {
+    width: 80px;
+    height: 80px;
+}
+
+.loginLogo p {
+    line-height: 30px;
+    font-size: 24px;
+    padding-top: 5px;
+}
+
+
+/*登录 结束*/
+
+
+/*个人中心 开始*/
+
+.myHeaderMain {
+    background: #ff7323;
+    min-height: 152px;
+}
+
+.myLoginButton {
+    text-align: center;
+    padding: 30px 0 75px;
+}
+
+.myLoginButton p {
+    color: #fff;
+    font-size: 16px;
+    line-height: 45px;
+}
+
+.myLoginButton a {
+    display: block;
+    width: 40%;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    color: #ff7323;
+    margin: 5px auto 0;
+    background: #fff;
+    border-radius: 35px;
+}
+
+.myLoginButton img {
+    width: 40%;
+}
+
+.myHeader {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    overflow: hidden;
+}
+
+.myHeader>div.headerPortrait {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #fff;
+    float: left;
+    margin: 22px 0 0 20px;
+    box-sizing: border-box;
+}
+
+.myHeader>div.headerInformation {
+    padding: 32px 0 0 100px;
+    box-sizing: border-box;
+    color: #fff;
+    line-height: 20px;
+    font-size: 14px;
+}
+
+.myHeader>div.headerInformation p span {
+    border: 1px solid #fff;
+    margin-left: 5px;
+    border-radius: 26px;
+    padding: 2px 5px;
+    font-size: 12px;
+}
+
+.mySetButton {
+    display: block;
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 14px;
+    color: #fff;
+}
+
+.myheaderButtonGroup {
+    width: 94%;
+    margin: -50px auto 0;
+    background: #fff;
+    position: relative;
+    z-index: 2;
+    overflow: hidden;
+    padding: 20px 0 12px;
+}
+
+.myheaderButtonGroup a {
+    display: block;
+    width: 25%;
+    float: left;
+    text-align: center;
+}
+
+.myheaderButtonGroup a img {
+    width: 35px;
+}
+
+.myheaderButtonGroup a p {
+    font-size: 14px;
+    line-height: 26px;
+    color: #333;
+}
+
+.myButtonList, .myContactMain {
+    width: 94%;
+    margin: 10px auto 0;
+    background: #fff;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.myContactMain {
+    margin-bottom: 10px;
+}
+
+.myButtonListUl li {
+    line-height: 50px;
+    box-sizing: border-box;
+}
+
+.myButtonListUl li a {
+    overflow: hidden;
+    display: block;
+    font-size: 14px;
+    color: #333;
+}
+
+a.rightArr {
+    padding-right: 15px;
+    position: relative;
+}
+
+a.rightArr::after {
+    content: '';
+    display: block;
+    width: 5px;
+    height: 5px;
+    border-right: 1px solid #333;
+    border-bottom: 1px solid #333;
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    margin-top: -5px;
+}
+
+.myButtonListUl li a img {
+    width: 21px;
+    height: 21px;
+    float: left;
+    margin: 14px 7px 0 0;
+    display: block;
+}
+
+.myButtonListUl li a span {
+    float: left;
+}
+
+.myButtonListUl li a span i {
+    color: #fa5e13;
+}
+
+.myButtonListUl li a em {
+    float: right;
+}
+
+.myContactItem {
+    line-height: 50px;
+}
+
+.myContactItem a {
+    overflow: hidden;
+    display: block;
+    color: #333;
+    font-size: 14px;
+}
+
+.myContactItem a img {
+    display: block;
+    width: 21px;
+    height: 21px;
+    float: left;
+    margin: 14px 7px 0 0;
+}
+
+.myContactItem a span {
+    float: left;
+}
+
+.myContactItem a em {
+    float: right;
+    line-height: 15px;
+    font-size: 12px;
+    padding-top: 12px;
+    display: block;
+    text-align: right;
+}
+
+.myContactItem a em i {
+    color: #fa5e13;
+    display: block;
+    font-size: 14px;
+}
+
+em.buttonEm {
+    color: #fa5e13;
+}
+
+.myButtonListUl li a em.redEm {
+    color: #f33;
+}
+
+
+/**图表**/
+
+.gushitubiao {
+    height: 260px;
+}
+
+
+/*个人中心 结束*/
+
+
+/*消息 开始*/
+
+.informationList {
+    padding: 10px;
+}
+
+.informationListUl li {
+    background: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.informationListUl li a {
+    color: #333;
+}
+
+.informationListUl li a>em {
+    font-size: 14px;
+    display: block;
+    font-weight: bold;
+}
+
+.informationListUl li a time {
+    font-size: 14px;
+    color: #333;
+    line-height: 30px;
+    padding-top: 5px;
+}
+
+.informationListUl li h3 {
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.informationListUl li p {
+    font-size: 12px;
+    line-height: 20px;
+    padding: 5px 0 10px;
+}
+
+.informationListUl li div img {
+    height: 200px;
+}
+
+
+/*消息 结束*/
+
+
+/*登录 开始*/
+
+.loginMain {
+    padding-top: 25px;
+}
+
+.input_list {
+    overflow: hidden;
+    line-height: 30px;
+    padding: 5px 5%;
+    font-size: 16px;
+    position: relative;
+    font-family: "黑体";
+}
+
+.input_list>em {
+    display: block;
+    width: 90px;
+    float: left;
+    font-style: normal;
+}
+
+.input_list>div {
+    padding-left: 90px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.input_list>div i {
+    position: absolute;
+    left: 90px;
+    top: 0;
+    display: block;
+    line-height: 30px;
+}
+
+.input_list>div input[type='date'] {
+    position: relative;
+    z-index: 9;
+}
+
+.input_list>div input {
+    height: 30px;
+    line-height: 30px;
+    border: none;
+    background: none;
+    font-size: 16px;
+    width: 100%;
+}
+
+.password_div span {
+    position: absolute;
+    right: 0;
+    top: 12px;
+    display: block;
+    width: 25px;
+    height: 25px;
+    background: url(../images/eyeIcon.png) no-repeat center center;
+    background-size: 25px 25px;
+}
+
+.password_div span.active {
+    background-image: url(../images/eyeActiveIcon.png);
+}
+
+.login_input_div {
+    padding: 0 30px;
+}
+
+.login_input_div>div.input_list {
+    padding-left: 0;
+    line-height: 50px;
+    position: relative;
+}
+
+.login_btn {
+    display: block;
+    width: 60%;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    color: #fff;
+    background: #fa5e13;
+    border-radius: 5px;
+    margin: 40px auto 0;
+}
+
+.agreement_p {
+    text-align: center;
+    line-height: 45px;
+}
+
+.agreement_p a {
+    font-size: 14px;
+    color: #333;
+}
+
+
+/*登录 结束*/
+
+
+/*忘记密码 开始*/
+
+.forgetPasswordContainer {
+    width: 80%;
+    margin: 15% auto 0;
+    background: #fff;
+    border-radius: 5px;
+    padding: 30px 20px;
+    box-sizing: border-box;
+}
+
+.forgetPasswordHeader img {
+    width: 200px;
+    height: 80px;
+    display: block;
+    margin: 0 auto;
+}
+
+.forgetPasswordPhone {
+    width: 80%;
+    margin: 55px auto 0;
+    height: 5px;
+    border-bottom: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    position: relative;
+}
+
+.forgetPasswordPhone input {
+    width: 100%;
+    height: 40px;
+    font-size: 16px;
+    text-align: center;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    border: none;
+    background: none;
+}
+
+.forgetPasswordCode {
+    line-height: 50px;
+    font-size: 16px;
+    text-align: center;
+    padding-top: 8px;
+}
+
+.forgetPasswordCode text.active {
+    color: #ccc;
+}
+
+.forgetPassVerification {
+    padding: 10px 0 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.forgetPassVerification input {
+    width: 45px;
+    height: 45px;
+    border: 1px solid #ccc;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    float: left;
+}
+
+.forgetPasswordCode span {
+    padding: 0 10px;
+    color: #fa5e13;
+}
+
+.forgetPasswordBtn a {
+    display: block;
+    height: 40px;
+    line-height: 40px;
+    width: 100%;
+    margin: 0 auto;
+    background: #fa5e13;
+    color: #fff;
+    text-align: center;
+    border-radius: 40px;
+    font-size: 16px;
+}
+
+
+/*修改密码*/
+
+.forgetPasswordNumber {
+    width: 100%;
+    height: 40px;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    margin: 0 auto 10px;
+    box-sizing: border-box;
+    padding: 0 20px;
+}
+
+.forgetPasswordNumber input {
+    width: 100%;
+    height: 38px;
+    font-size: 16px;
+    border: none;
+    background: none;
+}
+
+div.marginTopBtn {
+    margin-top: 25px;
+}
+
+
+/*忘记密码 结束*/
+
+
+/*实名认证 开始*/
+
+.CertificationHeaderFiexd {
+    position: fixed;
+    width: 100%;
+    top: 40px;
+    left: 0;
+    z-index: 999;
+}
+
+.CertificationHeaderFiexdPlace {
+    height: 120px;
+}
+
+.noticeTip {
+    line-height: 42px;
+    overflow: hidden;
+    height: 40px;
+    font-size: 12px;
+    color: #333;
+    padding: 0 10px;
+    background: #f1f1f1;
+}
+
+.noticeTip img {
+    float: left;
+    width: 25px;
+    height: 25px;
+    margin: 7px 5px 0 0;
+}
+
+.checkStep {
+    position: relative;
+    height: 80px;
+    padding: 0 10px;
+    background: #fff;
+}
+
+.checkStep::before {
+    content: '';
+    display: block;
+    height: 1px;
+    background: #E6E6E6;
+    top: 28px;
+    position: absolute;
+    left: 10px;
+    right: 10px;
+}
+
+.checkStep>div {
+    /*width:33.33333%; */
+    width: 50%;
+    float: left;
+    text-align: center;
+}
+
+.checkStep>div em {
+    display: block;
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+    position: relative;
+    bottom: -13px;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.checkStep>div em.stepOneIcon {
+    background-image: url(../images/stepIcon01.png);
+}
+
+.checkStep>div em.stepTwoIcon {
+    background-image: url(../images/stepIcon02.png);
+}
+
+.checkStep>div em.stepThreeIcon {
+    background-image: url(../images/stepIcon03.png);
+}
+
+.checkStep>div em.complete {
+    background-image: url(../images/completeIcon.png);
+}
+
+.checkStep>div p {
+    padding-top: 20px;
+    font-size: 14px;
+}
+
+.FormsGroup {
+    background: #fff;
+    margin-top: 10px;
+}
+
+.FormsGroup>div {
+    padding: 0 10px;
+    line-height: 50px;
+}
+
+.FormsGroup>div input {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    font-size: 16px;
+    font-family: "黑体";
+    background: none;
+    border: none;
+}
+
+.buttonMain {
+    padding: 30px 30px 30px;
+}
+
+.buttonMain a {
+    display: block;
+    width: 100%;
+    height: 45px;
+    background: #ff7323;
+    text-align: center;
+    line-height: 45px;
+    font-size: 16px;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.idCardUploadContainer {
+    background: #fff;
+    margin-top: 10px;
+}
+
+.idCardUploadMain {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    flex-direction: row;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-around;
+    justify-content: space-around;
+}
+
+.idCardUploadMain>div {
+    text-align: center;
+    width: 30%;
+    position: relative;
+    margin: 15px auto 5px;
+}
+
+.idCardUploadMain>div input {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.idCardUploadMain>div p {
+    line-height: 30px;
+    font-size: 14px;
+}
+
+.idCardUploadTip {
+    padding: 10px;
+}
+
+.idCardUploadTip>em {
+    font-size: 14px;
+}
+
+.idCardUploadTipMain {
+    padding-top: 5px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    flex-direction: row;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-around;
+    justify-content: space-around;
+}
+
+.idCardUploadTipMain div {
+    width: 20%;
+    text-align: center;
+}
+
+.idCardUploadTipMain div img {
+    vertical-align: middle;
+}
+
+.idCardUploadTipMain div p {
+    padding-top: 5px;
+    font-size: 12px;
+}
+
+.bindCardFormGroup>div {
+    padding-left: 50px;
+    position: relative;
+}
+
+.bindCardFormGroup>div img {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    left: 9px;
+    top: 10px;
+}
+
+.bindCardFormGroup>div.BindVerificationCode a {
+    display: block;
+    line-height: 50px;
+    position: absolute;
+    right: 10px;
+    top: 0;
+    font-size: 16px;
+    color: #ff7323;
+}
+
+.bindCardPhoto {
+    margin-top: 10px;
+}
+
+.bindCardPhoto>div {
+    width: 60%;
+    margin: 0 auto;
+    position: relative;
+    text-align: center;
+    padding: 10px 0 10px;
+}
+
+.bindCardPhoto>div input {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+}
+
+.bindCardPhoto>div p {
+    line-height: 30px;
+}
+
+.CertificationResult {
+    padding-top: 15%;
+}
+
+.CertificationResult img {
+    width: 60px;
+    height: 60px;
+    display: block;
+    margin: 0 auto;
+}
+
+.CertificationResult p {
+    font-size: 16px;
+}
+
+.CertificationFail>p:last-of-type {
+    font-size: 12px;
+}
+
+.CertificationSubmit {
+    text-align: center;
+}
+
+.CertificationSubmit p {
+    padding-top: 15px;
+}
+
+.CertificationSubmit>p:last-of-type {
+    font-size: 12px;
+}
+
+.CertificationSuccess>p {
+    padding-top: 15px;
+    text-align: center;
+}
+
+.CertificationSuccessMain {
+    margin-top: 30px;
+    background: #fff;
+    padding: 10px 15px;
+}
+
+.CertificationSuccessMain h3 {
+    font-size: 16px;
+    line-height: 30px;
+}
+
+.CertificationSuccessMain div:first-of-type {
+    padding-bottom: 13px;
+    margin-bottom: 10px;
+}
+
+.CertificationSuccessMain div p {
+    font-size: 14px;
+    line-height: 20px;
+}
+
+
+/*实名认证 结束*/
+
+
+/*设置 开始*/
+
+.settingContainer {
+    padding: 10px;
+}
+
+.settingListMain {
+    background: #fff;
+    padding: 0 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.settingListMain li a {
+    overflow: hidden;
+    display: block;
+    box-sizing: border-box;
+    line-height: 52px;
+    font-size: 14px;
+    color: #333;
+    height: 50px;
+}
+
+.settingListMain li a img {
+    float: left;
+    width: 20px;
+    height: 20px;
+    margin-top: 15px;
+    margin-right: 5px;
+}
+
+.settingListMain li a span {
+    float: left;
+}
+
+.settingListMain li a em {
+    float: right;
+}
+
+.settingLogo {
+    text-align: center;
+    padding: 30px 0 10px;
+}
+
+.settingLogo img {
+    vertical-align: middle;
+    width: 50px;
+    height: 50px;
+}
+
+.settingLogo p {
+    padding-top: 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+em.cookieEm {
+    background: #f33;
+    color: #fff;
+    height: 14px;
+    line-height: 16px;
+    overflow: hidden;
+    border-radius: 14px;
+    padding: 2px 5px;
+    margin-top: 16px;
+}
+
+
+/*设置 结束*/
+
+
+/*修改密码 开始*/
+
+.modificationPassword {
+    margin-top: 0;
+}
+
+.modificationPassword>div {
+    padding-left: 42px;
+    position: relative;
+}
+
+.modificationPassword>div img {
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    left: 9px;
+    top: 12px;
+}
+
+
+/*修改密码 结束*/
+
+
+/*修改成功 开始*/
+
+.settingChangeSuccess {
+    text-align: center;
+    padding-top: 25%;
+}
+
+.settingChangeSuccess img {
+    width: 60px;
+    height: 60px;
+    vertical-align: middle;
+}
+
+.settingChangeSuccess p {
+    line-height: 35px;
+}
+
+.settingChangeSuccess p:first-of-type {
+    padding-top: 20px;
+    font-size: 16px;
+    color: #333;
+}
+
+.settingChangeSuccess p:last-of-type {
+    font-size: 12px;
+}
+
+
+/*修改成功 结束*/
+
+
+/*更换手机号 开始*/
+
+.changePhoneNumber {
+    padding: 10px 20px;
+}
+
+.changePhoneHeader span {
+    display: block;
+    width: 80px;
+    height: 80px;
+    margin: 20px auto 0;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.changePhoneHeader p {
+    font-size: 18px;
+    text-align: center;
+    line-height: 50px;
+    padding-top: 10px;
+}
+
+.titleFromGroup>div {
+    height: 50px;
+    line-height: 50px;
+    padding-left: 90px;
+    position: relative;
+    font-size: 16px;
+}
+
+.titleFromGroup>div input {
+    width: 100%;
+    height: 50px;
+    border: none;
+    background: none;
+    font-size: 16px;
+}
+
+.titleFromGroup>div em {
+    display: block;
+    width: 90px;
+    height: 50px;
+    left: 0;
+    top: 0;
+    position: absolute;
+}
+
+.verificationCodeDiv a {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: #ff7323;
+}
+
+.changePhoneOtherWay {
+    line-height: 40px;
+    text-align: right;
+    padding: 0 30px;
+}
+
+.changePhoneOtherWay a {
+    font-size: 14px;
+    color: #333;
+}
+
+.settingChangePhoneOtherWay {
+    padding: 10px 20px 10px;
+    line-height: 24px;
+    font-size: 14px;
+    text-align: justify;
+}
+
+
+/*更换手机号 结束*/
+
+
+/*更换银行卡 开始*/
+
+.changeBankCardHeader {
+    padding: 10px;
+    position: relative;
+}
+
+.changeBankCardHeader img {
+    display: block;
+    height: 200px;
+}
+
+.changeBankCardHeader h3 {
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 100%;
+    height: 42px;
+    line-height: 44px;
+    overflow: hidden;
+    padding-left: 37px;
+    box-sizing: border-box;
+    color: #fff;
+    font-size: 20px;
+}
+
+.changeBankCardHeader p {
+    line-height: 42px;
+    height: 40px;
+    width: 90%;
+    position: absolute;
+    left: 0;
+    bottom: 26px;
+    padding: 0 5%;
+    font-size: 26px;
+    color: #fff;
+}
+
+@media only screen and (max-width:320px) {
+    .changeBankCardHeader p {
+        font-size: 22px;
+    }
+}
+
+
+/*更换银行卡 结束*/
+
+
+/*帮助中心 开始*/
+
+.helpContainer {
+    padding-bottom: 10px;
+}
+
+.helpMainHeader {
+    height: 100px;
+    padding-left: 100px;
+    position: relative;
+    box-sizing: border-box;
+    background: #fff;
+}
+
+.helpMainHeader img {
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}
+
+.helpMainHeader div {
+    line-height: 30px;
+    padding-top: 21px;
+    padding-right: 10px;
+}
+
+.helpMainHeader div a {
+    color: #fa5e13;
+    padding-right: 3px;
+}
+
+.helpListMain {
+    margin-top: 10px;
+    background: #fff;
+}
+
+.helpListMain h3 {
+    line-height: 40px;
+    height: 40px;
+    overflow: hidden;
+    font-size: 14px;
+    padding: 0 10px;
+}
+
+.helpListMain h3 img {
+    width: 20px;
+    height: 20px;
+    float: left;
+    margin: 10px 10px 0 0;
+}
+
+.helpListUl {
+    padding: 0 10px;
+}
+
+.helpListUl li a {
+    display: block;
+    padding-left: 20px;
+    height: 40px;
+    line-height: 40px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+    color: #333;
+}
+
+.helpListUl li a::before {
+    content: '';
+    display: block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #fa5e13;
+    position: absolute;
+    left: 8px;
+    top: 18px;
+}
+
+
+/*帮助中心 结束*/
+
+
+/*意见反馈 开始*/
+
+.feedbackContainer>img {
+    width: 80px;
+    height: 80px;
+    margin: 20px auto 10px;
+    display: block;
+}
+
+.feedbackTextarea {
+    width: 90%;
+    margin: 10px auto 0;
+    border: 1px solid #d5edf5;
+    border-radius: 5px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.feedbackTextarea textarea {
+    line-height: 22px;
+    font-family: '黑体';
+    font-size: 14px;
+    resize: none;
+    width: 100%;
+    height: 150px;
+    border: none;
+    background: none;
+}
+
+.feedbackPicMain {
+    overflow: hidden;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.feedbackPicMain h3 {
+    line-height: 30px;
+    font-size: 14px;
+    padding-top: 15px;
+}
+
+.feedbackPicItem {
+    width: 25%;
+    float: left;
+    padding-top: 10px;
+}
+
+.feedbackPicItem em {
+    display: block;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #ff7323;
+    position: absolute;
+    right: -8px;
+    top: -8px;
+    box-sizing: border-box;
+    padding: 1px 0 0 1px;
+    text-align: center;
+    z-index: 9999;
+}
+
+.feedbackPicItem em>img {
+    width: 80%;
+}
+
+.feedbackPicItem span {
+    display: block;
+    width: 70px;
+    height: 70px;
+    border: 1px solid #d5edf5;
+    box-sizing: border-box;
+    padding-top: 14px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.feedbackPicItem span>img.picIconBtn {
+    display: block;
+    width: 40px;
+    height: 40px;
+    margin: 0 auto;
+}
+
+.feedbackPicItem span>img.uploadImg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    top: 0;
+}
+
+
+/*意见反馈 结束*/
+
+
+/*详细页 开始*/
+
+.detailContainer {
+    padding: 0 10px;
+}
+
+.detailTitleMain h3 {
+    line-height: 26px;
+    font-size: 16px;
+    padding: 10px 0 5px;
+}
+
+.detailTitleMain>div {
+    line-height: 20px;
+    padding-bottom: 10px;
+    overflow: hidden;
+}
+
+.detailTitleMain>div time {
+    float: left;
+    font-size: 14px;
+    color: #333;
+    display: block;
+}
+
+.detailTitleMain>div span {
+    float: right;
+    overflow: hidden;
+    font-size: 14px;
+    color: #333;
+}
+
+.detailTitleMain>div span img {
+    width: 20px;
+    height: 20px;
+    float: left;
+    margin-right: 5px;
+}
+
+.detailContent {
+    padding: 10px 0;
+    line-height: 26px;
+    font-size: 14px;
+    text-align: justify;
+}
+
+
+/*详细页 结束*/
+
+
+/*支付键盘 开始*/
+
+.syt_money {
+    height: 60px;
+    text-align: center;
+    line-height: 60px;
+    font-size: 46px;
+    color: #ff7323;
+    padding-bottom: 10px;
+}
+
+.syt_money span {
+    font-size: 38px;
+}
+
+.syt_keybordUl {
+    overflow: hidden;
+    width: 90%;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.syt_keybord li {
+    width: 33.33333333%;
+    float: left;
+    height: 60px;
+    line-height: 60px;
+    box-sizing: border-box;
+    text-align: center;
+    position: relative;
+}
+
+.syt_keybord li:active span {
+    background: #eee;
+}
+
+.syt_keybord li span {
+    display: block;
+    height: 59px;
+    width: 100%;
+    left: 0;
+    top: 0;
+    position: absolute;
+    font-size: 30px;
+    background: #fff;
+}
+
+.syt_keybord li span.backKeyIcon {
+    font-size: 0;
+    position: relative;
+    z-index: 3;
+    background: none;
+}
+
+.syt_keybord li.backKeyLi em {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.syt_keybord li img {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -16px 0 0 -15px;
+    z-index: 2;
+}
+
+.rightPay {
+    width: 80%;
+    height: 46px;
+    line-height: 46px;
+    border-radius: 5px;
+    background: #ff7323;
+    margin: 20px auto 5px;
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+}
+
+.PayTip {
+    width: 80%;
+    margin: 10px auto;
+    line-height: 18px;
+    font-size: 12px;
+    color: #333;
+    text-align: justify;
+}
+
+.payNumberDiv {
+    line-height: 30px;
+    width: 90%;
+    margin: 0 auto;
+    font-size: 16px;
+    padding-top: 5px;
+    overflow: hidden;
+}
+
+.payNumberDiv span {
+    float: left;
+}
+
+.payNumberDiv em {
+    float: right;
+}
+
+.payNumberDiv em i {
+    color: #f33;
+}
+
+.selectCreditCardDiv {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.selectCreditCardDiv a {
+    display: block;
+    overflow: hidden;
+    line-height: 50px;
+    text-align: right;
+    color: #333;
+}
+
+
+/*支付键盘 结束*/
+
+
+/*信用卡管理 开始*/
+
+.addCreditCardBtn img {
+    width: 80px;
+    height: 80px;
+    display: block;
+    margin: 0 auto;
+}
+
+.addCreditCardBtn p {
+    padding: 15px 0 0 0;
+    line-height: 20px;
+    font-size: 16px;
+    text-align: center;
+}
+
+.CreditCardListMain {
+    padding: 10px;
+}
+
+.CreditCardListUl li {
+    margin-bottom: 10px;
+    background: #fff;
+    padding: 10px;
+    position: relative;
+}
+
+.CreditCardListUl li.addCreditCardBtn {
+    background: none;
+    padding-top: 35%;
+}
+
+.CreditCardListUl li img.deleteIconBtn {
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.CreditCardListUl li>div:first-of-type {
+    overflow: hidden;
+}
+
+.CreditCardListUl li>div:first-of-type span {
+    display: block;
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    float: left;
+    border-radius: 50%;
+}
+
+.CreditCardListUl li>div:first-of-type p:first-of-type {
+    padding-top: 7px;
+    font-weight: bold;
+}
+
+.CreditCardListUl li>div:first-of-type p {
+    padding-left: 60px;
+    box-sizing: border-box;
+    line-height: 20px;
+    color: #333;
+}
+
+.CreditCardListUl li>div:first-of-type p:nth-of-type(2) {
+    font-size: 14px;
+}
+
+.CreditCardListUl li>div:nth-of-type(2) {
+    font-size: 22px;
+    color: #000;
+    text-align: center;
+    line-height: 50px;
+    font-family: 'MyWebFont';
+    padding-top: 5px;
+}
+
+.CreditCardListUl li>p {
+    color: #333;
+    font-size: 14px;
+}
+
+
+/*信用卡管理 结束*/
+
+
+/* 收益明细 开始 */
+
+.bottom-line {
+    background-color: #fff;
+}
+
+.CommissionRecordTab {
+    overflow: hidden;
+}
+
+.CommissionRecordTab a {
+    display: block;
+    width: 33%;
+    float: left;
+    line-height: 50px;
+    height: 50px;
+    font-size: 12px;
+    color: #333;
+    text-align: center;
+    position: relative;
+}
+
+.CommissionRecordTab a.Selected::before {
+    content: '';
+    display: block;
+    width: 50%;
+    height: 3px;
+    background: #ff7323;
+    position: absolute;
+    left: 50%;
+    margin-left: -25%;
+    bottom: 0.5px;
+}
+
+.CommissionRecordListUl li {
+    overflow: hidden;
+    padding: 5px 0 10px;
+}
+
+.CommissionRecordListUl li>img {
+    width: 30px;
+    height: 30px;
+    float: left;
+    margin: 10px 10px 0 5px;
+}
+
+.CommissionRecordListUl li>div.CommissionRecordListDiv {
+    overflow: hidden;
+    padding-top: 10px;
+    padding-right: 10%;
+    position: relative;
+}
+
+.CommissionRecordListUl li>div.CommissionRecordListDiv:after {
+    content: ' ';
+    position: absolute;
+    right: 3%;
+    top: 50%;
+    margin-top: -5px;
+    width: 5px;
+    height: 5px;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+
+.CommissionRecordListUl li>div.CommissionRecordListDiv div:nth-of-type(1) {
+    float: left;
+    width: 48%;
+    padding-left: 10px;
+}
+
+.CommissionRecordListUl li>div.CommissionRecordListDiv div:nth-of-type(1) h3 {
+    line-height: 16px;
+    font-size: 14px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    -webkit-text-overflow: ellipsis;
+}
+
+.CommissionRecordListUl li>div.CommissionRecordListDiv div:nth-of-type(1) p {
+    line-height: 20px;
+    font-size: 12px;
+}
+
+.CommissionRecordListUl li>div.CommissionRecordListDiv div:nth-of-type(2) {
+    float: right;
+    text-align: right;
+}
+
+.CommissionRecordListUl li>div.CommissionRecordListDiv div:nth-of-type(2) p {
+    font-size: 16px;
+    line-height: 16px;
+    font-weight: bold;
+    color: #f33;
+}
+
+.CommissionRecordListUl li>div.CommissionRecordListDiv div:nth-of-type(2) time {
+    font-size: 12px;
+    color: #666;
+}
+
+.nav-fenge {
+    clear: both;
+    width: 100%;
+}
+
+.fenrun_mx {
+    height: 24px;
+    padding: 0 3%;
+    text-align: right;
+    margin-top: 15px;
+    padding-top: 8px;
+    display: none;
+}
+
+.fenrun_mx>span {
+    padding-left: 3%;
+    font-size: 10px;
+}
+
+.tradingRecordHeader {
+    width: 30%;
+    float: left;
+    font-size: 13px;
+    padding-left: 3%;
+    position: relative;
+}
+
+.tradingRecordHeader>select {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 38px;
+    border: none;
+    background: none;
+    opacity: 0;
+}
+
+.tradingRecordHeader a {
+    display: block;
+    height: 38px;
+    line-height: 38px;
+    overflow: hidden;
+    color: #333;
+}
+
+.tradingRecordHeader a span {
+    float: left;
+}
+
+.tradingRecordHeader a em i {
+    display: block;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    border-radius: 50%;
+    float: left;
+    margin: 5px 10px 0 0;
+}
+
+.tradingRecordHeader a em img {
+    width: 40px;
+    height: 40px;
+}
+
+em.orangeColor {
+    color: #ff7323;
+}
+
+em.greenColor {
+    color: green;
+}
+
+.search_date {
+    height: 32px;
+    line-height: 32px;
+    padding: 1% 0;
+    background-color: #f5f5f5;
+    width: 60%;
+    float: right;
+    padding-right: 3%;
+}
+
+.search_date>input[type=month] {
+    border: 1px solid #eee;
+    background-color: #fafafa;
+    vertical-align: top;
+    height: 30px;
+    line-height: 30px;
+    width: 70%;
+    float: right;
+    color: #333;
+    font-size: 13px;
+}
+
+.search_date>input[type=button] {
+    background-color: #ff7323;
+    color: #fff;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    width: 20%;
+    font-size: 14px;
+    vertical-align: top;
+    border: none;
+    float: right;
+}
+
+
+/*选择支付平台 列表 开始*/
+
+.selectPayWayUl {
+    overflow: hidden;
+}
+
+.selectPayWayMain li {
+    width: 33.333333333%;
+    float: left;
+    text-align: center;
+}
+
+.selectPayWayMain li img {
+    display: block;
+    margin: 20px auto 0;
+    height: 30px;
+    width: auto;
+}
+
+.selectPayWayMain li p {
+    font-size: 12px;
+    line-height: 30px;
+    height: 30px;
+    padding-bottom: 20px;
+}
+
+
+/*选择支付平台 列表 结束*/
+
+
+/* 收益明细 结束 */
+
+
+/*我的团队 开始*/
+
+.teamMain {
+    padding: 10px;
+    overflow: hidden;
+}
+
+.teamItem {
+    background: #fff;
+    overflow: hidden;
+    margin-bottom: 10px;
+    padding: 10px;
+    float: left;
+    width: 48%;
+    box-sizing: border-box;
+    display: block;
+}
+
+.teamItem:nth-of-type(2n) {
+    float: right;
+}
+
+.teamItem img {
+    width: 35px;
+    float: left;
+    display: block;
+    margin-right: 10px;
+}
+
+.teamItem div {
+    padding-top: 2px;
+}
+
+.teamItem div p {
+    line-height: 26px;
+    font-size: 16px;
+}
+
+.teamItem div p:first-of-type {
+    font-size: 18px;
+}
+
+.teamItem div a {
+    color: #ff7323;
+    font-size: 12px;
+}
+
+
+/*我的团队 结束*/
+
+
+/*直属团队 开始*/
+
+.teamLevelOneListMain {
+    padding: 40px 10px 0;
+}
+
+.teamLevelOneListUl li {
+    overflow: hidden;
+    padding: 10px 0;
+    position: relative;
+}
+
+.teamLevelOneListUl li.teamLevelOneNoData div {
+    padding: 20% 0 0;
+}
+
+.teamLevelOneListUl li.teamLevelOneNoData div p {
+    line-height: 50px;
+    font-size: 16px !important;
+}
+
+.teamLevelOneListUl li>img {
+    width: 30px;
+    height: 30px;
+    float: left;
+    margin: 10px 10px 0;
+    display: block;
+}
+
+.teamLevelOneListUl li div {
+    padding-left: 50px;
+    padding-top: 2px;
+    line-height: 26px;
+    font-size: 16px;
+}
+
+em.teamLevelOneBmBtn {
+    display: block;
+    width: 50px;
+    height: 30px;
+    line-height: 31px;
+    overflow: hidden;
+    color: #fff;
+    background: #ff7323;
+    text-align: center;
+    float: right;
+    margin-top: 10px;
+    border-radius: 5px;
+    margin-left: 16px;
+}
+
+.teamLevelOneListUl li div p:last-of-type {
+    font-size: 14px;
+}
+
+.teamLevelOneListUl li div a {
+    display: block;
+    float: right;
+    margin-top: 10px;
+}
+
+.teamLevelOneListUl li div a img {
+    width: 30px;
+    height: 30px;
+    display: block;
+}
+
+.teamLevelOneTotal {
+    overflow: hidden;
+    height: 40px;
+    line-height: 41px;
+    padding: 0 10px;
+    background: #f1f1f1;
+    position: fixed;
+    width: 100%;
+    box-sizing: border-box;
+    left: 0;
+    top: 0;
+    z-index: 9;
+}
+
+.teamLevelOneTotal span {
+    float: left;
+}
+
+.teamLevelOneTotal em {
+    float: right;
+}
+
+
+/*直属团队 结束*/
+
+
+/*间接团队 开始*/
+
+.teamLevelTwoContainer {
+    padding: 40px 10px 0;
+}
+
+.teamLevelTwoListUl li {
+    overflow: hidden;
+    line-height: 51px;
+    overflow: hidden;
+    height: 50px;
+    font-size: 16px;
+}
+
+.teamLevelTwoListUl li.teamLevelTwoListNoData {
+    height: auto;
+}
+
+.teamLevelTwoListUl li.teamLevelTwoListNoData div p {
+    line-height: 50px;
+}
+
+.teamLevelTwoListUl li>img {
+    width: 30px;
+    height: 30px;
+    float: left;
+    margin: 10px 10px 0;
+    display: block;
+}
+
+
+/*间接团队 结束*/
+
+
+/*我的结算卡 开始*/
+
+.myBankMain {
+    padding: 10px;
+}
+
+.myBankList img.deleteIconBtn {
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.myBankList {
+    height: 120px;
+    background: url(../images/bankBgImg.png) repeat-y;
+    background-size: 100% auto;
+    overflow: hidden;
+    border-radius: 5px;
+    padding: 15px 20px 10px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.myBankList h3 {
+    line-height: 30px;
+    font-size: 20px;
+    color: #fff;
+    overflow: hidden;
+}
+
+.myBankList h3 span {
+    float: right;
+    font-weight: 500;
+    font-size: 16px;
+    display: block;
+    line-height: 16px;
+}
+
+.myBankList p {
+    line-height: 20px;
+    color: #fff;
+    font-size: 14px;
+}
+
+.myBankList>div {
+    line-height: 50px;
+    height: 45px;
+    overflow: hidden;
+    font-size: 26px;
+    color: #fff;
+    text-align: center;
+}
+
+.addCardBtn {
+    padding: 0 10px;
+    background: #f1f1f1;
+    margin-top: 20px;
+}
+
+.addCardBtn a {
+    display: block;
+    line-height: 51px;
+    font-size: 16px;
+    overflow: hidden;
+    height: 50px;
+    color: #333;
+}
+
+.addCardBtn a img {
+    float: left;
+    width: 20px;
+    height: 20px;
+    margin: 15px 10px 0 0;
+}
+
+
+/*我的結算卡 结束*/
+
+
+/*升级店主 开始*/
+
+.upgradeMain {
+    padding: 10px 20px 65px;
+    text-align: justify;
+    line-height: 20px;
+    font-size: 14px;
+}
+
+.upgradeMain>h3 {
+    line-height: 40px;
+    color: #fb514c;
+}
+
+.upgradeFooterBtn {
+    padding: 10px 20px;
+    width: 100%;
+    box-sizing: border-box;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    background: #f8da29;
+}
+
+.upgradeFooterBtn a {
+    display: block;
+    width: 100%;
+    height: 45px;
+    line-height: 47px;
+    overflow: hidden;
+    background: #ff7323;
+    color: #fff;
+    text-align: center;
+    font-size: 18px;
+}
+
+
+/*升级店主 结束*/
+
+
+/*红包排行榜 开始*/
+
+.Ranktop_header {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 14px;
+    color: #fff;
+}
+
+.RankHeaderLeft {
+    display: block;
+    width: 40px;
+    height: 30px;
+    position: absolute;
+    left: 0;
+    top: 13px;
+    padding-top: 10px;
+}
+
+.RankHeaderLeft img {
+    width: 20px;
+    height: 20px;
+    margin: 0 auto;
+    vertical-align: middle;
+}
+
+.rank_header_box {
+    border-radius: 3px;
+    background-color: #fff;
+    width: 94%;
+    margin: 10% auto 0;
+    color: #000;
+    position: relative;
+    height: 140px;
+}
+
+.touxiang_top {
+    height: 80px;
+}
+
+.touxiang_box>em {
+    display: block;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid #fff;
+    box-sizing: border-box;
+    position: absolute;
+    left: 10px;
+    top: -10px;
+}
+
+.grid_box {
+    overflow: hidden;
+    margin-top: 5px;
+    padding: 10px 5%;
+}
+
+.grid_box span {}
+
+.rank_main {
+    height: 80px;
+}
+
+.rank_main_left {
+    float: left;
+    padding-left: 80px;
+    width: 40%;
+    line-height: 24px;
+}
+
+.paiming {
+    color: #44af9d;
+}
+
+.paimingname {
+    color: #999;
+}
+
+.rank_main_right {
+    text-align: right;
+    line-height: 24px;
+}
+
+.rank_bysy {
+    width: 94%;
+    margin: 0 auto;
+    border-top: 1px solid #f5f5f5;
+}
+
+.rank_bysy_left {
+    float: left;
+}
+
+.rank_bysy_right {
+    float: right;
+    color: #44af9d;
+    font-size: 24px;
+}
+
+.rank_bysy {
+    height: 40px;
+    line-height: 40px;
+}
+
+.grid_box span>b, .grid_box span>i {
+    display: block;
+}
+
+.dangyueleiji_tabs {
+    background: #fff;
+    margin-top: 5px;
+    height: 32px;
+    padding: 10px;
+}
+
+.dangyueleiji_tabs_main {
+    width: 50%;
+    margin: 0 auto;
+    box-shadow: 0 0 5px #eee;
+    height: 32px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.dangyueleiji_tabs_main>a {
+    display: block;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    width: 50%;
+    float: left;
+    color: #000;
+}
+
+.dangyueleiji_tabs_main>a.actives {
+    color: #fff;
+    background-color: #44af9d;
+}
+
+.quanbupaihang {
+    background-color: #fff;
+    height: 42px;
+    padding: 0 3%;
+}
+
+.quanbupaihang_left {
+    float: left;
+    height: 42px;
+    line-height: 42px;
+    color: #44af9d;
+    width: 30%;
+    position: relative;
+}
+
+.quanbupaihang_left>span {
+    display: block;
+    width: 72%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.quanbupaihang_left:after {
+    width: 5px;
+    height: 5px;
+    border-top: 1px solid #44af9d;
+    border-right: 1px solid #44af9d;
+    -webkit-transform: rotate(45deg);
+    content: ' ';
+    right: 28%;
+    top: 50%;
+    margin-top: -3px;
+    display: block;
+    position: absolute;
+}
+
+.quanbupaihang_left select {
+    width: 100%;
+    height: 42px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: none;
+    border: none;
+    opacity: 0;
+}
+
+.quanbupaihang_tab {
+    width: 70%;
+    float: right;
+}
+
+.quanbupaihang_tab>a {
+    display: block;
+    width: 50%;
+    float: left;
+    height: 42px;
+    line-height: 42px;
+    text-align: center;
+    font-size: 12px;
+}
+
+.quanbupaihang_tab>a.actives {
+    color: #44af9d;
+    position: relative;
+}
+
+.quanbupaihang_tab>a.actives:before {
+    position: absolute;
+    content: ' ';
+    width: 100%;
+    height: 1px;
+    background-color: #44af9d;
+    left: 0;
+    bottom: 1px;
+}
+
+.quanbupaihang_tab>a.actives:after {
+    position: absolute;
+    content: ' ';
+    left: 50%;
+    margin-left: -3px;
+    bottom: 1px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 4px solid #44af9d;
+}
+
+.rank_main_tab {
+    overflow: hidden;
+    width: 92%;
+    margin: -10px auto 0;
+}
+
+.rank_main_mian_box>div {
+    overflow: hidden;
+    padding: 0 15px;
+}
+
+.rank_main_mian_box>div span {
+    display: block;
+    float: left;
+    font-size: 14px;
+    line-height: 30px;
+}
+
+.rank_main_mian_box>div span:nth-of-type(1) {
+    width: 20%;
+}
+
+.rank_main_mian_box>div span:nth-of-type(2) {
+    width: 50%;
+    text-align: center;
+}
+
+.rank_main_mian_box>div span:nth-of-type(3) {
+    width: 30%;
+    text-align: right;
+}
+
+.rank_mian_main {
+    background-color: #fff;
+    overflow: hidden;
+}
+
+.rank_main_mian_left_list li {
+    overflow: hidden;
+    padding: 5px 15px;
+}
+
+.rank_main_mian_left_list li span {
+    display: block;
+    float: left;
+    font-size: 14px;
+    line-height: 30px;
+}
+
+.rank_main_mian_left_list li span:nth-of-type(1) {
+    width: 20%;
+    text-align: center;
+}
+
+.rank_main_mian_left_list li span:nth-of-type(1) em svg {
+    width: 25px;
+    height: 25px;
+}
+
+.rank_main_mian_left_list li span:nth-of-type(2) {
+    width: 50%;
+    text-align: center;
+}
+
+.rank_main_mian_left_list li span:nth-of-type(3) {
+    width: 30%;
+    text-align: right;
+}
+
+.rank_main_mian_left_list li span:nth-of-type(3) b {
+    font-weight: 500;
+    color: #44af9d;
+}
+
+.rank_main_mian_box>div em {
+    display: block;
+    float: left;
+    font-size: 14px;
+    line-height: 30px;
+    text-align: center;
+}
+
+.rank_main_mian_box>div em:nth-of-type(1) {
+    width: 35%;
+}
+
+.rank_main_mian_box>div em:nth-of-type(2) {
+    width: 65%;
+}
+
+.rank_main_mian_right_list li {
+    overflow: hidden;
+    padding: 0 15px;
+    color: #fff;
+}
+
+.rank_main_mian_right_list li span {
+    display: block;
+    float: left;
+    text-align: center;
+    font-size: 12px;
+    line-height: 30px;
+}
+
+.rank_main_mian_right_list li span:nth-of-type(1) {
+    width: 35%;
+    font-weight: bold;
+}
+
+.rank_main_mian_right_list li span:nth-of-type(2) {
+    width: 65%;
+}
+
+.rankTopThree {
+    width: 18px;
+    position: relative;
+    top: 5px;
+}
+
+.rank_tab {
+    height: 34px;
+    line-height: 34px;
+    border: 1px solid #741901;
+    border-radius: 50px;
+    overflow: hidden;
+    width: 90%;
+    margin: 0 auto 15px;
+}
+
+.rank_tab a {
+    display: block;
+    width: 30%;
+    float: left;
+    height: 34px;
+    text-align: center;
+    font-size: 14px;
+    color: #fff;
+}
+
+.rank_tab a.actives {
+    background-color: #741901;
+}
+
+
+/*红包排行榜 结束*/
+
+
+/*我的钱包 开始*/
+
+.walletHeaderMain {
+    height: 105px;
+    background: url(../images/walletBgImg.jpg) no-repeat center center;
+    background-size: 100% 100%;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.blanceDiv p {
+    font-size: 16px;
+    color: #fff;
+    padding-top: 15px;
+}
+
+.blanceDiv span {
+    font-size: 40px;
+    font-family: "WebFont";
+    color: #fff;
+    display: block;
+    line-height: 60px;
+}
+
+.blanceDiv span i {
+    font-size: 16px;
+}
+
+.blanceTabDiv {
+    overflow: hidden;
+}
+
+.blanceTabDiv>div {
+    width: 33%;
+    float: left;
+    color: #fff;
+}
+
+.blanceTabDiv>div p {
+    color: #fff;
+    font-size: 12px;
+}
+
+.blanceTabDiv>div p img {
+    width: 15px;
+    height: 15px;
+    vertical-align: middle;
+    margin-right: 3px;
+    position: relative;
+    top: -1px;
+}
+
+.blanceTabDiv>div span {
+    display: block;
+    padding-top: 5px;
+    font-size: 20px;
+    font-family: "WebFont";
+    line-height: 20px;
+}
+
+.blanceTabDiv>div span i {
+    font-size: 12px;
+}
+
+.walletMyCard h2 {
+    line-height: 30px;
+    line-height: 30px;
+    overflow: hidden;
+    padding: 0 10px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.walletMyCard h2 img {
+    float: left;
+    width: 20px;
+    height: 20px;
+    margin-top: 5px;
+    margin-right: 5px;
+}
+
+
+/*我的钱包 结束*/
+
+
+/*提现 开始*/
+
+.input_list {
+    overflow: hidden;
+    line-height: 30px;
+    padding: 5px 5%;
+    font-size: 16px;
+    position: relative;
+    font-family: "黑体";
+}
+
+.input_list>em {
+    display: block;
+    width: 90px;
+    float: left;
+    font-style: normal;
+}
+
+.input_list>div {
+    padding-left: 90px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.input_list>div i {
+    position: absolute;
+    left: 90px;
+    top: 0;
+    display: block;
+    line-height: 30px;
+}
+
+.input_list>div input[type='date'] {
+    position: relative;
+    z-index: 9;
+}
+
+.input_list>div input {
+    height: 30px;
+    line-height: 30px;
+    border: none;
+    background: none;
+    font-size: 16px;
+    width: 100%;
+}
+
+.input_list>div select {
+    height: 30px;
+    line-height: 30px;
+    border: none;
+    background: none;
+    font-size: 16px;
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+}
+
+.input_list>a {
+    display: block;
+    width: 30%;
+    height: 25px;
+    line-height: 26px;
+    background: skyblue;
+    position: absolute;
+    right: 20px;
+    top: 8px;
+    color: #fff;
+    font-size: 12px;
+    text-align: center;
+    border-radius: 5px;
+    z-index: 9;
+}
+
+.input_list>a.active {
+    background: #ccc;
+}
+
+.registerBtn {
+    width: 90%;
+    margin: 10px auto 30px;
+    display: block;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    color: #fff;
+    background: #ff7323;
+    border-radius: 5px;
+}
+
+.nav_title {
+    padding: 5px 5%;
+    box-sizing: border-box;
+    background: #f1f1f3;
+    line-height: 24px;
+    height: 32px;
+    overflow: hidden;
+    position: relative;
+}
+
+.withDetail_img {
+    text-align: center;
+    padding: 20px 0 10px;
+}
+
+.withDetail_img img {
+    width: 50%;
+}
+
+.withdrawDetail_box h3 {
+    font-size: 18px;
+    color: #cd3027;
+    text-align: center;
+    margin: 0 0 15px 0;
+    line-height: 30px;
+}
+
+.withdrawDetail_main {
+    background: #fff;
+}
+
+.withdrawDetail_main>div {
+    font-size: 14px;
+    line-height: 35px;
+    height: 30px;
+}
+
+.withdrawDetail_main>div input {
+    line-height: 33px;
+    font-size: 14px;
+}
+
+.withdrawDetail_box nav {
+    background: #fff;
+}
+
+
+/*2017-6-27 15:00 修改 开始*/
+
+.selectWithdraw {
+    background: #f3f3f4;
+    padding: 10px 0;
+}
+
+.swiperSlide {
+    padding-bottom: 5px;
+}
+
+.withDrawBox {
+    width: 100%;
+    background: #fff;
+    border-radius: 5px;
+    padding: 0 0 10px 0;
+    margin-bottom: 5px;
+}
+
+.withDrawBox.active {
+    box-shadow: 0 0 5px #ff7323;
+}
+
+.withDrawBox>h3 {
+    height: 30px;
+    line-height: 32px;
+    background: #ff7323;
+    color: #fff;
+    margin: 0;
+    padding: 0 10px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.withDrawBox>div {
+    text-align: center;
+}
+
+.withDrawBox>div span {
+    font-size: 30px;
+    color: #f33;
+    line-height: 30px;
+    font-family: 'webFont'
+}
+
+.withDrawBox>div p {
+    line-height: 30px;
+    font-size: 14px;
+    padding-top: 10px;
+}
+
+.withDrawBox>em {
+    display: block;
+    text-align: center;
+    font-size: 14px;
+    line-height: 25px;
+}
+
+.withDrawBox>em:nth-of-type(1) {
+    padding-top: 5px;
+}
+
+.withDrawBox>em:nth-of-type(2) {
+    font-size: 12px;
+    color: #666;
+}
+
+.withDrawInput {
+    line-height: 60px;
+    height: 58px;
+    overflow: hidden;
+}
+
+.withDrawInput>em {
+    height: 60px;
+    overflow: hidden;
+    line-height: 62px;
+}
+
+.withDrawInput>div {
+    font-size: 20px;
+}
+
+.withDrawInput>div input {
+    line-height: 50px;
+    overflow: hidden;
+    height: 52px;
+    color: #f33;
+    font-size: 20px;
+}
+
+
+/*提现 结束*/
+
+
+/*提现记录 列表 开始*/
+
+.WithdrawRecordListUl {
+    padding: 10px;
+}
+
+.WithdrawRecordListUl li {
+    background: #fff;
+    padding: 13px 10px 10px;
+    margin-bottom: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.yidaozhang {
+    position: absolute;
+    right: -16px;
+    top: -5px;
+    width: 40%;
+    height: 40%;
+    transform: rotate(45deg);
+}
+
+.yidaozhang img {
+    max-width: 100%;
+}
+
+div.WRTitleTime {
+    line-height: 20px;
+}
+
+div.WRTitleTime h3 {
+    font-size: 16px;
+}
+
+.WithdrawRecordListUl li div.WRTitleTime time {
+    font-size: 12px;
+}
+
+div.WRListMain {
+    text-align: center;
+}
+
+div.WRListMain p:first-of-type {
+    font-size: 14px;
+    line-height: 20px;
+}
+
+div.WRListMain p:last-of-type {
+    font-size: 40px;
+    color: #ff7323;
+    font-family: "webFont";
+}
+
+div.WRListMain div {
+    line-height: 26px;
+    font-size: 14px;
+}
+
+div.WRTip {
+    padding-top: 10px;
+    line-height: 20px;
+    font-size: 14px;
+    ;
+}
+
+
+/*提现记录 列表 结束*/
+
+
+/*我的终端POS 开始*/
+
+.posCons {
+    height: 28px;
+    line-height: 28px;
+    padding: 0 3%;
+    font-size: 10px;
+}
+
+.posCons span {
+    font-size: 13px;
+    color: #f00;
+    font-weight: bold;
+}
+
+.myPosListHeader {
+    overflow: hidden;
+    background: #fff;
+}
+
+.myPosListHeader a {
+    display: block;
+    float: left;
+    text-align: center;
+    height: 45px;
+    width: 33%;
+    line-height: 46px;
+    font-size: 14px;
+    color: #333;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.myPosListHeader a input[type='month'] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    bottom: 0;
+    opacity: 0;
+}
+
+.myPosListHeader a select {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    bottom: 0;
+    opacity: 0;
+}
+
+.myPosListHeader a img {
+    width: 8px;
+    margin-left: 5px;
+    position: relative;
+    top: -2px;
+}
+
+.myPosListMain {
+    padding: 10px;
+}
+
+.myPosListUl li {
+    padding: 10px;
+    background: #fff;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.bindbtn {
+    position: absolute;
+    right: 10px;
+    top: 110px;
+    display: block;
+    width: 70px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    color: #fff;
+    background: #f00;
+    font-size: 12px;
+    border-radius: 3px;
+}
+
+.myPosListUl li.agentLi {
+    border-left: 2px solid deepskyblue;
+}
+
+.myPosListUl li.bindedLi {
+    border-left: 2px solid green;
+}
+
+.myPosListUl li.unBindedLi {
+    border-left: 2px solid #f33;
+}
+
+.myPosListUl li.agentLi .myPosListLiHeader em {
+    color: deepskyblue;
+}
+
+.myPosListUl li.bindedLi .myPosListLiHeader em {
+    color: green;
+}
+
+.myPosListUl li.unBindedLi .myPosListLiHeader em {
+    color: #f33;
+}
+
+.input_checkbox { border: none; outline: none; opacity: 0;}
+.myPosListLiHeader {
+    overflow: hidden;
+    line-height: 32px;
+    font-size: 16px;
+}
+
+.myPosListLiHeader span {
+    float: left;
+}
+
+.myPosListLiHeader em {
+    float: right;
+}
+
+.myPosListLiHeader span b {
+    display: block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    float: left;
+    margin-right: 5px;
+}
+
+.myPosListLiHeader span b img {
+    width: 100%;
+    height: 100%;
+}
+
+.myPosListNumber {
+    text-align: center;
+}
+
+.myPosListNumber p {
+    font-size: 16px;
+}
+
+.myPosListNumber div {
+    line-height: 30px;
+    font-size: 26px;
+    font-family: 'webFont';
+    padding: 5px 0 8px;
+}
+
+.myPosAgent {
+    overflow: hidden;
+    padding: 12px 0 0;
+    font-size: 16px;
+}
+
+.myPosAgent span {
+    float: left;
+}
+
+.myPosAgent em {
+    float: right;
+}
+
+.myPosGetTime {
+    font-size: 14px;
+    padding-top: 8px;
+}
+
+
+/*我的终端POS 结束*/
+
+
+/*关于我们 开始 */
+
+.aboutContainer {
+    padding: 10px;
+    line-height: 20px;
+    font-size: 14px;
+    color: #333
+}
+
+.aboutContainer img {
+    vertical-align: middle;
+    margin: 5px 0;
+}
+
+
+/*关于我们 结束 */
+
+
+/*拨码 开始*/
+.bm_select{ position: absolute; right: 5px; top: 0; font-size: 12px; height: 42px; line-height: 42px;}
+
+.bm_select > select{ border: none; outline: none; background: none;color: #fff; }
+
+.bm_select > select > option{text-align: center; }
+.SmyPosListMain {
+    padding: 10px;
+}
+
+.myPosSearchMain {
+    padding: 0 10px;
+    line-height: 45px;
+    background: #fff;
+    position: relative;
+}
+
+.myPosSearchMain input {
+    width: 100%;
+    line-height: 45px;
+    font-size: 16px;
+    border: none;
+    background: none;
+}
+
+.posNumSearch {
+    display: block;
+    width: 60px;
+    height: 35px;
+    line-height: 35px;
+    margin-top: 5px;
+    text-align: center;
+    color: #fff;
+    background-color: #ff7323;
+    border-radius: 3px;
+    position: absolute;
+    right: 3px;
+    top: 0;
+}
+
+.SmyPosListUl {
+    padding-bottom: 50px;
+}
+
+.SmyPosListUl .bindedLi {
+    position: relative;
+}
+
+.SmyPosListUl .bindedLi input[type='checkbox'] {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.SmyPosListUl .bindedLi .checkboxSpan {
+    display: block;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #ff7323;
+    border-radius: 50%;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.SmyPosListUl .bindedLi input[type='checkbox']:checked+span::before {
+    content: '';
+    display: block;
+    width: 16px;
+    height: 16px;
+    background: #ff7323;
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    border-radius: 50%;
+}
+
+.SmyPosFooterBtn {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 0 10px;
+    overflow: hidden;
+    box-sizing: border-box;
+    height: 50px;
+    line-height: 52px;
+}
+
+.SmyPosFooterBtn span {
+    float: left;
+}
+
+.SmyPosFooterBtn a {
+    display: block;
+    width: 70px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    font-size: 14px;
+    color: #fff;
+    background: #ff7323;
+    float: right;
+    margin-top: 11px;
+}
+
+
+/*拨码 结束*/
+
+.noDataaMain {
+    text-align: center;
+}
+
+.noDataaMain img {
+    max-width: 50%;
+}
+
+
+/**分享办信用卡**/
+
+.shares {
+    position: absolute;
+    right: 5px;
+    bottom: 0;
+    height: 40px;
+    line-height: 40px;
+    width: 40px;
+    text-align: center;
+}
+
+.shares img {
+    max-width: 70%;
+    vertical-align: top;
+    margin-top: 15%;
+}
+
+.login-btn {
+    width: 100px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    font-size: 14px;
+    color: #fff;
+    background: #fa5e13;
+    border-radius: 3px;
+    margin: 10px auto 0;
+}
+
+
+/**激活送礼品**/
+
+
+/* pages/list/list.wxss */
+
+
+/* pages/list/list.wxss */
+
+.nav_tt {
+    color: #777;
+    font-size: 12px;
+    line-height: 30px;
+    padding: 0 15px;
+    background: #f5f5f5;
+}
+
+.nav_box {
+    padding: 5px 0 5px 15px;
+    overflow: hidden;
+    border-bottom: 10px solid #f5f5f5;
+}
+
+.nav_item {
+    float: left;
+    padding: 0 5px;
+    border: 1px solid #eee;
+    color: #777;
+    font-size: 12px;
+    line-height: 20px;
+    margin: 5px 15px 5px 0;
+}
+
+.select {
+    background: #1296db;
+    color: #fff;
+    border-color: #1296db;
+}
+
+#container {
+    position: relative;
+    height: auto;
+    overflow: hidden;
+    background: #f5f5f5;
+}
+
+.list {
+    padding: 0 1px 10px;
+    color: #333;
+    font-size: 12px;
+    line-height: 20px;
+    float: left;
+    width: 49.9%;
+    box-sizing: border-box;
+}
+
+.list img {
+    display: block;
+    height: auto;
+    width: 100%;
+}
+
+.list_tt {
+    font-size: 14px;
+    line-height: 20px;
+    height: 20px;
+    overflow: hidden;
+    padding: 5px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    background: #fff;
+}
+
+.pric {
+    color: #888;
+    line-height: 20px;
+    background: #fff;
+    padding: 0 3%;
+}
+
+.tj {
+    clear: both;
+    border-top: 1px solid #eee;
+    line-height: 25px;
+    padding: 10px 5px 10px;
+    font-size: 14px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.tj span:nth-child(1) {
+    display: block;
+    color: #1296db;
+    border: 1px solid #1296db;
+    font-size: 12px;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.tj span {
+    margin-right: 5px;
+    display: inline-block;
+}
+
+.shop_button {
+    height: 30px;
+    padding: 0 15px 5px;
+}
+
+.shop_button div {
+    float: right;
+    width: 100px;
+    height: 28px;
+    line-height: 28px;
+    border: 1px solid #1296db;
+    color: #333;
+    text-align: center;
+    margin-left: 10px;
+}
+
+.shop_button div:nth-child(1) {
+    color: #fff;
+    background: #1296db;
+}
+
+.shaixuan {
+    height: 40px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    line-height: 40px;
+    color: #333;
+    position: fixed;
+    z-index: 99;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: #fff;
+}
+
+.shaixuan>div {
+    float: left;
+    width: 50%;
+    box-sizing: border-box;
+    border-right: 1px solid #f5f5f5;
+    padding: 0 15px;
+    overflow: hidden;
+}
+
+.shaixuan>div img {
+    float: right;
+    width: 10px;
+    height: 10px;
+    margin: 15px 0 0;
+    opacity: 0.6;
+}
+
+
+/* pages/gift/giftDetail/giftDetail.wxss */
+
+.top_img {
+    display: block;
+    width: 100%;
+    height: 375px;
+}
+
+.cp_tt {
+    overflow: hidden;
+    border-bottom: 10px solid #f5f5f5;
+    padding: 10px 0;
+}
+
+.cp_tt_left {
+    float: left;
+    width: 70%;
+    box-sizing: border-box;
+    border-right: 1px solid #eee;
+    padding-left: 10px;
+    line-height: 20px;
+}
+
+.cp_tt_left div {
+    font-size: 15px;
+    color: #333;
+}
+
+.cp_tt_left span {
+    color: #999;
+    text-decoration: line-through;
+    font-size: 12px;
+}
+
+.cp_jf {
+    text-align: right;
+    padding-right: 10px;
+    line-height: 20px;
+}
+
+.cp_jf div {
+    font-size: 14px;
+    color: #007eff;
+}
+
+.cp_jf div:nth-child(2) {
+    color: #aaa;
+    font-size: 12px;
+}
+
+.cp_ct_tt {
+    margin: 20px 10px 5px;
+    border-left: 3px solid #007eff;
+    line-height: 18px;
+    color: #007eff;
+    padding-left: 5px;
+    font-size: 14px;
+}
+
+.cp_ct_ct {
+    font-size: 12px;
+    color: #666;
+    line-height: 25px;
+    padding: 0 10px 20px;
+    border-bottom: 10px solid #f5f5f5;
+}
+
+.bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    padding: 10px;
+    background: #fff;
+    font-size: 15px;
+    color: #333;
+    line-height: 36px;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+/*全局按钮  */
+
+.button {
+    text-align: center;
+    font-size: 30rpx;
+    line-height: 70rpx;
+    background: -webkit-linear-gradient(top, #1b9bfc 0%, #4c81ef 100%);
+    color: #fff;
+    border-radius: 8rpx;
+    border: 1px solid #4c81ef;
+}
+
+.h_addr {
+    border-bottom: 1px solid #eee;
+    color: #333;
+    font-size: 14px;
+}
+
+.add {
+    color: #777;
+    line-height: 40px;
+    text-align: center;
+    padding: 20px 0;
+    display: none;
+}
+
+.add img {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    vertical-align: center;
+    margin: 0 7.5px -3px 0;
+}
+
+.add span {
+    color: #1296db;
+    margin: 0 5px;
+}
+
+.ads_box {
+    padding: 10px 15px;
+    line-height: 20px;
+}
+
+.ads_box>div span {
+    color: #1296db;
+    font-size: 12px;
+}
+
+.ads_box>span {
+    color: #777;
+    font-size: 12px;
+}
+
+.shoping {
+    padding: 10px 15px;
+    border-bottom: 10px solid #f5f5f5;
+    overflow: hidden;
+    line-height: 20px;
+}
+
+.shoping img {
+    display: block;
+    float: left;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+.shoping div {
+
+    overflow: hidden;
+    font-size: 14px;
+    color: #333;
+}
+
+.shoping span {
+    color: #777;
+    font-size: 12px;
+}
+
+.condition {
+    border-bottom: 10px solid #f5f5f5;
+}
+
+.condition_tt {
+    font-size: 15px;
+    color: #333;
+    line-height: 40px;
+    padding: 0 15px;
+}
+
+.condition_ct {
+    margin-left: 15px;
+    padding-right: 15px;
+    border-bottom: 1px solid #eee;
+    font-size: 12px;
+    color: #777;
+    line-height: 40px;
+    height: 40px;
+}
+
+.condition_ct img {
+    display: block;
+    float: left;
+    width: 10px;
+    height: 10px;
+    margin: 15px 10px 0 0;
+}
+
+.condition_ct span {
+    background: #eee;
+    color: #777;
+    font-size: 10px;
+    display: block;
+    float: right;
+    padding: 0 10px;
+    line-height: 20px;
+    margin: 10px 0 0;
+    border-radius: 2px;
+}
+
+.condition_ct span.select {
+    background: #1296db;
+    color: #fff;
+}
+
+.h_button {
+    background: #1296db;
+    color: #fff;
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    font-size: 14px;
+    width: 100%;
+}
+
+
+/* pages/task/task.wxss */
+.tab_bg{overflow: hidden; border-bottom: 10px solid #f5f5f5;}
+.tab_box{margin:10px auto 20px; width: 50%; border-radius: 4px; overflow: hidden; border: 1px solid #1296db;}
+.tab_box div{float: left; font-size: 15px; line-height: 30px; text-align: center; color: #1296db; width: 50%; background: #fff;}
+.tab_box div.select{background: #1296db; color: #fff;}
+
+.list_task{border-bottom: 10px solid #f5f5f5; padding:0 0 10px 15px; color: #333; font-size: 12px; line-height: 20px; border-top: 1px solid #eee;}
+.list_task img{display: block; float: left; height: 80px; width: 80px; margin:0 10px 10px 0;}
+.list_task{font-size: 14px; line-height:30px; overflow: hidden; margin-bottom: 10px;}
+.tj_task{clear: both; border-top: 1px solid #eee; line-height: 25px; padding: 10px 15px 0 0;font-size: 14px; overflow: hidden;}
+.tj_task span:nth-child(1){border: 1px solid #1296db; color: #777; display: block; float: right; padding: 0 15px; font-size: 11px;}
+.tj_task span:nth-child(2){display: block; float: right; color: #fff; background: #1296db; padding: 0 15px; border: 1px solid #1296db; font-size: 12px;}
+.tj_task span{display: inline-block;}
+.tj_task .wc span:nth-child(1){color:#1296db; background: #fff;}
+.tj_task{color: #ccc;}
+.wc{color: #ccc; line-height: 40px; border-bottom: 1px solid #eee; margin:0 0 10px -15px; padding:0 15px;text-align: right; overflow: hidden;}
+.wc span{float: right; color: #1296db; font-weight: bold; font-size: 15px; margin: 0 5px;}
+.wc div{float: left; color: #333; font-size: 14px;}
+.wc img{display: block; float: left; width: 18px; height:18px; margin: 10.5px 10px 0 0; }
+
+.wl_bg{background: #000; opacity: 0.5; position: fixed; width: 100%; height: 100%; left: 0; top: 0; z-index: 9;}
+.wl_box{position: fixed; max-height: 60%; width: 100%; background: #fff; bottom: -60%; left: 0; z-index: 99; overflow-y: auto; transition: all 0.5s;}
+.wl_box.show{bottom: 0;}
+.dz{padding: 5px 15px; border-bottom: 1px solid #eee; line-height: 25px;}
+.dz div:nth-child(1){color: #333; font-size:15px;}
+.dz div:nth-child(1) span{color: #1296db; font-size: 14px; margin: 0 5px;}
+.dz div:nth-child(2){color: #777; font-size: 12px;}
+.dz div:nth-child(2) img{display: block; float: left; width: 15px; height: 15px; margin: 5px 5px 0 0;}
+.wl{padding: 15px; line-height: 17.5px;}
+.wl>div{font-size: 12px; color: #444; overflow: hidden;}
+.wl>div span{display: block; float: left; width: 80px; text-align: center; background: #ccc; color: #fff; font-size: 11px; margin-right: 10px; position: relative; z-index: 9;}
+.wl>div:nth-child(1) span{background: #1296db;}
+.wl>div div{padding-bottom: 20px; margin-left: 40px; border-left: 1px solid #f5f5f5;}
+.wl>div:nth-last-child(1) div{border: none;}
+
+/**晒单**/
+.sunDrying-main{ position: relative;}
+
+.sunDrying-search{height: 42px; line-height: 42px; width: 100%; position: fixed; top: 0; left: 0; z-index: 9;}
+
+.sunDrying-classification,.sunDrying-date,.sunDrying-typesof{float: left;position: relative;}
+
+.sunDrying-classification{width:25%; text-align: center;}
+
+.sunDrying-classification > select,.sunDrying-typesof > select{position: absolute;left:0;top:0;width: 100%; height: 42px; border: none; background: none; outline: none;}
+
+.sunDrying-date{width:50%;}
+
+.sunDrying-typesof{width:25%;text-align: center;}
+
+.t_statistics{ position: relative; margin-top: -30px;}
+
+.activationStatistics{ width: 94%; margin: 0 auto; border-radius: 5px; background: #fff; box-shadow: #eee 0 0 5px; margin-bottom: 15px; overflow: hidden;}
+
+.activationStatistics > h2{ height: 32px; padding: 0 3%; font-size: 12px; line-height: 32px;}
+
+.activationStatistics:nth-child(1) > h2{color:#0072ff;}
+
+.activationStatistics:nth-child(2) > h2{color:#ff6700;}
+
+.activationStatistics:nth-child(3) > h2{color:#31ac00;}
+
+.activationStatistics-list{ float: left; width: 50%; text-align: center; padding: 10px 0;}
+
+.activationStatistics_self{ font-size: 15px; color: #f00; height: 38px; line-height: 38px;}
+
+.activationStatistics_self > span{ color: #888; font-size: 10px;}
+
+.activationStatistics_title{ height: 26px; line-height: 26px; font-size: 10px;}
+
+/**礼品商城**/
+.brand{ position: relative;}
+
+.brand select{ width: 100%; height: 40px; position: absolute; left: 0; top: 0; opacity: 0; border: none;}
+
+/**数据分析**/
+
+.t_statistics1 {position: relative; margin-top: -30px;}
+
+.t_statistics1 li{ background-color: #fff; padding: 0 3%; margin-bottom: 5px;}
+
+.shName{ height: 32px; line-height: 32px;}
+
+.shJiaoyi{ height: 38px; line-height: 38px;}
+
+.shName{ font-size: 14px;}
+
+.dmsh.shName{color: #888;}
+
+.dmsh.shName sub{ color: #f00;}
+
+.xfsh.shName sub{color: #61ab00;}
+
+.shJiaoyi{ font-size: 14px; color: #f60;}
+
+.shJiaoyi span{ font-size: 10px; color: #999;}
+
+#div_date1{position: relative;}
+
+#div_date1 > select{ width: 100%; height: 38px;  border:none; background: none; outline: none;}
+
+#div_date1 > select > option{text-align:center;}
+
+/**在线订货**/
+.button_box{position: fixed; bottom: 0; width: 100%; background: #fff; border-top: 1px solid #eee; line-height: 50px; font-size: 14px; box-sizing: border-box; padding: 0 20px;}
+.button_box a{display: block; float: right; background: cadetblue; line-height: 30px; margin: 10px 0 0; width: 80px; text-align: center; font-size: 12px; color: #fff; border-radius: 4px;}
+.maclist{overflow: hidden; background: #fff;}
+.maclist li{ overflow: hidden; margin-left: 20px; padding:10px 20px 10px 0;}
+.maclist li img{display: block; float: left; width: 120px; height: 80px; margin-right: 10px;}
+.mac_tt{font-size: 15px; color: #333; line-height: 30px;}
+.maclist li>p{color: #777; font-size: 12px; line-height: 20px;}
+.mac_bt{font-size: 12px; color: #777; line-height: 30px;}
+.mac_bt>span{color: cadetblue; font-size: 15px; font-weight: bold;}
+.mac_bt div{display: block; float: right; height: 28px; line-height: 28px; font-size: 14px; width: 70px; text-align: center; border: 1px solid #eee; color: #333;}
+.mac_bt div span{display: block; float: left; width: 20px; background: #f5f5f5; color: #ccc;}
+.mac_bt div span:nth-child(1){float: right;}
+/**确认订单**/
+.h_addr{color: #333; font-size: 14px;}
+.add{color: #777; line-height: 40px; text-align: center; padding: 20px 0; display: none;}
+.add img{display: inline-block; width: 20px; height: 20px; vertical-align: center; margin: 0 7.5px -3px 0;}
+.add span{color: cadetblue; margin: 0 5px;}
+
+.ads_box{padding: 10px 15px; line-height: 20px; position: relative;}
+.ads_box>div span{color: cadetblue; font-size: 12px;}
+.ads_box>span{color: #777; font-size: 12px;}
+.ads_box i{display: block; position: absolute; width: 9px; height: 9px; border-right: 1px solid #eee; border-top: 1px solid #eee; right: 15px; top: 25px; transform: rotate(45deg);}
+
+.shoping{border-bottom: 10px solid #f5f5f5; overflow: hidden; line-height: 20px;}
+.shoping>div{padding: 10px 15px;}
+.shoping img{display: block; float: left; width: 40px; height: 40px; margin-right: 10px;}
+.shoping>div div{height: 20px; overflow: hidden; font-size: 14px; color: #333;}
+.shoping>span{color: #777; font-size: 12px; display: block;}
+.shoping span em{float: right; color: cadetblue; font-size: 14px;}
+.shoping p{border-top: 1px solid #f5f5f5; padding-right: 15px; margin-left: 15px; font-size: 12px; color: #777; line-height: 40px;}
+.shoping p span{float: right; color: cadetblue; font-size: 14px;}
+
+.h_button{ text-align: right; height: 40px; line-height: 40px; position: fixed; bottom: 0; left: 0; font-size: 14px; width: 100%; border-top: 1px solid #ddd;}
+.h_button div{background: cadetblue; color: #fff; float: right; padding: 0 15px; margin-left: 20px;}
+.h_button span{color: cadetblue; font-size: 10px;}
+.h_button span em{font-size: 16px;}

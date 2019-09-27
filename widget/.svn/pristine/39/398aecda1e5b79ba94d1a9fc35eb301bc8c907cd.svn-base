@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css?4564" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+	</head>
+	<body>
+		<!-- 按钮 -->
+		<div class="button_box"><a onclick="paySure();">确认购买</a>共领取<span id="allNum">0</span>件，总价<span id="allMoney">0</span>元</div>
+		<!-- 列表 -->
+		<ul class="maclist">
+		</ul>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/base64.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/doT.min.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+	var db;
+	var userInfo;
+	var $bid,$plat;
+	var amountJsonData=[];
+	var allNum=0;
+	var allMoney=0;
+		H.ready(function(){
+			db=api.require('db');
+			//取出用户信息
+			var sql='select * from kltx_login',
+					userInfo=selectSql('kltx_db', sql);
+					$bid = userInfo[0].id;
+					$plat = userInfo[0].plat;
+					getData();
+		});
+
+		//请求数据
+		function getData(){
+			var $url=url+'Colorder/Holorder000/listData';
+			H.ajax(getDataCallback, $url, 'post', {values:{plat:$plat}}, 'json', {});
+		}
+
+		function getDataCallback(ret,err){
+			if(ret){
+				if(ret.body.statusCode=="200"){
+					var data=ret.body.datas;
+					if(data.length>0){
+						for(var i=0;i<data.length;i++){
+							var item={id:data[i].id,num:0,price:0};
+							amountJsonData.push(item);
+						}
+						var interText = doT.template($("#commodityListMarsk").text());
+							$(".maclist").html(interText(data));
+					}
+
+				}
+			}else{
+				//J(err);
+			}
+		}
+
+		//数量减
+		function less(cnt,id,price,obj){
+			var num=Number($(obj).closest("li").find("#num").text());
+		if(num>0){
+			num-=cnt;
+		}else{
+			num=0;
+		}
+		$(obj).closest("li").find("#num").text(num);
+		var index=$(obj).closest("li").index();
+				amountJsonData[index].num=num;
+				amountJsonData[index].price=Number(price)*num;
+				var newNumber=0;
+				var newPrice=0;
+				for(var i=0;i<amountJsonData.length;i++){
+					if(Number(amountJsonData[i].num)==cnt){
+							amountJsonData[i].num=0;
+							amountJsonData[index].price=0;
+					}
+						newNumber+=Number(amountJsonData[i].num);
+						newPrice+=Number(amountJsonData[i].price);
+				}
+				allNum=newNumber;
+				allMoney=newPrice;
+				$("#allNum").html(allNum);
+				$("#allMoney").html(allMoney);
+		}
+		//数量加
+		function plus(cnt,id,price,obj){
+			var num=Number($(obj).closest("li").find("#num").text());
+					num+=cnt;
+					$(obj).closest("li").find("#num").text(num);
+			var index=$(obj).closest("li").index();
+					amountJsonData[index].num=num;
+					amountJsonData[index].price=Number(price)*num;
+					var newNumber=0;
+					var newPrice=0;
+					for(var i=0;i<amountJsonData.length;i++){
+						newNumber+=Number(amountJsonData[i].num);
+						newPrice+=Number(amountJsonData[i].price);
+					}
+					allNum=newNumber;
+					allMoney=newPrice;
+					$("#allNum").html(allNum);
+					$("#allMoney").html(allMoney);
+		}
+
+		//确认购买
+		function paySure(){
+			if(allNum>0){
+				H.openWin('onlineOrderSure','onlineOrderSure.html',{data:amountJsonData});
+			}
+
+		}
+	</script>
+	<script id="commodityListMarsk" type="text/x-dot-template">
+		{{
+			for(var index in it){
+			}}
+			<li class="bottom-line">
+				<img src="{{=it[index].src}}" alt="">
+				<div class="mac_tt">{{=it[index].name}}</div>
+				<p>{{=it[index].remark}}</p>
+				<div class="mac_bt"><div><span onclick="plus({{=it[index].cnt}},{{=it[index].id}},'{{=it[index].pric}}',this)">+</span><span onclick="less({{=it[index].cnt}},{{=it[index].id}},'{{=it[index].pric}}',this)">-</span><p id="num">0</p></div>售价：<span>￥{{=it[index].pric}}</span></div>
+			</li>
+			{{
+			}
+		}}
+	</script>
+</html>

@@ -1,0 +1,151 @@
+body,html {
+	padding:0;
+	margin:0;
+	font-family: Helvetica;
+	margin: 0 auto;
+	position: relative;
+	height:100%;
+	max-width:750px;
+	min-width:320px;
+}
+*{
+	margin:0;
+	padding:0;
+}
+img{width:100%;}
+a{ text-decoration: none;}
+a,
+input,
+button{
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	outline:none;
+}
+input,
+button {
+	-webkit-appearance: none;
+	border-radius: 0;
+}
+p{ margin:0; padding:0;}
+i,em{ font-style: normal;}
+ul,li,dl,dd,dt{ margin:0;padding:0; font-style:normal; list-style: none;}
+/*清除float*/
+/* Clear Fix */
+.clearfix:after {
+	content:".";
+	display:block;
+	height:0;
+	clear:both;
+	visibility:hidden;
+}
+.clearfix {
+	display:inline-block;
+}
+/* Hide from IE Mac \*/
+.clearfix {
+	display:block;
+}
+.clearfix{ zoom:1;}
+/* End hide from IE Mac */
+/* end of clearfix */
+/*清除float_end*/
+/*init_end*/
+
+/*1像素 边框 开始*/
+.line_bottom {
+	background-color:#fff;
+	border: none;
+	background-image: -webkit-linear-gradient(bottom, transparent 50%, #ccc 50%);
+	background-image: linear-gradient(bottom, transparent 50%, #ccc 50%);
+	background-size: 100% 1px;
+	background-repeat: no-repeat;
+	background-position: left bottom;
+}
+
+.line_top {
+	border: none;
+	background-color:#fff;
+	background-image: -webkit-linear-gradient(top, transparent 50%, #ccc 50%);
+	background-image: linear-gradient(top, transparent 50%, #ccc 50%);
+	background-size: 100% 1px;
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+
+.line_left {
+	border: none;
+	background-image: -webkit-linear-gradient(left, transparent 50%, #ccc 50%);
+	background-image: linear-gradient(left, transparent 50%, #ccc 50%);
+	background-size: 1px 100%;
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+
+.line_right {
+	border: none;
+	background-image: -webkit-linear-gradient(right, transparent 50%, #ccc 50%);
+	background-image: linear-gradient(right, transparent 50%, #ccc 50%);
+	background-size: 1px 100%;
+	background-repeat: no-repeat;
+	background-position: right top;
+}
+
+.line_bottom_right {
+	border: none;
+	background-image: -webkit-linear-gradient(bottom, transparent 50%, #ccc 50%), -webkit-linear-gradient(right, transparent 50%, #ccc 50%);
+	background-image: linear-gradient(bottom, transparent 50%, #ccc 50%), linear-gradient(right, transparent 50%, #ccc 50%);
+	background-size: 100% 1px, 1px 100%;
+	background-repeat: no-repeat, no-repeat;
+	background-position: left bottom, right top;
+}
+
+.line_right_fff {
+	border: none;
+	background-image: -webkit-linear-gradient(right, transparent 50%, #fff 50%);
+	background-image: linear-gradient(right, transparent 50%, #fff 50%);
+	background-size: 1px 100%;
+	background-repeat: no-repeat;
+	background-position: right top;
+}
+
+.line_bottom_fff {
+	border: none;
+	background-image: -webkit-linear-gradient(bottom, transparent 50%, #fff 50%);
+	background-image: linear-gradient(bottom, transparent 50%, #fff 50%);
+	background-size: 100% 1px;
+	background-repeat: no-repeat;
+	background-position: left bottom;
+}
+
+.line_bottom_000 {
+	border: none;
+	background-image: -webkit-linear-gradient(bottom, transparent 50%, #741901 50%);
+	background-image: linear-gradient(bottom, transparent 50%, #741901 50%);
+	background-size: 100% 1px;
+	background-repeat: no-repeat;
+	background-position: left bottom;
+}
+
+/*1像素 边框 结束*/
+/* 圆角按钮 开始 */
+.buttonBtnCircle{
+  padding:30px 0;
+}
+.buttonBtnCircle a{
+	display:block;
+	width:50%;
+	margin:0 auto;
+	height:40px;
+	line-height:41px;
+	overflow:hidden;
+	text-align:center;
+	font-size:16px;
+	color: #fff;
+	background:#fa5e13;
+	border-radius:40px;
+}
+/* 圆角按钮 结束 */
+/*字体颜色 开始*/
+a.active{
+	color:#ccc !important;
+}
+/*字体颜色 结束*/

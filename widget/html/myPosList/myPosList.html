@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+	</head>
+	<body>
+		<!--header start-->
+		<div class="headers">
+			<header class="subpageHeader"><a class="aBackBtn" onclick="H.closeWin();"><img src="../../images/backIcon.png"/></a>我的终端POS</header>
+	    </div>
+	    <section class="subpageMain">
+			<div class="myPosListContainer">
+				<div class="myPosListHeader">
+					<a href="javascript:;"><select><option value="1">未绑定</option><option value="2">已绑定</option><option value="3">已拨码</option><option value="4">已激活</option></select><em id='statusEm'>未绑定</em><img src="../../images/bottomArrIcon.png"/></a>
+					<a href="javascript:;"><input type="month" /><em id='monthEm'>按月份</em><img src="../../images/bottomArrIcon.png"/></a>
+					<a onclick="H.openWin('selectPayWay','selectPayWay.html',{},{animation : {type : 'movein',subType : 'from_bottom',duration : 300}});" ><span id="fenlei">按平台<span><img src="../../images/bottomArrIcon.png"/></a>
+				</div>
+		   </div>
+	    </section>
+			<!-- <div class="posCons">
+
+			</div> -->
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+	<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/base64.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	var $bid, $plat;
+		H.ready(function(){
+					H.fixStatusBar(null,'.headers');
+					db = api.require('db');
+					//取出用户信息
+					var sql = 'select * from kltx_login',
+						userInfo = selectSql('kltx_db', sql);
+					$bid = userInfo[0].id;
+					$plat = userInfo[0].plat;
+					var h=api.systemType=='ios' ? 20 : 25;
+					var height=$(".headers").height()+$('.subpageMain').height()+h;
+					var $winHeight=api.winHeight;
+					H.openFrame('myPosList_body','myPosList_body.html',{},{
+						rect: {	x: 0,
+								y: height,
+						        w: 'auto',
+						        h: 'auto'
+				    		},
+				    	bounces:false
+				    });
+				    //按状态
+				    $('.myPosListHeader a select').change(function(){
+				       var statusVal = $(this).find('option:selected').text();
+				      $('#statusEm').text(statusVal);
+							var val=$(this).find("option:selected").val();
+							H.execScript('myPosList','myPosList_body','getPosType("'+val+'");');
+				    })
+				    //按月份
+				    $('.myPosListHeader a input').change(function(){
+				    if($(this).val()!=''){
+				      var monthVal = $(this).val();
+				      $('#monthEm').text(monthVal);
+									H.execScript('myPosList','myPosList_body','getMonth("'+monthVal+'");');
+				      }else{
+				      $('#monthEm').text('按月份');
+									H.execScript('myPosList','myPosList_body','getMonth();');
+				      }
+				    })
+						//獲取POS數量
+						//getPosNum();
+		});
+		//更换分类名称
+		function changeName(name){
+				$("#fenlei").html(name);
+		}
+		function readText(text){
+			var speechRecognizer = api.require('speechRecognizer');
+					speechRecognizer.read({
+							readStr: text,
+							speed: 70,
+							volume: 60,
+							voice: 'vixq',
+							rate: 16000,
+							audioPath: 'fs://speechRecogniser/read.mp3'
+					}, function(ret, err) {
+							if (ret.status) {
+									ret.speakProgress
+							} else {
+									api.alert({ msg: err.msg });
+							}
+					});
+		}
+		//請求POS機數量
+		function getPosNum(){
+			var $url = url + 'Home/Stock/stockData';
+			H.ajax(getPosNumCallback, $url, 'post', {
+				values: {
+					bid :$bid,
+					plat: $plat,
+					pid :0
+				}
+			}, 'json', {});
+		}
+		function getPosNumCallback(ret,err){
+			if(ret){
+				if(ret.body.status){
+					var total=ret.body.data.total;
+					var bind=ret.body.data.bind;
+					var unbind=ret.body.data.unbind;
+					var active=ret.body.data.active;
+					var unactive=ret.body.data.unactive;
+					$(".posCons").html('●总数:<span>'+total+'</span>台 ●已绑定:<span>'+bind+'</span>台 ●未绑定:<span>'+unbind+'</span>台 ●已激活:<span>'+active+'</span>台 ●未激活:<span>'+unactive+'</span>台');
+					//語音朗讀
+					if(Number(unactive)>0){
+						readText('您还差'+unactive+'台没有激活，要加油哦！');
+					}
+				}
+			}else{
+				J(err);
+			}
+		}
+	</script>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+	</head>
+	<body>
+		<!--header start-->
+		<div class="headers">
+			<header class="subpageHeader"><a class="aBackBtn" onclick="H.closeWin();"><img src="../../images/backIcon.png"/></a>拨码<div class="bm_select"><select id="bm-classification" onchange="changeClassification(this);"><option>星支付</option></select></div></header>
+			<!--选择支付平台-->
+			<div class="tradingRecordFixed">
+				<div class="myPosSearchMain">
+				   <input type="text" placeholder="输入POS机终端号进行搜索"/>
+					 <a class="posNumSearch" onclick="searchs(this);">搜索</a>
+				</div>
+			</div>
+	    </div>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+	<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/base64.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../script/doT.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	var db;
+	var userInfo;
+	var $bid,$plat;
+		H.ready(function(){
+			db=api.require('db');
+			//取出用户信息
+			var sql='select * from kltx_login',
+					userInfo=selectSql('kltx_db', sql);
+					$bid = userInfo[0].id;
+					$plat = userInfo[0].plat;
+					H.fixStatusBar(null,'.headers');
+					var h=api.systemType=='ios' ? 20 : 25;
+					var height=$(".headers").height()+h;
+					var $winHeight=api.winHeight;
+					H.openFrame('selectPosList_body','selectPosList_body.html',{},{
+						rect: {	x: 0,
+								y: height,
+						        w: 'auto',
+						        h: 'auto'
+
+				    		},
+				    	bounces:false
+				    });
+						//获取POS机分类
+						getData();
+		});
+		//获取POS机分类
+		function getData(){
+			//获取POS机分类
+			var $url1=url+'Home/Sunburn/listData';
+			H.ajax(getPosFlCallback, $url1,'post', {values:{bid:$bid,plat:$plat}}, 'json', {});
+		}
+		//获取POS机分类
+		function getPosFlCallback(ret,err){
+			if(ret){
+				//J(ret);
+					if(ret.body.status){
+						var data=ret.body.data;
+						if(data.length>0){
+							var interText = doT.template($("#classificationMarsk").text());
+								$("select#bm-classification").html(interText(data));
+								$pid=$("select#bm-classification > option:selected").attr("value");
+
+						}
+					}else{
+						hideLoading();
+						return false;
+					}
+			}else{
+					J(err);
+			}
+		}
+function changeName(name){
+		$("#name").html(name);
+}
+//搜索
+function searchs(obj){
+	var val=$(obj).parent().find("input").val();
+		H.execScript('selectPosList','selectPosList_body','search("'+val+'");');
+}
+
+//切换POS机分类
+function changeClassification(obj){
+	$pid=$(obj).find("option:selected").attr("value");
+	H.execScript('selectPosList','selectPosList_body','getPosList1("'+$pid+'");');
+}
+	</script>
+	<script id="classificationMarsk" type="text/x-dot-template">
+		{{
+			for(var index in it){
+			}}
+				<option value="{{=it[index].id}}">{{=it[index].name}}</option>
+			{{
+			}
+		}}
+	</script>
+</html>

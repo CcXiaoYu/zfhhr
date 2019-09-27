@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+	</head>
+	<body>
+		<!--header start-->
+		<div class="headers">
+			<header class="subpageHeader"><a class="aBackBtn" onclick="H.closeWin();"><img src="../../images/backIcon.png"/></a>实名认证
+			</header>
+	</div>
+		<!--header end-->
+		<!--subpage start-->
+			 <section class="subpageMain">
+				 <div class="noticeTip">
+					<img src="../../images/noticeIcon.png"/>
+					请添加本人储蓄卡信息，认真填写核对
+				 </div>
+				 <div class="checkStep">
+					<div>
+					<em class="stepOneIcon complete"></em>
+					<p>填写基本信息</p>
+					</div>
+					<div>
+					<em class="stepTwoIcon"></em>
+					<p>绑定结算卡</p>
+					</div>
+				 </div>
+				 <!--<div class="bindCardPhoto line_bottom">
+					<div>
+						<input type="file" />
+						<img src="../../images/addBankCardImg.png"/ alt="添加银行卡照片">
+						<p>请上传储蓄卡正面照片</p>
+					</div>
+				 </div>-->
+				 <div class="FormsGroup bindCardFormGroup">
+				    <div class="line_bottom">
+						<img src="../../images/realNameIcon.png" alt="真实姓名"/>
+						<input type="text" id="realName" disabled="disabled"/>
+					</div>
+					<div class="line_bottom">
+						<img src="../../images/creditCardIcon.png" alt="储蓄卡卡号"/>
+						<input type="tel" id="cardNum" onblur="selectBank(this);" placeholder="请输入储蓄卡卡号" emp="{empty:true,care:true}" mess="输入储蓄卡卡号"/>
+					</div>
+					<div class="line_bottom">
+						<img src="../../images/bankIcon.png" alt="所属银行" />
+						<input type="text" id="bank" placeholder="所属银行" disabled="disabled" />
+					</div>
+					<div class="line_bottom">
+						<img src="../../images/creditCardIcon.png" alt="开户支行"/>
+						<input type="text" id="branch" onblur="selectBank(this);" placeholder="请输入开户支行" emp="{empty:true}" mess="输入开户支行"/>
+					</div>
+					<div>
+						<img src="../../images/phoneIcon.png"  alt="预留手机号"/>
+						<input type="tel" id="phone" maxlength="11"  placeholder="银行预留手机号" emp="{empty:true,tel:true}" mess="输入银行预留手机号"/>
+					</div>
+				 </div>
+				 <div class="buttonMain">
+					<a class="submitBtn" onclick="next();">完成认证</a>
+				 </div>
+			 </section>
+		<!--subpage start-->
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+	<script type="text/javascript" src="../../script/api.js"></script>
+	<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/chackLoginAndCertificate.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	var db;
+	var userInfo;
+	var $bid,$plat;
+		H.ready(function(){
+					H.fixStatusBar(null,'.headers');
+					db=api.require('db');
+					//取出用户信息
+					var sql='select * from kltx_login';
+					userInfo=selectSql('kltx_db', sql);
+					$bid = userInfo[0].id;
+					  $plat = userInfo[0].plat;
+					//查询是否已经认证过,认证过绑定信息
+					certBind();
+					//真实姓名
+					$('#realName').val(api.pageParam.realName);
+		});
+		//查询是否已经认证过,认证过绑定信息
+		function certBind(){
+			var certificationInfo = H.getStorage('certificationInfo');
+				if(certificationInfo!=undefined){
+					var $realName = certificationInfo.realName,
+				      $cardNum=certificationInfo.cardNum,
+						$bank=certificationInfo.bank,
+						$phone=certificationInfo.phone;
+						$('#realName').val($realName);
+						$("#cardNum").val($cardNum);
+						$("#bank").val($bank);
+						$("#phone").val($phone);
+				}
+		}
+		//下一步
+		function next(){
+				if ($('[emp]').checkinput()){
+					var realName = $('#realName').val();
+					    cardNum=$("#cardNum").val(),
+						bank=$("#bank").val(),
+						phone=$("#phone").val(),
+						branch=$("#branch").val();
+					var info=H.getStorage('certificationInfo');
+					    info.realName = realName;
+							 info.cardNum=cardNum;
+							 info.bank=bank;
+							 info.phone=phone;
+							 info.branch=branch;
+						H.setStorage('certificationInfo',info);
+							//提交信息
+						postInfo();
+			}
+		}
+
+		//提交信息
+		function postInfo(){
+			showLoading();
+			var $cardNum=$("#cardNum").val();
+			var $bankName=$("#bank").val();
+			var $phone=$("#phone").val();
+			var $branch=$("#branch").val();
+			var $url=url+'Home/BankCard/addBankCard';
+			H.ajax(postInfoCallBack, $url, 'post', {values:{bid:$bid,plat:$plat,cardNum :$cardNum,phone:$phone,bankName:$bankName,openBank:$branch}}, 'json', {});
+		}
+		//提交信息返回
+		function postInfoCallBack(ret,err){
+			hideLoading();
+			if(ret){
+					H.toast(ret.body.msg);
+					if(ret.body.status){
+					  H.openWin('certificationComplete','../certificationCenter/certificationComplete.html');
+					}else{
+					return false;
+				}
+		}else{
+				return false;
+		}
+		}
+
+		//查询银行归属地
+		function selectBank(obj){
+				var cardNumber=$(obj).val();
+				var $url=url+'Home/BankCard/checkCards';
+				H.ajax(selectBankCallBack, $url, 'post', {values:{cardNum:cardNumber}}, 'json', {});
+
+		}
+		function selectBankCallBack(ret,err){
+			if(ret){
+			//	J(ret);
+				if(ret.body.status){
+					var bankName=ret.body.bankName;
+					$("#bank").val(bankName);
+				}
+			}else{
+				J(err);
+			}
+		}
+	</script>
+</html>

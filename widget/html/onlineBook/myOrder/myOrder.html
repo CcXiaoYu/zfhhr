@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>支付合伙人</title>
+		<link rel="stylesheet" type="text/css" href="../../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/loading1.css" />
+	</head>
+	<body>
+		<!--header start-->
+		<div class="headers">
+			<header class="subpageHeader"><a class="aBackBtn" onclick="H.closeWin();"><img src="../../../images/backIcon.png"/></a>我的订单
+			</header>
+			<!-- tab切换 -->
+			<nav class="myOrderTab">
+				<a href="javascript:;" class="line_right Selected" onclick="setFrameGroupIndex(0);" data->待支付</a>
+				<a href="javascript:;" class="line_right" onclick="setFrameGroupIndex(1);">待发货</a>
+				<a href="javascript:;" class="line_right" onclick="setFrameGroupIndex(2);">待收货</a>
+				<a href="javascript:;" onclick="setFrameGroupIndex(3);">已完成</a>
+			</nav>
+	</div>
+	</body>
+	<script type="text/javascript" src="../../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../../script/api.js"></script>
+	<script type="text/javascript" src="../../../script/H.js"></script>
+		<script type="text/javascript" src="../../../script/db.js"></script>
+	<script src="../../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../script/base64.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../../script/rand.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		var height;
+		H.ready(function(){
+					H.fixStatusBar(null,'.headers');
+					var h=api.systemType=='ios' ? 20 : 25;
+					height=$(".headers").height()+h;
+					var $winHeight=api.winHeight;
+					H.openFrame('myOrder_body','myOrder_body.html',{},{
+						rect: {	x: 0,
+								y: height,
+						        w: 'auto',
+						        h: 'auto'
+				    		},
+				    	bounces:false
+				    });
+						H.execScript('Confirm','Confirm_body','CloseWin();');
+						isOpenFrames();
+		});
+		function isOpenFrames() {
+			api.openFrameGroup({
+				name: 'myOrder',
+				background: '#f5f5f5',
+				scrollEnabled: true,
+				rect: {
+					x: 0,
+					y: height,
+					w: 'auto',
+					h: 'auto'
+				},
+				index: 0,
+				frames: [{
+					name: 'paying_body',
+					url: 'paying_body.html',
+					bgColor: '#f5f5f5',
+					vScrollBarEnabled:false
+				}, {
+					name: 'deliveing_body',
+					url: 'deliveing_body.html',
+					bgColor: '#f5f5f5',
+					vScrollBarEnabled:false
+				}, {
+					name: 'collecting_body',
+					url: 'collecting_body.html',
+					bgColor: '#f5f5f5',
+					vScrollBarEnabled:false
+				}, {
+					name: 'completed_body',
+					url: 'completed_body.html',
+					bgColor: '#f5f5f5',
+					vScrollBarEnabled:false
+				}]
+			}, function(ret, err) {
+				var index = ret.index;
+				$(".myOrderTab a:eq(" + index + ")").addClass("Selected").siblings().removeClass("Selected");
+				var selectedid = index;
+				switch (selectedid) {
+					case 0:
+						H.execScript('myOrder', 'paying_body', 'fnRefreshHeaderLoading()');
+						break;
+					case 1:
+						H.execScript('myOrder', 'deliveing_body', 'fnRefreshHeaderLoading()');
+						break;
+					case 2:
+						H.execScript('myOrder', 'collecting_body', 'fnRefreshHeaderLoading()');
+						break;
+					case 3:
+						H.execScript('myOrder', 'completed_body', 'fnRefreshHeaderLoading()');
+						break;
+					default:
+						reuturn;
+				}
+			});
+		}
+		//点击导航菜单设置index
+		function setFrameGroupIndex(id) {
+			api.setFrameGroupIndex({
+				name: 'myOrder',
+				index: id,
+				scroll: true
+			});
+		}
+	</script>
+</html>

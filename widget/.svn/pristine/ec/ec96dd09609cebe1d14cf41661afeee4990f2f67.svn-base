@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>支付合伙人</title>
+	<link rel="stylesheet" type="text/css" href="../../../css/reset.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/Hui.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/Rcommon.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+	<link rel="stylesheet" type="text/css" href="../../../css/loading1.css" />
+	<style>
+		html,body{background-color: #fff;}
+		input,textarea{outline: none;}
+	</style>
+</head>
+
+<body>
+	<section class="orderDetailSection"></section>
+</body>
+<script type="text/javascript" src="../../../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../../script/H.js"></script>
+<script src="../../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../script/doT.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+  var $bid,$orderNo;
+	H.ready(function () {
+		$bid = H.pageParam.Bid;
+	  $orderNo = H.pageParam.OrderNo
+		getMyOrderDetail()
+	});
+	// 请求订单详情
+	function getMyOrderDetail() {
+		showLoading()
+		var $url = url + "Colorder/Holorder002/detailData";
+		H.ajax(getMyOrderDetailCallBack, $url, 'post', {
+			values: {
+				bid: 	$bid,
+				orderno: $orderNo
+			}
+		}, 'json', {});
+	}
+
+	function getMyOrderDetailCallBack(ret, err) {
+		if (ret) {
+			hideLoading()
+			if (ret.body.statusCode == 200) {
+				var data = ret.body.datas;(data)
+				var interText = doT.template($("#myOrderDetailMark").text());
+				$(".orderDetailSection").html(interText(data));
+			}
+		}
+	}
+	//取消订单
+	function cancalOrderFn(){
+		var $url = url + "Colorder/Holorder002/cancelway";
+		if(confirm('您确定要取消订单？')){
+			H.ajax(cancalOrderFnCallBack, $url, 'post', {
+				values: {
+					bid:$bid,
+					orderno:$orderNo
+				}
+			}, 'json', {});
+		}
+	}
+	function cancalOrderFnCallBack(ret,err){
+		if(ret){
+			if(ret.body.statusCode==200){
+				 H.toast(ret.body.message);
+				 H.execScript('myOrder','paying_body','fnRefreshHeaderLoading();');
+				 setTimeout(function(){
+					 H.closeWin();
+				 },1000)
+			}
+		}
+	}
+	//确认收货
+	function comfirmOrderFn(){
+		var $url = url + "Colorder/Holorder002/comfirmway";
+		if(confirm('您确定已收到货？')){
+			H.ajax(cancalOrderFnCallBack, $url, 'post', {
+				values: {
+					bid:$bid,
+					orderno:$orderNo
+				}
+			}, 'json', {});
+    	}
+
+	}
+	function comfirmOrderFnCallBack(ret,err){
+		if(ret){
+				if(ret.body.statusCode==200){
+					var data = ret.body.datas;
+					 H.toast(data.message);
+					 H.execScript('myOrder','collecting_body','fnRefreshHeaderLoading();');
+					 setTimeout(function(){
+						 H.closeWin();
+					 },1000)
+				}
+		}
+	}
+</script>
+<script id="myOrderDetailMark" type="text/x-dot-template">
+<div class="orderDetailStatus">
+  {{? it.paystatus==1&&it.status==1}}
+		<img src="../../../images/dfkIcon.png" alt="待付款">
+		<div>
+			待付款
+		</div>
+	{{?? it.paystatus==2&&it.ostatus==1}}
+		<img src="../../../images/dfhIcon.png" alt="待发货">
+		<div>
+			待发货
+		</div>
+	{{?? it.paystatus==2&&it.ostatus==2}}
+		<img src="../../../images/dshIcon.png" alt="待收货">
+		<div>
+			待收货
+		</div>
+	{{?? it.paystatus==2&&it.ostatus==3}}
+		<img src="../../../images/ywcIcon.png" alt="已完成">
+		<div>
+			已完成
+		</div>
+	{{?? it.paystatus==1&&it.status==2}}
+	<img src="../../../images/cancelOrderIcon.png" alt="已取消">
+	<div>
+		订单已取消
+	</div>
+	{{?}}
+</div>
+
+<div class="orderProductInformation">
+	<img src="{{=it.gimg}}" alt="产品">
+	<div>
+		<h3 class="ellipsis">{{=it.gname}}</h3>
+		<p>{{=it.gremark}}</p>
+		<p>单价：{{=it.gprice}}</p>
+	</div>
+</div>
+<div class="spacingNav"></div>
+
+<div class="orderInformationItem {{? it.paystatus==2}}line_bottom{{?}}">
+	<p>订单编号：{{=it.orderno}}</p>
+	<p>下单时间：{{=it.createtime}}</p>
+</div>
+{{? it.paystatus==2}}
+<div class="orderInformationItem {{? it.ostatus==2&&it.kdno!=''&& it.kdname!=''}}line_bottom{{?}}">
+	<p>支付方式：微信支付</p>
+	<p>支付时间：{{=it.paytime}}</p>
+</div>
+{{?}}
+{{? it.ostatus==2&&it.kdno!=''&& it.kdname!=''}}
+<div class="orderInformationItem">
+	<p>配送方式：{{=it.kdname}}</p>
+	<p>运送单号：{{=it.kdno}}</p>
+</div>
+{{?}}
+<div class="spacingNav"></div>
+<div class="orderAddressMain">
+	<div>
+		<span>{{=it.name}}</span>
+		<em>{{=it.tel}}</em>
+	</div>
+	<p>
+	{{=it.address}}
+	</p>
+</div>
+<div class="spacingNav"></div>
+
+<div class="orderStatisticalMain">
+	<p>
+		<span>订购台数</span>
+		<em>{{=it.tn}}台</em>
+	</p>
+	<p>
+		<span>商品总额</span>
+		<em>￥{{=it.tm}}</em>
+	</p>
+	<p class="line_bottom">
+		<span>运费</span>
+		<em>￥0.00</em>
+	</p>
+	<div>
+		<em>实付款：<i>￥</i></em>{{=it.tm}}
+	</div>
+</div>
+<div class="orderOperationMain">
+  {{? it.paystatus==1&&it.status==1}}
+	  <a href="javascript:;" onclick = "cancalOrderFn()">取消订单</a>
+	{{?? it.paystatus==2&&it.ostatus==3}}
+	  <a href="javascript:;" onclick = "comfirmOrderFn()">确认收货</a>
+	{{?}}
+</div>
+</script>
+
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>闪付通</title>
+		<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+		<style>
+		  html,body{
+		    height:auto;
+		  }
+		</style>
+	</head>
+	<body>
+		<div class="headers">
+			<header class="subpageHeader"><a class="aBackBtn" onclick="H.closeWin();"><img src="../../images/backIcon.png"/></a>忘记密码</header>
+	    </div>
+		<section class="subpageMain">
+					<div class="forgetPasswordNextContainer">
+				<div class='forgetPasswordContainer'>
+					<div class='forgetPasswordHeader'>
+						<img src="../../images/forgetPasswordTwoImg.png" />
+					</div>
+					<div class='forgetPasswordNumber marginTopBtn'>
+						<input type="password" placeholder='请输入新密码' name="passWord" id="newPwd" emp="{empty:true}" mess="请输入新密码"></input>
+					</div>
+					<div class='forgetPasswordNumber'>
+						<input type="password" placeholder='请再次确认新密码' id="newPwdOne" name="confirmPassword" emp="{empty:true,compassw:'#newPwd'}" mess="请再次确认新密码"></input>
+					</div>
+					<div class='forgetPasswordBtn marginTopBtn'>
+						<a onclick="updataPass();">确认重置</a>
+					</div>
+				</div>
+			</div>
+		</section>
+	</body>
+	<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="../../script/H.js"></script>
+	<script type="text/javascript" src="../../script/db.js"></script>
+	<script src="../../script/HomeCheck.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+	var $bid,$phone;
+	H.ready(function(){
+		H.fixStatusBar(null,'.headers');
+		$bid=H.pageParam.bid;
+		$phone=H.pageParam.phone;
+
+})
+		function updataPass(){
+			var newPwd = $('#newPwd').val();
+			if ($('#newPwd').checkinput()) {
+				if (isRegisterUserName(newPwd)) {
+					if ($('#newPwdOne').checkinput()) {
+						showLoading();
+						var $url=url+'Home/publicInterface/updatePass';
+						H.ajax(updataPassCallback, $url, 'post', {values:{phone:$phone,bid:$bid,password:newPwd}}, 'json', {});
+					}
+				} else{
+					H.toast('密码必须以字母开头，长度5-10位，可带数字、"_"、"."');
+				}
+			}
+		}
+
+		//修改密码返回
+		function updataPassCallback(ret,err){
+			hideLoading();
+			if(ret){
+					if(ret.body.status){
+						setTimeout(function(){
+							H.closeToWin("root");
+						},1000);
+					}
+					H.toast(ret.body.msg);
+			}else{
+					J(err);
+			}
+		}
+
+			//校验密码：密码必须以字母开头，长度5-10位，可带数字、“_”、“.”
+		function isRegisterUserName(s) {
+			var patrn = /^[a-zA-Z]{1}([a-zA-Z0-9]|[._]){4,9}$/;
+			if (!patrn.exec(s)) return false
+			return true
+		}
+
+	</script>
+</html>

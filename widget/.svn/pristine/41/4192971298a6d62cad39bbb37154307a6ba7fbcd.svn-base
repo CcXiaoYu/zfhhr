@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>闪付通</title>
+	<link rel="stylesheet" type="text/css" href="../../css/reset.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/Hui.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/loading1.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/style.css?4564" />
+	<style>
+		html,
+		body {
+			background-color: #f5f5f5;
+			min-height: 100%;
+		}
+	</style>
+</head>
+<body>
+	<div id="page">
+		<!--pages/list/list.wxml-->
+		<!--筛选  -->
+		<div style='height:41px;'></div>
+		<div class='shaixuan'>
+			<!--品牌-->
+			<div>
+				<div class="div brand" id="brands">
+				</div>
+			</div>
+			<!--台数-->
+			<div bindchange="binddivChange">
+				<div class="div">
+					<img src='../../images/xl.png' /> 台数：1台 </div>
+			</div>
+		</div>
+		<!--nav  -->
+		<div class='nav_tt'>分类</div>
+		<div class='nav_box' id="classification">
+
+		</div>
+		<!--礼品数据列表容器-->
+		<div id="container">
+		</div>
+		<div class="loadings" style="display:none;">加载中...</div>
+		<!--/礼品数据列表容器-->
+	</div>
+</body>
+<script type="text/javascript" src="../../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../script/H.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/doT.min.js"></script>
+<script type="text/javascript" src="../../script/db.js"></script>
+<script src="../../script/loading1.js" type="text/javascript" charset="utf-8"></script>
+<script>
+	var db;
+	var userInfo;
+	var $bid, $plat, $page = 1,
+			flag = true;
+	var flid;
+	var ppid;
+	H.ready(function() {
+		db = api.require('db');
+		//取出用户信息
+		var sql = 'select * from kltx_login',
+			userInfo = selectSql('kltx_db', sql);
+		$bid = userInfo[0].id;
+		$plat = userInfo[0].plat;
+		//获取品牌及分类
+		getBrandCategory();
+		//上划加载
+		up_load();
+	});
+	//获取品牌及分类
+	function getBrandCategory() {
+		var $url = url + 'Sact/Hact002/infoData';
+		H.ajax(getBrandCategoryCallback, $url, 'post', {
+			values: {}
+		}, 'json', {});
+	}
+	function getBrandCategoryCallback(ret, err) {
+		if (ret) {
+			if (ret.body.statusCode == '200') {
+				//品牌
+				var $brandsData = ret.body.datas.brands;
+				if ($brandsData.length > 0) {
+					var interText = doT.template($("#brandMarsk").text());
+					$("#brands").html(interText($brandsData));
+					ppid = $("#brandSelect > option:selected").attr("value");
+				}
+				//分类
+				var $classification = ret.body.datas.navs;
+				if ($classification.length > 0) {
+					var interText = doT.template($("#giftListClassification").text());
+					$("#classification").html(interText($classification));
+					flid = $(".classificationList.select").attr("id").replace("c", "");
+					//请求礼品数据列表
+					getData();
+				}
+			}
+		} else {
+			return;
+		}
+	}
+	//请求数据
+	function getData() {
+		showLoading();
+		var $url = url + 'Sact/Hact002/listData';
+		H.ajax(getDataCallback, $url, 'post', {
+			values: {
+				bid: $bid,
+				plat: $plat,
+				brandid: ppid,
+				navid: flid,
+				page: $page
+			}
+		}, 'json', {});
+	}
+	function getDataCallback(ret, err) {
+		hideLoading();
+		if (ret) {
+			if (ret.body.statusCode == "200") {
+				var data = ret.body.datas;
+				if (data.length > 0) {
+					var interText = doT.template($("#giftListMarsk").text());
+					if (flag) {
+						if ($page == 1) {
+							$("#container").html(interText(data));
+						} else {
+							$("#container").append(interText(data));
+						}
+						$page++;
+						$(".loadings").hide().html("加载中...");
+					}
+					waterFlow("container", "list");
+				} else {
+					if ($page != 1) {
+						$(".loadings").show().html("已经到底了!");
+					} else {
+						$("#container").html('<div style="line-height:50px;text-align:center;">暂无数据</div>');
+					}
+				}
+				flag = true;
+			}
+		} else {
+			//J(err);
+		}
+	}
+	//切换品牌
+	function changebrand(obj) {
+		var name = $(obj).find("option:selected").text();
+		$("#brandName").html(name);
+		ppid = $("#brandSelect > option:selected").attr("value");
+		$page = 1;
+		flag = true;
+		getData();
+	}
+	//切换分类
+	function changeClassification(obj, id) {
+		$(obj).addClass("select").siblings().removeClass("select");
+		flid = $(".classificationList.select").attr("id").replace("c", "");
+		$page = 1;
+		flag = true;
+		getData();
+	}
+	//上划加载
+	function up_load() {
+		api.addEventListener({
+			name: 'scrolltobottom'
+		}, function(ret, err) {
+			if (flag) {
+				$(".loadings").show();
+				getData();
+				flag = false;
+			}
+		});
+	}
+	// 瀑布流
+	function waterFlow(parent, chirld) {
+		var wparent = document.getElementById(parent); //获取父级div, 最外级容器
+		var allArr = getAllChirld(wparent, chirld); //获取到所有的class为box的容器div
+		var wscreenWidth = document.documentElement.clientWidth; //获取屏幕宽度
+		var wchirldWidth = wparent.getElementsByTagName("*"); //获取所有的标签
+		var num = Math.floor(wscreenWidth / wchirldWidth[0].offsetWidth); //这是一个Math算法, 目的是将小数转变为整数,
+		// 从而可以知道每行最多容纳几张图片
+		wparent.style.cssText = 'width:' + wchirldWidth[0].offsetWidth * num + 'px;margin:0 auto'; //固定每行摆放个数 和上下左右边距
+		//获得每行的最小高度
+		getMinHeightOfCols(allArr, num);
+	}
+	function getAllChirld(parent, classname) {
+		//获取所有的标签
+		var wchirld = parent.getElementsByTagName("*");
+		//创建数组
+		var chirldArr = [];
+		//遍历wchirld, 将其中className等于classname(传进来的参数)相同的标签放入数组chirldArr中
+		for (var i = 0; i < wchirld.length; i++) {
+			if (wchirld[i].className == classname) {
+				//因为是位push所以没放进去一个, 都是在数组的最后一个
+				chirldArr.push(wchirld[i]);
+			}
+		}
+		//返回该数组
+		return chirldArr;
+	}
+	function getMinHeightOfCols(chirdArr, num) {
+		//创建数组, 用来盛放每一行的高度
+		var onlyOneColsArr = [];
+		for (var i = 0; i < chirdArr.length; i++) {
+			if (i < num) {
+				//num为传进来的参数, 即为每行放图片的张数, 此步骤的目的是为了将第一行每张图片的高度遍历出来存放如新数组
+				onlyOneColsArr[i] = chirdArr[i].offsetHeight;
+			} else {
+				//当大于每行存放的图片个数时进入该方法, Math.min.apply这个方法是为了得到数组中的最小值
+				var minHeightOfCols = Math.min.apply(null, onlyOneColsArr);
+				//此方法的目的是为了得到最小高度图片的下表, 也就是在每行的第几张, 具体方法见下面
+				var minHeightOfindex = getminIndex(onlyOneColsArr, minHeightOfCols);
+				//定义布局方式为绝对布局
+				chirdArr[i].style.position = "absolute";
+				//得到下一行图片应放的高度
+				chirdArr[i].style.top = minHeightOfCols + "px";
+				//得到下一行图片应放于那个位置
+				chirdArr[i].style.left = chirdArr[minHeightOfindex].offsetLeft + "px";
+				//将两张图片高度相加得到一个新的高度用来进行下一次的计算
+				onlyOneColsArr[minHeightOfindex] += chirdArr[i].offsetHeight;
+				document.getElementById('container').style.height = onlyOneColsArr[minHeightOfindex] + 'px'
+			}
+		}
+
+	}
+	//此方法是为了进行最小高度下标的确定
+	function getminIndex(onlyOneColsArr, min) {
+		//遍历传进来的高度数组
+		for (var i in onlyOneColsArr) {
+			//如果高度等于最小高度, 返回i即为该图片下标
+			if (onlyOneColsArr[i] == min) {
+				return i;
+			}
+		}
+	}
+</script>
+<script id="giftListMarsk" type="text/x-dot-template">
+	{{ for(var index in it){ }}
+	<div class='list' onclick="H.openWin('giftDetail','giftDetail.html');">
+		<img src='http://pay.yidianzn.com/{{=it[index].src}}' />
+		<div class='list_tt'>{{=it[index].name}}</div>
+		<div class='pric'>市场价：{{=it[index].pric}}</div>
+		<div class='tj'>
+			<span>领取要求</span> {{ for(var i in it[index].tj){ }}
+			<span>{{=it[index].tj[i]}}</span> {{ } }}
+		</div>
+	</div>
+	{{ } }}
+</script>
+<script id="giftListClassification" type="text/x-dot-template">
+	{{ for(var index in it){ }}
+	<div class="nav_item classificationList {{? index==0}}select{{?}}" id="c{{=it[index].id}}" onclick="changeClassification(this,'{{=it[index].id}}');">{{=it[index].name}}</div>
+	{{ } }}
+</script>
+<script id="brandMarsk" type="text/x-dot-template">
+	<img src='../../images/xl.png' /> 品牌：
+	<span id="brandName">{{=it[0].name}}</span>
+	<select id="brandSelect" onchange="changebrand(this);">
+{{
+	for(var index in it){
+	}}
+			<option value="{{=it[index].id}}">{{=it[index].name}}</option>
+	{{
+	}
+}}
+</select>
+</script>
+</html>
